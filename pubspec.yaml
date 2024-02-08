@@ -43,7 +43,6 @@ dependencies:
   graphql: ^5.2.0-beta.7
   collection: ^1.18.0
   gap: ^3.0.1
-  cached_network_image: ^3.3.1
   auto_size_text: ^3.0.0
   google_fonts: ^6.1.0
   flutter_animate: ^4.4.0

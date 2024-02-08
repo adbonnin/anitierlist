@@ -24,7 +24,7 @@ class AnimeTierListCard extends StatelessWidget {
         child: Stack(
           children: [
             Positioned.fill(
-              child: CoverImage(imageUrl: anime.coverImageMedium),
+              child: CoverImage(image: anime.coverImageMedium),
             ),
             Positioned(
               left: 0,
