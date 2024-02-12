@@ -47,8 +47,8 @@ class _AnimeTierListScreenState extends ConsumerState<AnimeTierListScreen> {
     final lastYear = DateTime.now().year + 1;
     final years = List<int>.generate(max(0, lastYear - firstYear), (index) => lastYear - index);
 
-    final asyncSeason = ref.watch(browseAnimeProvider(_year, _season));
-    final cannotExportThumbnails = !asyncSeason.hasValue || asyncSeason.isLoading || _exportingThumbnails;
+    final asyncAnime = ref.watch(browseAnimeProvider(_year, _season));
+    final cannotExportThumbnails = !asyncAnime.hasValue || asyncAnime.isLoading || _exportingThumbnails;
 
     return Scaffold(
       body: Padding(
@@ -95,28 +95,34 @@ class _AnimeTierListScreenState extends ConsumerState<AnimeTierListScreen> {
             Gaps.p12,
             Expanded(
               child: AsyncValueWidget(
-                asyncSeason,
-                data: (season) => SingleChildScrollView(
-                  child: AnimeTierListGroupList(
-                    key: _groupListKey,
-                    anime: season.map(_applyPreference).toList(),
-                    onAnimeTap: _onAnimeTap,
-                  ),
+                asyncAnime,
+                data: (anime) => Column(
+                  children: [
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: AnimeTierListGroupList(
+                          key: _groupListKey,
+                          anime: anime.map(_applyPreference).toList(),
+                          onAnimeTap: _onAnimeTap,
+                        ),
+                      ),
+                    ),
+                    Gaps.p12,
+                    Row(
+                      children: [
+                        FilledButton.icon(
+                          onPressed: cannotExportThumbnails ? null : _exportThumbnails,
+                          icon: LoadingIcon(Icons.collections, loading: _exportingThumbnails),
+                          label: Text(_exportingThumbnails //
+                              ? context.loc.anime_tierlist_exportingThumbnails
+                              : context.loc.anime_tierlist_exportThumbnails),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
             ),
-            Gaps.p12,
-            Row(
-              children: [
-                FilledButton.icon(
-                  onPressed: cannotExportThumbnails ? null : _exportThumbnails,
-                  icon: LoadingIcon(Icons.collections, loading: _exportingThumbnails),
-                  label: Text(_exportingThumbnails //
-                      ? context.loc.anime_tierlist_exportingThumbnails
-                      : context.loc.anime_tierlist_exportThumbnails),
-                ),
-              ],
-            )
           ],
         ),
       ),

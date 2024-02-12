@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:anitierlist/styles.dart';
+import 'package:flutter/material.dart';
 
 class InfoLabel extends StatelessWidget {
   const InfoLabel({

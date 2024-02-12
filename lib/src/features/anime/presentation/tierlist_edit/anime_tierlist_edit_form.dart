@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:anitierlist/src/features/anime/domain/anime.dart';
 import 'package:anitierlist/src/l10n/app_localizations.dart';
 import 'package:anitierlist/src/widgets/info_label.dart';
 import 'package:anitierlist/styles.dart';
+import 'package:flutter/material.dart';
 
 class AnimeTierListEditFormData {
   const AnimeTierListEditFormData({

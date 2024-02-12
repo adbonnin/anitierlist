@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:anitierlist/src/features/anime/domain/anime.dart';
 import 'package:anitierlist/src/features/anime/domain/anime_preference.dart';
 import 'package:anitierlist/src/features/anime/presentation/tierlist_edit/anime_tierlist_edit_form.dart';
 import 'package:anitierlist/src/l10n/app_localizations.dart';
+import 'package:flutter/material.dart';
 
 Future<AnimePreference?> showAnimeTierListEditDialog({
   required BuildContext context,
