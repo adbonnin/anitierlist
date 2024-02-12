@@ -1,12 +1,11 @@
-import 'package:collection/collection.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:anitierlist/src/features/anilist/application/anilist_service.dart';
 import 'package:anitierlist/src/features/anilist/data/browse_anime.graphql.dart';
 import 'package:anitierlist/src/features/anilist/data/schema.graphql.dart';
 import 'package:anitierlist/src/features/anime/domain/anime.dart';
-import 'package:anitierlist/src/features/anime/domain/anime_season.dart';
 import 'package:anitierlist/src/utils/iterable_extensions.dart';
 import 'package:anitierlist/src/utils/season.dart';
+import 'package:collection/collection.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'anime_service.g.dart';
@@ -21,7 +20,7 @@ class AnimeService {
 
   final Ref ref;
 
-  Future<AnimeSeason> browseAnime(int year, Season season) async {
+  Future<List<Anime>> browseAnime(int year, Season season) async {
     final anilistService = ref.read(anilistServiceProvider);
 
     final anime = (await anilistService.browseAnime(year: year, season: season)) //
@@ -29,35 +28,24 @@ class AnimeService {
         .whereNotNull();
 
     final leftovers = (await anilistService.browseLeftovers(year: year, season: season)) //
-        .map((m) => m.toAnime())
+        .map((m) => m.toAnime(leftover: true))
         .whereNotNull();
 
-    final leftoversWithoutSpecials = leftovers //
-        .where((a) => a.format != AnimeFormat.ovaOnaSpecial);
-
-    final leftoverSpecials = leftovers //
-        .where((a) => a.format == AnimeFormat.ovaOnaSpecial);
-
-    final allAnime = [anime, leftoverSpecials].flatten();
-
-    return AnimeSeason(
-      tv: allAnime.whereTv().toList(),
-      tvShort: allAnime.whereTvShort().toList(),
-      leftovers: leftoversWithoutSpecials.toList(),
-      movie: allAnime.whereMovie().toList(),
-      ovaOnaSpecial: allAnime.whereOvaOnaSpecial().toList(),
-    );
+    return [anime, leftovers] //
+        .flatten()
+        .sorted((a, b) => a.format.toIndex() - b.format.toIndex())
+        .toList();
   }
 }
 
 @riverpod
-Future<AnimeSeason> browseAnime(BrowseAnimeRef ref, int year, Season season) {
+Future<List<Anime>> browseAnime(BrowseAnimeRef ref, int year, Season season) {
   final service = ref.read(animeServiceProvider);
   return service.browseAnime(year, season);
 }
 
 extension _MediaExtension on Query$BrowseAnime$Page$media {
-  Anime? toAnime() {
+  Anime? toAnime({bool leftover = false}) {
     final animeFormat = format?.toMediaFormat();
 
     if (animeFormat == null) {
@@ -70,7 +58,7 @@ extension _MediaExtension on Query$BrowseAnime$Page$media {
       nativeTitle: title?.native ?? '',
       userPreferredTitle: title?.userPreferred ?? '',
       coverImageMedium: coverImage?.medium,
-      format: animeFormat,
+      format: leftover && animeFormat != AnimeFormat.ovaOnaSpecial ? AnimeFormat.leftover : animeFormat,
     );
   }
 }

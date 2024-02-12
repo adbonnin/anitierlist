@@ -74,8 +74,19 @@ class Anime {
 enum AnimeFormat {
   tv,
   tvShort,
+  leftover,
   movie,
-  ovaOnaSpecial,
+  ovaOnaSpecial;
+
+  int toIndex() {
+    return switch (this) {
+      AnimeFormat.tv => 0,
+      AnimeFormat.tvShort => 1,
+      AnimeFormat.leftover => 2,
+      AnimeFormat.movie => 3,
+      AnimeFormat.ovaOnaSpecial => 4,
+    };
+  }
 }
 
 enum MediaTitle {

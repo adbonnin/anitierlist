@@ -1,79 +1,53 @@
-import 'package:collection/collection.dart';
-import 'package:flutter/material.dart';
 import 'package:anitierlist/src/features/anime/domain/anime.dart';
 import 'package:anitierlist/src/features/anime/presentation/tierlist/anime_tierlist_card.dart';
+import 'package:anitierlist/src/l10n/app_localization_extension.dart';
+import 'package:anitierlist/src/l10n/app_localizations.dart';
 import 'package:anitierlist/src/widgets/widget_to_image.dart';
 import 'package:anitierlist/styles.dart';
+import 'package:flutter/material.dart';
 
-class AnimeTierListGroup extends StatefulWidget {
+class AnimeTierListGroup extends StatelessWidget {
   const AnimeTierListGroup({
     super.key,
-    required this.groupText,
-    required this.anime,
-    required this.onItemTap,
+    required this.format,
+    required this.animeImageControllers,
+    required this.onAnimeTap,
   });
 
-  final String groupText;
-  final List<Anime> anime;
-  final ValueChanged<Anime> onItemTap;
-
-  @override
-  State<AnimeTierListGroup> createState() => AnimeTierListGroupState();
-}
-
-class AnimeTierListGroupState extends State<AnimeTierListGroup> {
-  late List<WidgetToImageController> imageControllers;
-
-  @override
-  void initState() {
-    super.initState();
-    imageControllers = List.generate(widget.anime.length, (_) => WidgetToImageController());
-  }
-
-  @override
-  void didUpdateWidget(AnimeTierListGroup oldWidget) {
-    super.didUpdateWidget(oldWidget);
-
-    if (widget.anime.length != oldWidget.anime.length) {
-      imageControllers = List.generate(widget.anime.length, (_) => WidgetToImageController());
-    }
-  }
-
-  @override
-  void dispose() {
-    imageControllers = [];
-    super.dispose();
-  }
+  final AnimeFormat format;
+  final List<(Anime, WidgetToImageController)> animeImageControllers;
+  final ValueChanged<Anime> onAnimeTap;
 
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
 
     return Column(
+      mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Text(
-          widget.groupText,
+          context.loc.animeFormat(format),
           style: textTheme.headlineSmall,
         ),
         Gaps.p6,
         Wrap(
           spacing: Insets.p6,
           runSpacing: Insets.p6,
-          children: widget.anime //
-              .mapIndexed(_buildItem)
+          children: animeImageControllers //
+              .map((e) => _buildItem(e.$1, e.$2))
               .toList(),
         ),
       ],
     );
   }
 
-  Widget _buildItem(int index, Anime anime) {
+  Widget _buildItem(Anime anime, WidgetToImageController imageController) {
     return WidgetToImage(
-      controller: imageControllers[index],
+      controller: imageController,
       child: AnimeTierListCard(
         anime,
-        onTap: () => widget.onItemTap(anime),
+        onTap: () => onAnimeTap(anime),
       ),
     );
   }

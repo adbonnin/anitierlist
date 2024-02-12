@@ -1,21 +1,14 @@
 import 'dart:io';
 import 'dart:math';
 
-import 'package:archive/archive.dart';
-import 'package:collection/collection.dart';
-import 'package:file_saver/file_saver.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:anitierlist/src/features/anime/application/anime_service.dart';
 import 'package:anitierlist/src/features/anime/domain/anime.dart';
 import 'package:anitierlist/src/features/anime/domain/anime_preference.dart';
-import 'package:anitierlist/src/features/anime/presentation/tierlist/anime_tierlist_group.dart';
+import 'package:anitierlist/src/features/anime/presentation/tierlist/anime_tierlist_group_list.dart';
 import 'package:anitierlist/src/features/anime/presentation/tierlist_edit/anime_tierlist_edit_dialog.dart';
 import 'package:anitierlist/src/l10n/app_localization_extension.dart';
 import 'package:anitierlist/src/l10n/app_localizations.dart';
 import 'package:anitierlist/src/utils/anime.dart';
-import 'package:anitierlist/src/utils/iterable_extensions.dart';
 import 'package:anitierlist/src/utils/number.dart';
 import 'package:anitierlist/src/utils/season.dart';
 import 'package:anitierlist/src/utils/string_extension.dart';
@@ -24,6 +17,12 @@ import 'package:anitierlist/src/widgets/info_label.dart';
 import 'package:anitierlist/src/widgets/loading_icon.dart';
 import 'package:anitierlist/src/widgets/widget_to_image.dart';
 import 'package:anitierlist/styles.dart';
+import 'package:archive/archive.dart';
+import 'package:collection/collection.dart';
+import 'package:file_saver/file_saver.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class AnimeTierListScreen extends ConsumerStatefulWidget {
   const AnimeTierListScreen({super.key});
@@ -33,11 +32,7 @@ class AnimeTierListScreen extends ConsumerStatefulWidget {
 }
 
 class _AnimeTierListScreenState extends ConsumerState<AnimeTierListScreen> {
-  final _tvKey = GlobalKey<AnimeTierListGroupState>();
-  final _tvShortKey = GlobalKey<AnimeTierListGroupState>();
-  final _leftoverKey = GlobalKey<AnimeTierListGroupState>();
-  final _movieKey = GlobalKey<AnimeTierListGroupState>();
-  final _ovaOnaSpecialKey = GlobalKey<AnimeTierListGroupState>();
+  final _groupListKey = GlobalKey<AnimeTierListGroupListState>();
 
   var _exportingThumbnails = false;
 
@@ -102,48 +97,10 @@ class _AnimeTierListScreenState extends ConsumerState<AnimeTierListScreen> {
               child: AsyncValueWidget(
                 asyncSeason,
                 data: (season) => SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      if (season.tv.isNotEmpty)
-                        AnimeTierListGroup(
-                          key: _tvKey,
-                          groupText: context.loc.anime_tierlist_tv,
-                          anime: season.tv.map(_applyPreference).toList(),
-                          onItemTap: _onItemTap,
-                        ),
-                      if (season.tvShort.isNotEmpty)
-                        AnimeTierListGroup(
-                          key: _tvShortKey,
-                          groupText: context.loc.anime_tierlist_tvShort,
-                          anime: season.tvShort.map(_applyPreference).toList(),
-                          onItemTap: _onItemTap,
-                        ),
-                      if (season.leftovers.isNotEmpty)
-                        AnimeTierListGroup(
-                          key: _leftoverKey,
-                          groupText: context.loc.anime_tierlist_leftover,
-                          anime: season.leftovers.map(_applyPreference).toList(),
-                          onItemTap: _onItemTap,
-                        ),
-                      if (season.movie.isNotEmpty)
-                        AnimeTierListGroup(
-                          key: _movieKey,
-                          groupText: context.loc.anime_tierlist_movie,
-                          anime: season.movie.map(_applyPreference).toList(),
-                          onItemTap: _onItemTap,
-                        ),
-                      if (season.ovaOnaSpecial.isNotEmpty)
-                        AnimeTierListGroup(
-                          key: _ovaOnaSpecialKey,
-                          groupText: context.loc.anime_tierlist_ovaOnaSpecial,
-                          anime: season.ovaOnaSpecial.map(_applyPreference).toList(),
-                          onItemTap: _onItemTap,
-                        ),
-                    ] //
-                        .intersperse((_, __) => Gaps.p18)
-                        .toList(),
+                  child: AnimeTierListGroupList(
+                    key: _groupListKey,
+                    anime: season.map(_applyPreference).toList(),
+                    onAnimeTap: _onAnimeTap,
                   ),
                 ),
               ),
@@ -152,7 +109,7 @@ class _AnimeTierListScreenState extends ConsumerState<AnimeTierListScreen> {
             Row(
               children: [
                 FilledButton.icon(
-                  onPressed: cannotExportThumbnails ? null : () => _exportThumbnails(context),
+                  onPressed: cannotExportThumbnails ? null : _exportThumbnails,
                   icon: LoadingIcon(Icons.collections, loading: _exportingThumbnails),
                   label: Text(_exportingThumbnails //
                       ? context.loc.anime_tierlist_exportingThumbnails
@@ -196,7 +153,7 @@ class _AnimeTierListScreenState extends ConsumerState<AnimeTierListScreen> {
     );
   }
 
-  Future<void> _onItemTap(Anime anime) async {
+  Future<void> _onAnimeTap(Anime anime) async {
     final updatedPreference = await showAnimeTierListEditDialog(
       context: context,
       anime: anime,
@@ -229,7 +186,7 @@ class _AnimeTierListScreenState extends ConsumerState<AnimeTierListScreen> {
     return anime;
   }
 
-  Future<void> _exportThumbnails(BuildContext context) async {
+  Future<void> _exportThumbnails() async {
     setState(() {
       _exportingThumbnails = true;
     });
@@ -275,33 +232,21 @@ class _AnimeTierListScreenState extends ConsumerState<AnimeTierListScreen> {
 
   Future<Uint8List> _buildZip() async {
     final archive = Archive();
+    final loc = context.loc;
 
-    final keys = [
-      _tvKey,
-      _tvShortKey,
-      _leftoverKey,
-      _movieKey,
-      _ovaOnaSpecialKey,
-    ];
-
-    final total = keys //
-        .map<int>((key) => key.currentState?.imageControllers.length ?? 0)
-        .sum;
+    final animeByFormat = _groupListKey.currentState?.buildAnimeByFormat() ?? {};
+    final total = animeByFormat.values.map((list) => list.length).sum;
 
     var offset = 1;
 
-    for (final keys in keys) {
-      final currentState = keys.currentState;
+    for (final etr in animeByFormat.entries) {
+      final format = etr.key;
+      final imageControllers = etr.value.map((e) => e.$2).toList();
 
-      if (currentState == null) {
-        continue;
-      }
-
-      final groupText = currentState.widget.groupText //
+      final groupText = loc //
+          .animeFormat(format)
           .removeSpecialCharacters()
           .removeMultipleSpace();
-
-      final imageControllers = currentState.imageControllers;
 
       await _addCapturesToArchive(archive, total, offset, groupText, imageControllers);
       offset += imageControllers.length;

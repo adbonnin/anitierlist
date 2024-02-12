@@ -1,10 +1,10 @@
-import 'package:collection/collection.dart';
-import 'package:graphql/client.dart';
 import 'package:anitierlist/src/features/anilist/data/browse_anime.graphql.dart';
 import 'package:anitierlist/src/features/anilist/data/schema.graphql.dart';
 import 'package:anitierlist/src/utils/anime.dart';
 import 'package:anitierlist/src/utils/iterable_extensions.dart';
 import 'package:anitierlist/src/utils/season.dart';
+import 'package:collection/collection.dart';
+import 'package:graphql/client.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'anilist_service.g.dart';
@@ -31,14 +31,14 @@ class AnilistService {
     return browseAnime(
       year: season.previousAnimeYear(year),
       season: season.previous,
-      episodeGreeter: 16,
+      episodeGreater: 16,
     );
   }
 
   Future<Iterable<Query$BrowseAnime$Page$media>> browseAnime({
     int? year,
     Season? season,
-    int? episodeGreeter,
+    int? episodeGreater,
   }) async {
     final pages = <Iterable<Query$BrowseAnime$Page$media>>[];
     bool hasNextPage = true;
@@ -50,7 +50,7 @@ class AnilistService {
             page: pages.length + 1,
             seasonYear: year,
             season: season?.toEnum$MediaSeason(),
-            episodeGreater: episodeGreeter,
+            episodeGreater: episodeGreater,
           ),
         ),
       );
