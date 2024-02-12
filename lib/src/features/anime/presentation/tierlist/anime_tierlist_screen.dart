@@ -16,6 +16,7 @@ import 'package:anitierlist/src/utils/string_extension.dart';
 import 'package:anitierlist/src/widgets/async_value_widget.dart';
 import 'package:anitierlist/src/widgets/info_label.dart';
 import 'package:anitierlist/src/widgets/loading_icon.dart';
+import 'package:anitierlist/src/widgets/main_scaffold.dart';
 import 'package:anitierlist/src/widgets/screenshot.dart';
 import 'package:anitierlist/styles.dart';
 import 'package:archive/archive.dart';
@@ -51,81 +52,85 @@ class _AnimeTierListScreenState extends ConsumerState<AnimeTierListScreen> {
     final asyncAnime = ref.watch(browseAnimeProvider(_year, _season));
     final cannotExportThumbnails = !asyncAnime.hasValue || asyncAnime.isLoading || _exportingThumbnails;
 
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(Insets.p16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: InfoLabel(
-                    labelText: context.loc.anime_tierlist_year,
-                    child: DropdownButtonFormField(
-                      value: _year,
-                      items: years //
-                          .map(_buildYear)
-                          .toList(),
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                      ),
-                      onChanged: _onYearChanged,
+    return MainScaffold(
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: InfoLabel(
+                  labelText: context.loc.anime_tierlist_year,
+                  child: DropdownButtonFormField(
+                    value: _year,
+                    items: years //
+                        .map(_buildYear)
+                        .toList(),
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
                     ),
+                    onChanged: _onYearChanged,
                   ),
                 ),
-                Gaps.p8,
-                Expanded(
-                  child: InfoLabel(
-                    labelText: context.loc.anime_tierlist_season,
-                    child: DropdownButtonFormField(
-                      value: _season,
-                      items: Season.values //
-                          .sorted(animeSeasonComparator)
-                          .map(_buildSeason)
-                          .toList(),
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                      ),
-                      onChanged: _onSeasonChanged,
+              ),
+              Gaps.p8,
+              Expanded(
+                child: InfoLabel(
+                  labelText: context.loc.anime_tierlist_season,
+                  child: DropdownButtonFormField(
+                    value: _season,
+                    items: Season.values //
+                        .sorted(animeSeasonComparator)
+                        .map(_buildSeason)
+                        .toList(),
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
                     ),
+                    onChanged: _onSeasonChanged,
                   ),
                 ),
-              ],
-            ),
-            Gaps.p12,
-            Expanded(
-              child: AsyncValueWidget(
-                asyncAnime,
-                data: (anime) => Column(
-                  children: [
-                    Expanded(
-                      child: SingleChildScrollView(
-                        child: AnimeTierListGroupList(
-                          key: _groupListKey,
-                          anime: anime.map(_applyPreference).toList(),
-                          onAnimeTap: _onAnimeTap,
+              ),
+            ],
+          ),
+          Gaps.p16,
+          Expanded(
+            child: AsyncValueWidget(
+              asyncAnime,
+              data: (anime) => Card(
+                color: Colors.white,
+                margin: EdgeInsets.zero,
+                child: Padding(
+                  padding: const EdgeInsets.all(Insets.p16),
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: SingleChildScrollView(
+                          child: AnimeTierListGroupList(
+                            key: _groupListKey,
+                            anime: anime.map(_applyPreference).toList(),
+                            onAnimeTap: _onAnimeTap,
+                          ),
                         ),
                       ),
-                    ),
-                    Gaps.p12,
-                    Row(
-                      children: [
-                        FilledButton.icon(
-                          onPressed: cannotExportThumbnails ? null : _exportThumbnails,
-                          icon: LoadingIcon(Icons.collections, loading: _exportingThumbnails),
-                          label: Text(_exportingThumbnails //
-                              ? context.loc.anime_tierlist_exportingThumbnails
-                              : context.loc.anime_tierlist_exportThumbnails),
-                        ),
-                      ],
-                    ),
-                  ],
+                      Gaps.p12,
+                      Row(
+                        children: [
+                          FilledButton.icon(
+                            onPressed: cannotExportThumbnails ? null : _exportThumbnails,
+                            icon: LoadingIcon(Icons.collections, loading: _exportingThumbnails),
+                            label: Text(_exportingThumbnails //
+                                ? context.loc.anime_tierlist_exportingThumbnails
+                                : context.loc.anime_tierlist_exportThumbnails),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
