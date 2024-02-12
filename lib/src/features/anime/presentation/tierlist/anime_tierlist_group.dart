@@ -2,7 +2,7 @@ import 'package:anitierlist/src/features/anime/domain/anime.dart';
 import 'package:anitierlist/src/features/anime/presentation/tierlist/anime_tierlist_card.dart';
 import 'package:anitierlist/src/l10n/app_localization_extension.dart';
 import 'package:anitierlist/src/l10n/app_localizations.dart';
-import 'package:anitierlist/src/widgets/widget_to_image.dart';
+import 'package:anitierlist/src/widgets/screenshot.dart';
 import 'package:anitierlist/styles.dart';
 import 'package:flutter/material.dart';
 
@@ -10,12 +10,12 @@ class AnimeTierListGroup extends StatelessWidget {
   const AnimeTierListGroup({
     super.key,
     required this.format,
-    required this.animeImageControllers,
+    required this.animeScreenshots,
     required this.onAnimeTap,
   });
 
   final AnimeFormat format;
-  final List<(Anime, WidgetToImageController)> animeImageControllers;
+  final List<(Anime, ScreenshotController)> animeScreenshots;
   final ValueChanged<Anime> onAnimeTap;
 
   @override
@@ -34,7 +34,7 @@ class AnimeTierListGroup extends StatelessWidget {
         Wrap(
           spacing: Insets.p6,
           runSpacing: Insets.p6,
-          children: animeImageControllers //
+          children: animeScreenshots //
               .map((e) => _buildItem(e.$1, e.$2))
               .toList(),
         ),
@@ -42,9 +42,9 @@ class AnimeTierListGroup extends StatelessWidget {
     );
   }
 
-  Widget _buildItem(Anime anime, WidgetToImageController imageController) {
-    return WidgetToImage(
-      controller: imageController,
+  Widget _buildItem(Anime anime, ScreenshotController screenshotController) {
+    return Screenshot(
+      controller: screenshotController,
       child: AnimeTierListCard(
         anime,
         onTap: () => onAnimeTap(anime),

@@ -9,13 +9,14 @@ import 'package:anitierlist/src/features/anime/presentation/tierlist_edit/anime_
 import 'package:anitierlist/src/l10n/app_localization_extension.dart';
 import 'package:anitierlist/src/l10n/app_localizations.dart';
 import 'package:anitierlist/src/utils/anime.dart';
+import 'package:anitierlist/src/utils/image_extensions.dart';
 import 'package:anitierlist/src/utils/number.dart';
 import 'package:anitierlist/src/utils/season.dart';
 import 'package:anitierlist/src/utils/string_extension.dart';
 import 'package:anitierlist/src/widgets/async_value_widget.dart';
 import 'package:anitierlist/src/widgets/info_label.dart';
 import 'package:anitierlist/src/widgets/loading_icon.dart';
-import 'package:anitierlist/src/widgets/widget_to_image.dart';
+import 'package:anitierlist/src/widgets/screenshot.dart';
 import 'package:anitierlist/styles.dart';
 import 'package:archive/archive.dart';
 import 'package:collection/collection.dart';
@@ -240,7 +241,7 @@ class _AnimeTierListScreenState extends ConsumerState<AnimeTierListScreen> {
     final archive = Archive();
     final loc = context.loc;
 
-    final animeByFormat = _groupListKey.currentState?.buildAnimeByFormat() ?? {};
+    final animeByFormat = _groupListKey.currentState?.buildAnimeScreenshotsByFormat() ?? {};
     final total = animeByFormat.values.map((list) => list.length).sum;
 
     var offset = 1;
@@ -274,16 +275,16 @@ class _AnimeTierListScreenState extends ConsumerState<AnimeTierListScreen> {
     int total,
     int offset,
     String groupText,
-    List<WidgetToImageController> imageControllers,
+    List<ScreenshotController> screenshotControllers,
   ) async {
-    if (imageControllers.isEmpty) {
+    if (screenshotControllers.isEmpty) {
       return;
     }
 
-    final numberFormat = Numbers.numberFormatFromDigits(imageControllers.length);
+    final numberFormat = Numbers.numberFormatFromDigits(screenshotControllers.length);
 
-    for (var i = 0; i < imageControllers.length; i++) {
-      final imageController = imageControllers[i];
+    for (var i = 0; i < screenshotControllers.length; i++) {
+      final imageController = screenshotControllers[i];
       final image = await imageController.capture();
 
       if (image == null) {
@@ -291,11 +292,12 @@ class _AnimeTierListScreenState extends ConsumerState<AnimeTierListScreen> {
       }
 
       final index = numberFormat.format(offset + i);
+      final imageBytes = await image.toByteArray();
 
       final file = ArchiveFile(
         '$index $groupText.png',
-        image.lengthInBytes,
-        image,
+        await imageBytes.lengthInBytes,
+        imageBytes,
       );
 
       archive.addFile(file);
