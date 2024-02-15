@@ -9,13 +9,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: subosito/flutter-action@v1
         with:
           flutter-version: '3.16.9'
-      - run: flutter config --enable-web
-      - run: flutter pub get
-      - run: dart run build_runner build --delete-conflicting-outputs
-      - run: flutter build web --web-renderer canvaskit --release
+
+      - name: Build
+        run: |
+          version="${GITHUB_REF_NAME:1}"
+          build_number=${{github.run_number}}
+          
+          flutter config --enable-web
+          flutter pub get
+          dart run build_runner build --delete-conflicting-outputs
+          flutter build web --web-renderer canvaskit --release --build-name $version --build-number $build_number
+
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
