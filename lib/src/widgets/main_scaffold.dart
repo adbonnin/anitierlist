@@ -14,7 +14,6 @@ class MainScaffold extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Scaffold(
-      backgroundColor: theme.colorScheme.surfaceVariant,
       body: Center(
         child: Container(
           constraints: const BoxConstraints(maxWidth: 1024),

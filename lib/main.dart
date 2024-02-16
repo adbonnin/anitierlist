@@ -49,7 +49,7 @@ class MyApp extends StatelessWidget {
       home: const AnimeTierListScreen(),
       onGenerateTitle: (context) => context.loc.app_title(version),
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
       localizationsDelegates: AppLocalizations.localizationsDelegates,

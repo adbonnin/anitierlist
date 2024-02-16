@@ -97,7 +97,6 @@ class _AnimeTierListScreenState extends ConsumerState<AnimeTierListScreen> {
             child: AsyncValueWidget(
               asyncAnime,
               data: (anime) => Card(
-                color: Colors.white,
                 margin: EdgeInsets.zero,
                 child: Padding(
                   padding: const EdgeInsets.all(Insets.p16),
