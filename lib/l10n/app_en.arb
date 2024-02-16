@@ -5,7 +5,14 @@
     "common_winter": "Winter",
     "common_cancel": "Cancel",
     "common_confirm": "Confirm",
-    "app_title": "AniTierList",
+    "app_title": "AniTierList {version}",
+    "@app_title": {
+        "placeholders": {
+            "version": {
+                "type": "String"
+            }
+        }
+    },
     "anime_title":"Anime",
     "anime_tierlist_year": "Year",
     "anime_tierlist_season": "Season",
