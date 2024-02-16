@@ -11,12 +11,9 @@ class MainScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Scaffold(
       body: Center(
-        child: Container(
-          constraints: const BoxConstraints(maxWidth: 1024),
+        child: Padding(
           padding: const EdgeInsets.symmetric(vertical: Insets.p16, horizontal: Insets.p8),
           child: body,
         ),
