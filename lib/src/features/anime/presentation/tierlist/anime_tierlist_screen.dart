@@ -90,7 +90,7 @@ class _AnimeTierListScreenState extends ConsumerState<AnimeTierListScreen> {
             ),
           ],
         ),
-        Gaps.p16,
+        Gaps.p8,
         Expanded(
           child: AsyncValueWidget(
             asyncAnime,
@@ -114,7 +114,7 @@ class _AnimeTierListScreenState extends ConsumerState<AnimeTierListScreen> {
                       children: [
                         FilledButton.icon(
                           onPressed: cannotExportThumbnails ? null : _exportThumbnails,
-                          icon: LoadingIcon(Icons.collections, loading: _exportingThumbnails),
+                          icon: LoadingIcon(Icons.file_download, loading: _exportingThumbnails),
                           label: Text(_exportingThumbnails //
                               ? context.loc.anime_tierlist_exportingThumbnails
                               : context.loc.anime_tierlist_exportThumbnails),

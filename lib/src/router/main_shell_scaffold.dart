@@ -34,7 +34,7 @@ class MainShellScaffold extends StatelessWidget {
           ),
         ],
         body: (_) => Padding(
-          padding: const EdgeInsets.all(Insets.p16),
+          padding: const EdgeInsets.all(Insets.p8),
           child: navigationShell,
         ),
         useDrawer: false,
