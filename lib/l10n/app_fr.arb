@@ -6,13 +6,8 @@
     "common_cancel": "Annuler",
     "common_confirm": "Confirmer",
     "app_title": "AniTierList {version}",
-    "@app_title": {
-        "placeholders": {
-            "version": {
-                "type": "String"
-            }
-        }
-    },
+    "anilist_title": "AniList",
+    "characters_title": "Personnages",
     "anime_title":"Anime",
     "anime_tierlist_year": "Année",
     "anime_tierlist_season": "Saison",

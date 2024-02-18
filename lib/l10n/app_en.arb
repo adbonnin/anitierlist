@@ -13,6 +13,8 @@
             }
         }
     },
+    "anilist_title": "AniList",
+    "characters_title": "Characters",
     "anime_title":"Anime",
     "anime_tierlist_year": "Year",
     "anime_tierlist_season": "Season",

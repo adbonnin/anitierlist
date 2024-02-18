@@ -1,8 +1,8 @@
 import 'dart:ui';
 
 import 'package:anitierlist/firebase_options.dart';
-import 'package:anitierlist/src/features/anime/presentation/tierlist/anime_tierlist_screen.dart';
 import 'package:anitierlist/src/l10n/app_localizations.dart';
+import 'package:anitierlist/src/router/router.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +35,7 @@ Future<void> main() async {
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({
     super.key,
     this.version = '',
@@ -44,9 +44,11 @@ class MyApp extends StatelessWidget {
   final String version;
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: const AnimeTierListScreen(),
+  Widget build(BuildContext context, WidgetRef ref) {
+    final router = ref.watch(routerProvider);
+
+    return MaterialApp.router(
+      routerConfig: router,
       onGenerateTitle: (context) => context.loc.app_title(version),
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
