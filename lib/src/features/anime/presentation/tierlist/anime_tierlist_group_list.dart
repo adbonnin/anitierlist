@@ -1,4 +1,5 @@
 import 'package:anitierlist/src/features/anime/domain/anime.dart';
+import 'package:anitierlist/src/features/anime/presentation/tierlist/anime_tierlist_card.dart';
 import 'package:anitierlist/src/features/anime/presentation/tierlist/anime_tierlist_group.dart';
 import 'package:anitierlist/src/utils/iterable_extensions.dart';
 import 'package:anitierlist/src/widgets/screenshot.dart';
@@ -68,8 +69,17 @@ class AnimeTierListGroupListState extends State<AnimeTierListGroupList> {
   Widget _build(AnimeFormat format, List<(Anime, ScreenshotController)> animeScreenshots) {
     return AnimeTierListGroup(
       format: format,
-      animeScreenshots: animeScreenshots,
-      onAnimeTap: widget.onAnimeTap,
+      children: animeScreenshots.map(_buildItem).toList(),
+    );
+  }
+
+  Widget _buildItem((Anime, ScreenshotController) animeScreenshot) {
+    return Screenshot(
+      controller: animeScreenshot.$2,
+      child: AnimeTierListCard(
+        animeScreenshot.$1,
+        onTap: () => widget.onAnimeTap(animeScreenshot.$1),
+      ),
     );
   }
 }
