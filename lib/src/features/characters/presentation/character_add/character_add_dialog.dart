@@ -70,9 +70,13 @@ class _CharacterAddDialogState extends State<CharacterAddDialog> {
             TextField(
               focusNode: _searchFocusNode,
               controller: _searchController,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.search),
+              decoration: InputDecoration(
+                border: const OutlineInputBorder(),
+                prefixIcon: const Icon(Icons.search),
+                suffixIcon: IconButton(
+                  onPressed: _onErasePressed,
+                  icon: const Icon(Icons.close),
+                ),
               ),
             ),
             Gaps.p8,
@@ -100,6 +104,11 @@ class _CharacterAddDialogState extends State<CharacterAddDialog> {
     setState(() {
       _search = _searchController.text.trim();
     });
+  }
+
+  void _onErasePressed() {
+    _searchController.text = '';
+    _searchFocusNode.requestFocus();
   }
 
   void _onClosePressed() {
