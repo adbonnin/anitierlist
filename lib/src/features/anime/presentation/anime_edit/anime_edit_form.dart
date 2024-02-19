@@ -1,11 +1,12 @@
 import 'package:anitierlist/src/features/anime/domain/anime.dart';
 import 'package:anitierlist/src/l10n/app_localizations.dart';
+import 'package:anitierlist/src/widgets/expanded_radio_list_tile.dart';
 import 'package:anitierlist/src/widgets/info_label.dart';
 import 'package:anitierlist/styles.dart';
 import 'package:flutter/material.dart';
 
-class AnimeTierListEditFormData {
-  const AnimeTierListEditFormData({
+class AnimeEditFormData {
+  const AnimeEditFormData({
     required this.userSelectedTitle,
     required this.customTitle,
   });
@@ -14,8 +15,8 @@ class AnimeTierListEditFormData {
   final String customTitle;
 }
 
-class AnimeTierListEditForm extends StatefulWidget {
-  const AnimeTierListEditForm({
+class AnimeEditForm extends StatefulWidget {
+  const AnimeEditForm({
     super.key,
     required this.anime,
   });
@@ -23,10 +24,10 @@ class AnimeTierListEditForm extends StatefulWidget {
   final Anime anime;
 
   @override
-  State<AnimeTierListEditForm> createState() => AnimeTierListEditFormState();
+  State<AnimeEditForm> createState() => AnimeEditFormState();
 }
 
-class AnimeTierListEditFormState extends State<AnimeTierListEditForm> {
+class AnimeEditFormState extends State<AnimeEditForm> {
   final _customTitleController = TextEditingController();
   final _customTitleFocusNode = FocusNode();
 
@@ -55,11 +56,11 @@ class AnimeTierListEditFormState extends State<AnimeTierListEditForm> {
           mainAxisSize: MainAxisSize.min,
           children: [
             if (widget.anime.englishTitle.isNotEmpty)
-              AnimeTiersListTitleRadioListTile(
+              ExpandedRadioListTile(
                 value: MediaTitle.english,
                 groupValue: _userSelectedTitle,
                 onChanged: _onUserSelectedTitleChanged,
-                titleText: context.loc.anime_title_english,
+                title: Text(context.loc.anime_title_english),
                 subtitle: Text(
                   widget.anime.englishTitle,
                   maxLines: null,
@@ -67,11 +68,11 @@ class AnimeTierListEditFormState extends State<AnimeTierListEditForm> {
                 onCopyPressed: () => _onCopyPressed(widget.anime.englishTitle),
               ),
             if (widget.anime.nativeTitle.isNotEmpty)
-              AnimeTiersListTitleRadioListTile(
+              ExpandedRadioListTile(
                 value: MediaTitle.native,
                 groupValue: _userSelectedTitle,
                 onChanged: _onUserSelectedTitleChanged,
-                titleText: context.loc.anime_title_native,
+                title: Text(context.loc.anime_title_native),
                 subtitle: Text(
                   widget.anime.nativeTitle,
                   maxLines: null,
@@ -79,22 +80,22 @@ class AnimeTierListEditFormState extends State<AnimeTierListEditForm> {
                 onCopyPressed: () => _onCopyPressed(widget.anime.nativeTitle),
               ),
             if (widget.anime.userPreferredTitle.isNotEmpty)
-              AnimeTiersListTitleRadioListTile(
+              ExpandedRadioListTile(
                 value: MediaTitle.userPreferred,
                 groupValue: _userSelectedTitle,
                 onChanged: _onUserSelectedTitleChanged,
-                titleText: context.loc.anime_title_userPreferred,
+                title: Text(context.loc.anime_title_userPreferred),
                 subtitle: Text(
                   widget.anime.userPreferredTitle,
                   maxLines: null,
                 ),
                 onCopyPressed: () => _onCopyPressed(widget.anime.userPreferredTitle),
               ),
-            AnimeTiersListTitleRadioListTile(
+            ExpandedRadioListTile(
               value: MediaTitle.custom,
               groupValue: _userSelectedTitle,
               onChanged: _onUserSelectedTitleChanged,
-              titleText: context.loc.anime_title_custom,
+              title: Text(context.loc.anime_title_custom),
               subtitle: Padding(
                 padding: const EdgeInsets.only(top: Insets.p2),
                 child: TextFormField(
@@ -141,58 +142,10 @@ class AnimeTierListEditFormState extends State<AnimeTierListEditForm> {
     });
   }
 
-  AnimeTierListEditFormData value() {
-    return AnimeTierListEditFormData(
+  AnimeEditFormData value() {
+    return AnimeEditFormData(
       userSelectedTitle: _userSelectedTitle,
       customTitle: _customTitleController.text,
-    );
-  }
-}
-
-class AnimeTiersListTitleRadioListTile<T> extends StatelessWidget {
-  const AnimeTiersListTitleRadioListTile({
-    super.key,
-    required this.value,
-    this.groupValue,
-    this.onChanged,
-    this.onCopyPressed,
-    required this.titleText,
-    required this.subtitle,
-  });
-
-  final T value;
-  final T? groupValue;
-  final ValueChanged<T?>? onChanged;
-  final VoidCallback? onCopyPressed;
-  final String titleText;
-  final Widget subtitle;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: RadioListTile<T>(
-            value: value,
-            groupValue: groupValue,
-            onChanged: onChanged,
-            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            title: Text(titleText),
-            subtitle: subtitle,
-            dense: true,
-            visualDensity: const VisualDensity(
-              vertical: VisualDensity.minimumDensity,
-            ),
-          ),
-        ),
-        if (onCopyPressed != null) ...[
-          Gaps.p6,
-          IconButton.outlined(
-            onPressed: onCopyPressed,
-            icon: const Icon(Icons.keyboard_arrow_down),
-          ),
-        ],
-      ],
     );
   }
 }

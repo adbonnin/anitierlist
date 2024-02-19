@@ -12,13 +12,27 @@ extension AppLocalizationsExtension on AppLocalizations {
     };
   }
 
-  String animeFormat(AnimeFormat value) {
-    return switch (value) {
-      AnimeFormat.tv => anime_tierlist_tv,
-      AnimeFormat.tvShort => anime_tierlist_tvShort,
-      AnimeFormat.leftover => anime_tierlist_leftover,
-      AnimeFormat.movie => anime_tierlist_movie,
-      AnimeFormat.ovaOnaSpecial => anime_tierlist_ovaOnaSpecial,
-    };
+  String animeGroup(String value) {
+    if (value == AnimeFormat.tv.name) {
+      return anime_tierlist_tv;
+    }
+
+    if (value == AnimeFormat.tvShort.name) {
+      return anime_tierlist_tvShort;
+    }
+
+    if (value == AnimeFormat.leftover.name) {
+      return anime_tierlist_leftover;
+    }
+
+    if (value == AnimeFormat.movie.name) {
+      return anime_tierlist_movie;
+    }
+
+    if (value == AnimeFormat.ovaOnaSpecial.name) {
+      return anime_tierlist_ovaOnaSpecial;
+    }
+
+    return '';
   }
 }

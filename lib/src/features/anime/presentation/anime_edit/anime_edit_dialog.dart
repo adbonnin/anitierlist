@@ -1,11 +1,11 @@
 import 'package:anitierlist/src/features/anime/domain/anime.dart';
 import 'package:anitierlist/src/features/anime/domain/anime_preference.dart';
-import 'package:anitierlist/src/features/anime/presentation/tierlist_edit/anime_tierlist_edit_form.dart';
+import 'package:anitierlist/src/features/anime/presentation/anime_edit/anime_edit_form.dart';
 import 'package:anitierlist/src/l10n/app_localizations.dart';
 import 'package:anitierlist/styles.dart';
 import 'package:flutter/material.dart';
 
-Future<AnimePreference?> showAnimeTierListEditDialog({
+Future<AnimePreference?> showAnimeEditDialog({
   required BuildContext context,
   required Anime anime,
   bool barrierDismissible = true,
@@ -21,7 +21,7 @@ Future<AnimePreference?> showAnimeTierListEditDialog({
     barrierColor: barrierColor,
     barrierLabel: barrierLabel,
     useRootNavigator: useRootNavigator,
-    builder: (_) => AnimeTierListEditDialog(
+    builder: (_) => AnimeEditDialog(
       anime: anime,
     ),
     routeSettings: routeSettings,
@@ -29,8 +29,8 @@ Future<AnimePreference?> showAnimeTierListEditDialog({
   );
 }
 
-class AnimeTierListEditDialog extends StatefulWidget {
-  const AnimeTierListEditDialog({
+class AnimeEditDialog extends StatefulWidget {
+  const AnimeEditDialog({
     super.key,
     required this.anime,
   });
@@ -38,11 +38,11 @@ class AnimeTierListEditDialog extends StatefulWidget {
   final Anime anime;
 
   @override
-  State<AnimeTierListEditDialog> createState() => _AnimeTierListEditDialogState();
+  State<AnimeEditDialog> createState() => _AnimeEditDialogState();
 }
 
-class _AnimeTierListEditDialogState extends State<AnimeTierListEditDialog> {
-  final _formKey = GlobalKey<AnimeTierListEditFormState>();
+class _AnimeEditDialogState extends State<AnimeEditDialog> {
+  final _formKey = GlobalKey<AnimeEditFormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +50,7 @@ class _AnimeTierListEditDialogState extends State<AnimeTierListEditDialog> {
       title: Text(context.loc.anime_tierlist_edit_title),
       content: SizedBox(
         width: Sizes.dialogMinWidth,
-        child: AnimeTierListEditForm(
+        child: AnimeEditForm(
           key: _formKey,
           anime: widget.anime,
         ),

@@ -1,5 +1,5 @@
-import 'package:anitierlist/src/features/anime/presentation/tierlist/anime_tierlist_screen.dart';
 import 'package:anitierlist/src/features/characters/presentation/character_list/character_list_screen.dart';
+import 'package:anitierlist/src/features/anime/presentation/anime_list/anime_list_screen.dart';
 import 'package:anitierlist/src/router/main_shell_scaffold.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
@@ -63,7 +63,7 @@ class AnimeRouteData extends GoRouteData {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return const AnimeTierListScreen();
+    return const AnimeListScreen();
   }
 }
 

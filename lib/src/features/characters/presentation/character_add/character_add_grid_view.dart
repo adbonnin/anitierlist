@@ -1,6 +1,7 @@
 import 'package:anitierlist/src/features/anilist/application/anilist_service.dart';
 import 'package:anitierlist/src/features/anilist/data/browse_characters.graphql.dart';
-import 'package:anitierlist/src/features/anime/presentation/tierlist/anime_tierlist_card.dart';
+import 'package:anitierlist/src/features/tierlist/domain/tierlist.dart';
+import 'package:anitierlist/src/features/tierlist/presentation/tierlist_list/tierlist_card.dart';
 import 'package:anitierlist/src/widgets/sized_paged_grid_view.dart';
 import 'package:anitierlist/styles.dart';
 import 'package:collection/collection.dart';
@@ -51,8 +52,8 @@ class _CharacterSearchGridViewState extends ConsumerState<CharacterAddGridView> 
   Widget build(BuildContext context) {
     return SizedPagedGridView(
       itemBuilder: _buildItem,
-      itemWidth: AnimeTierListCard.width,
-      itemHeight: AnimeTierListCard.height,
+      itemWidth: TierListCard.width,
+      itemHeight: TierListCard.height,
       mainAxisSpacing: Insets.p6,
       crossAxisSpacing: Insets.p6,
       pagingController: _pagingController,
@@ -95,9 +96,14 @@ class _CharacterSearchGridViewState extends ConsumerState<CharacterAddGridView> 
   }
 
   Widget _buildItem(BuildContext context, Query$BrowseCharacters$Page$characters item, int index) {
-    return AnimeTierListCard(
+    final tierList = TierList(
+      id: item.id,
       title: item.name?.userPreferred ?? '',
       cover: item.image?.medium,
+    );
+
+    return TierListCard(
+      tierList: tierList,
       onTap: () => widget.onCharacterTap(item),
     );
   }

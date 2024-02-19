@@ -1,21 +1,20 @@
-import 'package:anitierlist/src/features/anime/presentation/cover_image.dart';
+import 'package:anitierlist/src/widgets/cover_image.dart';
+import 'package:anitierlist/src/features/tierlist/domain/tierlist.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class AnimeTierListCard extends StatelessWidget {
-  const AnimeTierListCard({
+class TierListCard extends StatelessWidget {
+  const TierListCard({
     super.key,
-    required this.title,
-    required this.cover,
+    required this.tierList,
     this.onTap,
   });
 
   static const double width = 80;
   static const double height = 120;
 
-  final String title;
-  final String? cover;
+  final TierList tierList;
   final VoidCallback? onTap;
 
   @override
@@ -28,7 +27,7 @@ class AnimeTierListCard extends StatelessWidget {
         child: Stack(
           children: [
             Positioned.fill(
-              child: CoverImage(image: cover),
+              child: CoverImage(image: tierList.cover),
             ),
             Positioned(
               left: 0,
@@ -38,7 +37,7 @@ class AnimeTierListCard extends StatelessWidget {
                 color: const Color(0xE6292929),
                 padding: const EdgeInsets.fromLTRB(4, 3, 4, 2),
                 child: AutoSizeText(
-                  title,
+                  tierList.title,
                   style: GoogleFonts.overpass(
                     color: Colors.white,
                     height: 0,
