@@ -84,7 +84,7 @@ class _CharacterAddDialogState extends State<CharacterAddDialog> {
               child: ScrollShadow(
                 child: CharacterAddGridView(
                   search: _search,
-                  onCharacterTap: widget.onCharacterTap,
+                  onCharacterTap: _onCharacterTap,
                 ),
               ),
             ),
@@ -108,6 +108,11 @@ class _CharacterAddDialogState extends State<CharacterAddDialog> {
 
   void _onErasePressed() {
     _searchController.text = '';
+    _searchFocusNode.requestFocus();
+  }
+
+  void _onCharacterTap(Character character) {
+    widget.onCharacterTap(character);
     _searchFocusNode.requestFocus();
   }
 
