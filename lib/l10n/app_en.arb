@@ -5,6 +5,7 @@
     "common_winter": "Winter",
     "common_cancel": "Cancel",
     "common_confirm": "Confirm",
+    "common_close": "Close",
     "app_title": "AniTierList {version}",
     "@app_title": {
         "placeholders": {
@@ -15,6 +16,7 @@
     },
     "anilist_title": "AniList",
     "characters_title": "Characters",
+    "characters_add_title": "Add characters",
     "anime_title":"Anime",
     "anime_tierlist_year": "Year",
     "anime_tierlist_season": "Season",

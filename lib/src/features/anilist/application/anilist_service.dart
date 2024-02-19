@@ -1,4 +1,5 @@
 import 'package:anitierlist/src/features/anilist/data/browse_anime.graphql.dart';
+import 'package:anitierlist/src/features/anilist/data/browse_characters.graphql.dart';
 import 'package:anitierlist/src/features/anilist/data/schema.graphql.dart';
 import 'package:anitierlist/src/utils/anime.dart';
 import 'package:anitierlist/src/utils/iterable_extensions.dart';
@@ -56,13 +57,29 @@ class AnilistService {
       );
 
       final page = result.parsedData?.Page;
-      final media = page?.media ?? [];
+      final media = (page?.media ?? []).whereNotNull();
 
-      pages.add(media.whereNotNull());
-      hasNextPage = (page?.pageInfo?.hasNextPage ?? false) || media.isNotEmpty;
+      pages.add(media);
+      hasNextPage = (page?.pageInfo?.hasNextPage ?? false) && media.isNotEmpty;
     }
 
     return pages.flatten();
+  }
+
+  Future<QueryResult<Query$BrowseCharacters>> browseCharacters({
+    int? page,
+    int? perPage,
+    String? search,
+  }) {
+    return client.query$BrowseCharacters(
+      Options$Query$BrowseCharacters(
+        variables: Variables$Query$BrowseCharacters(
+          page: page,
+          perPage: perPage,
+          search: search,
+        ),
+      ),
+    );
   }
 }
 
