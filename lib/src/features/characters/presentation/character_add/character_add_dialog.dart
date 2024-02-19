@@ -3,6 +3,7 @@ import 'package:anitierlist/src/features/characters/presentation/character_add/c
 import 'package:anitierlist/src/l10n/app_localizations.dart';
 import 'package:anitierlist/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_scroll_shadow/flutter_scroll_shadow.dart';
 
 void showCharacterAddDialog({
   required BuildContext context,
@@ -76,9 +77,11 @@ class _CharacterAddDialogState extends State<CharacterAddDialog> {
             ),
             Gaps.p8,
             Expanded(
-              child: CharacterAddGridView(
-                search: _search,
-                onCharacterTap: widget.onCharacterTap,
+              child: ScrollShadow(
+                child: CharacterAddGridView(
+                  search: _search,
+                  onCharacterTap: widget.onCharacterTap,
+                ),
               ),
             ),
           ],
