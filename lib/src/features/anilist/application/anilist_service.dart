@@ -76,7 +76,7 @@ class AnilistService {
         variables: Variables$Query$BrowseCharacters(
           page: page,
           perPage: perPage,
-          search: search,
+          search: (search?.trim().isEmpty ?? true) ? null : search,
         ),
       ),
     );
