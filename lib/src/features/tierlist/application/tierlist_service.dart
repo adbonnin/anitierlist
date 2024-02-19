@@ -13,7 +13,7 @@ import 'package:flutter/foundation.dart';
 class TierListService {
   const TierListService();
 
-  static Future<void> saveFile(String name, Uint8List bytes) async {
+  static Future<void> saveZipFile(String name, Uint8List bytes) async {
     const ext = '.zip';
     const mimeType = MimeType.zip;
 
@@ -43,9 +43,9 @@ class TierListService {
   }
 
   static Future<Uint8List> buildZip(
-    Map<String?, List<(TierList, ScreenshotController)>> tierListScreenshotsByFormat,
-    String Function(String group) toGroupLabel,
-  ) async {
+    Map<String?, List<(TierList, ScreenshotController)>> tierListScreenshotsByFormat, [
+    String Function(String group)? toGroupLabel,
+  ]) async {
     final archive = Archive();
 
     final total = tierListScreenshotsByFormat.values.map((list) => list.length).sum;
@@ -55,11 +55,11 @@ class TierListService {
       final group = etr.key;
       final imageControllers = etr.value.map((e) => e.$2).toList();
 
-      final groupText = toGroupLabel(group ?? '') //
-          .removeSpecialCharacters()
+      final groupLabel = (toGroupLabel == null || group == null ? group : toGroupLabel.call(group)) //
+          ?.removeSpecialCharacters()
           .removeMultipleSpace();
 
-      await _addCapturesToArchive(archive, total, offset, groupText, imageControllers);
+      await _addCapturesToArchive(archive, total, offset, groupLabel, imageControllers);
       offset += imageControllers.length;
     }
 
@@ -78,7 +78,7 @@ class TierListService {
     Archive archive,
     int total,
     int offset,
-    String groupText,
+    String? groupText,
     List<ScreenshotController> screenshotControllers,
   ) async {
     if (screenshotControllers.isEmpty) {
@@ -96,14 +96,17 @@ class TierListService {
       }
 
       final index = numberFormat.format(offset + i);
+      final nameItems = [index];
+
+      if (groupText != null && groupText.isNotEmpty) {
+        nameItems.add(groupText);
+      }
+
+      final name = '${nameItems.join(' ')}.png';
       final imageBytes = await image.toByteArray();
+      final imageBytesLength = await imageBytes.lengthInBytes;
 
-      final file = ArchiveFile(
-        '$index $groupText.png',
-        await imageBytes.lengthInBytes,
-        imageBytes,
-      );
-
+      final file = ArchiveFile(name, imageBytesLength, imageBytes);
       archive.addFile(file);
     }
   }

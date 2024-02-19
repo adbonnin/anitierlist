@@ -1,10 +1,9 @@
-import 'package:anitierlist/src/features/anilist/application/anilist_service.dart';
-import 'package:anitierlist/src/features/anilist/data/browse_characters.graphql.dart';
+import 'package:anitierlist/src/features/characters/application/character_service.dart';
+import 'package:anitierlist/src/features/characters/domain/character.dart';
 import 'package:anitierlist/src/features/tierlist/domain/tierlist.dart';
 import 'package:anitierlist/src/features/tierlist/presentation/tierlist_list/tierlist_card.dart';
 import 'package:anitierlist/src/widgets/sized_paged_grid_view.dart';
 import 'package:anitierlist/styles.dart';
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -17,14 +16,14 @@ class CharacterAddGridView extends ConsumerStatefulWidget {
   });
 
   final String search;
-  final void Function(Query$BrowseCharacters$Page$characters character) onCharacterTap;
+  final void Function(Character character) onCharacterTap;
 
   @override
   ConsumerState<CharacterAddGridView> createState() => _CharacterSearchGridViewState();
 }
 
 class _CharacterSearchGridViewState extends ConsumerState<CharacterAddGridView> {
-  late final PagingController<int, Query$BrowseCharacters$Page$characters> _pagingController;
+  late final PagingController<int, Character> _pagingController;
 
   @override
   void initState() {
@@ -61,33 +60,26 @@ class _CharacterSearchGridViewState extends ConsumerState<CharacterAddGridView> 
   }
 
   Future<void> _fetchPage(int pageKey) async {
-    final service = ref.read(anilistServiceProvider);
+    final service = ref.read(characterServiceProvider);
     final pagingState = _pagingController.value;
+    final search = widget.search;
 
     if (pageKey != pagingState.nextPageKey) {
       return;
     }
 
     try {
-      final result = await service.browseCharacters(
-        search: widget.search,
-        page: pageKey,
-        perPage: 12,
-      );
+      final result = await service.browseCharacters(search, pageKey);
 
       if (!identical(pagingState, _pagingController.value)) {
         return;
       }
 
-      final page = result.parsedData?.Page;
-      final characters = (page?.characters ?? []).whereNotNull().toList();
-      final hasNextPage = (page?.pageInfo?.hasNextPage ?? false) && characters.isNotEmpty;
-
-      if (hasNextPage) {
-        _pagingController.appendPage(characters, pageKey + 1);
+      if (result.hasNextPage) {
+        _pagingController.appendPage(result.value, pageKey + 1);
       } //
       else {
-        _pagingController.appendLastPage(characters);
+        _pagingController.appendLastPage(result.value);
       }
     } //
     catch (error) {
@@ -95,11 +87,11 @@ class _CharacterSearchGridViewState extends ConsumerState<CharacterAddGridView> 
     }
   }
 
-  Widget _buildItem(BuildContext context, Query$BrowseCharacters$Page$characters item, int index) {
+  Widget _buildItem(BuildContext context, Character item, int index) {
     final tierList = TierList(
       id: item.id,
-      title: item.name?.userPreferred ?? '',
-      cover: item.image?.medium,
+      title: item.name,
+      cover: item.image,
     );
 
     return TierListCard(

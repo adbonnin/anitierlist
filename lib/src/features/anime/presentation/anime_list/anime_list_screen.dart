@@ -28,12 +28,11 @@ class AnimeListScreen extends ConsumerStatefulWidget {
 class _AnimeTierListScreenState extends ConsumerState<AnimeListScreen> {
   final _groupListKey = GlobalKey<TierListGroupListState>();
 
-  var _exportingThumbnails = false;
-
   var _year = DateTime.now().year;
   var _season = DateTime.now().season;
 
   var _preferencesById = <int, AnimePreference>{};
+  var _exporting = false;
 
   @override
   Widget build(BuildContext context) {
@@ -93,9 +92,9 @@ class _AnimeTierListScreenState extends ConsumerState<AnimeListScreen> {
                   .map(_toTierList)
                   .toList(),
               onTierListTap: (tl) => _onAnimeTap(anime.where((a) => a.id == tl.id).firstOrNull),
-              exporting: _exportingThumbnails,
+              exporting: _exporting,
               toGroupLabel: context.loc.animeGroup,
-              onExportPressed: _onExportThumbnailsPressed,
+              onExportPressed: _onExportPressed,
             ),
           ),
         ),
@@ -179,23 +178,23 @@ class _AnimeTierListScreenState extends ConsumerState<AnimeListScreen> {
     );
   }
 
-  Future<void> _onExportThumbnailsPressed() async {
+  Future<void> _onExportPressed() async {
     final tierListScreenshotsByFormat = _groupListKey.currentState?.buildTierListScreenshotsByFormat() ?? {};
 
     final seasonLabel = context.loc.season(_season);
     final name = 'TierList $_year $seasonLabel';
 
     setState(() {
-      _exportingThumbnails = true;
+      _exporting = true;
     });
 
     try {
       final bytes = await TierListService.buildZip(tierListScreenshotsByFormat, context.loc.animeGroup);
-      await TierListService.saveFile(name, bytes);
+      await TierListService.saveZipFile(name, bytes);
     } //
     finally {
       setState(() {
-        _exportingThumbnails = false;
+        _exporting = false;
       });
     }
   }

@@ -15,14 +15,14 @@ class TierListGroupList extends StatefulWidget {
     required this.tierLists,
     required this.exporting,
     required this.onTierListTap,
-    required this.toGroupLabel,
+    this.toGroupLabel,
     required this.onExportPressed,
   });
 
-  final List<TierList> tierLists;
+  final Iterable<TierList> tierLists;
   final bool exporting;
   final void Function(TierList tierList) onTierListTap;
-  final String Function(String group) toGroupLabel;
+  final String Function(String group)? toGroupLabel;
   final VoidCallback onExportPressed;
 
   @override
@@ -86,7 +86,7 @@ class TierListGroupListState extends State<TierListGroupList> {
             Row(
               children: [
                 FilledButton.icon(
-                  onPressed: (widget.exporting || widget.tierLists.isEmpty ) ? null : widget.onExportPressed,
+                  onPressed: (widget.exporting || widget.tierLists.isEmpty) ? null : widget.onExportPressed,
                   icon: LoadingIcon(Icons.file_download, loading: widget.exporting),
                   label: Text(widget.exporting //
                       ? context.loc.anime_tierlist_exportingThumbnails
@@ -101,8 +101,11 @@ class TierListGroupListState extends State<TierListGroupList> {
   }
 
   Widget _build(String? group, List<(TierList, ScreenshotController)> tierListScreenshots) {
+    final toGroupLabel = widget.toGroupLabel;
+    final groupLabel = (toGroupLabel == null || group == null) ? group : toGroupLabel(group);
+
     return TierListGroup(
-      formatText: group == null ? null : widget.toGroupLabel(group),
+      labelText: groupLabel,
       children: [
         for (final tierListScreenshot in tierListScreenshots)
           Screenshot(

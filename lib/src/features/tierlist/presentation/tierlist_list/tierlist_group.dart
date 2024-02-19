@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 class TierListGroup extends StatelessWidget {
   const TierListGroup({
     super.key,
-    required this.formatText,
+    required this.labelText,
     required this.children,
   });
 
-  final String? formatText;
+  final String? labelText;
   final List<Widget> children;
 
   @override
@@ -19,9 +19,9 @@ class TierListGroup extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        if (formatText != null) ...[
+        if (labelText != null) ...[
           Text(
-            formatText!,
+            labelText!,
             style: textTheme.headlineSmall,
           ),
           Gaps.p6,

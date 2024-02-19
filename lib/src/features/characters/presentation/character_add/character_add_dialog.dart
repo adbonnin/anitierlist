@@ -1,4 +1,4 @@
-import 'package:anitierlist/src/features/anilist/data/browse_characters.graphql.dart';
+import 'package:anitierlist/src/features/characters/domain/character.dart';
 import 'package:anitierlist/src/features/characters/presentation/character_add/character_add_grid_view.dart';
 import 'package:anitierlist/src/l10n/app_localizations.dart';
 import 'package:anitierlist/styles.dart';
@@ -7,7 +7,7 @@ import 'package:flutter_scroll_shadow/flutter_scroll_shadow.dart';
 
 void showCharacterAddDialog({
   required BuildContext context,
-  required void Function(Query$BrowseCharacters$Page$characters) onCharacterTap,
+  required void Function(Character) onCharacterTap,
   bool barrierDismissible = true,
   Color? barrierColor,
   String? barrierLabel,
@@ -37,7 +37,7 @@ class CharacterAddDialog extends StatefulWidget {
     required this.onCharacterTap,
   });
 
-  final void Function(Query$BrowseCharacters$Page$characters character) onCharacterTap;
+  final void Function(Character character) onCharacterTap;
 
   @override
   State<CharacterAddDialog> createState() => _CharacterAddDialogState();

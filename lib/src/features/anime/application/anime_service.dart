@@ -5,24 +5,22 @@ import 'package:anitierlist/src/features/anime/domain/anime.dart';
 import 'package:anitierlist/src/utils/iterable_extensions.dart';
 import 'package:anitierlist/src/utils/season.dart';
 import 'package:collection/collection.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'anime_service.g.dart';
 
 @Riverpod(keepAlive: true)
 AnimeService animeService(AnimeServiceRef ref) {
-  return AnimeService(ref);
+  final anilistService = ref.watch(anilistServiceProvider);
+  return AnimeService(anilistService);
 }
 
 class AnimeService {
-  const AnimeService(this.ref);
+  const AnimeService(this.anilistService);
 
-  final Ref ref;
+  final AnilistService anilistService;
 
   Future<List<Anime>> browseAnime(int year, Season season) async {
-    final anilistService = ref.read(anilistServiceProvider);
-
     final anime = (await anilistService.browseAnime(year: year, season: season)) //
         .map((m) => m.toAnime())
         .whereNotNull();
