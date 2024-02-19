@@ -2,6 +2,7 @@ import 'package:anitierlist/src/features/anime/domain/anime.dart';
 import 'package:anitierlist/src/features/anime/domain/anime_preference.dart';
 import 'package:anitierlist/src/features/anime/presentation/tierlist_edit/anime_tierlist_edit_form.dart';
 import 'package:anitierlist/src/l10n/app_localizations.dart';
+import 'package:anitierlist/styles.dart';
 import 'package:flutter/material.dart';
 
 Future<AnimePreference?> showAnimeTierListEditDialog({
@@ -47,9 +48,12 @@ class _AnimeTierListEditDialogState extends State<AnimeTierListEditDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text(context.loc.anime_tierlist_edit_title),
-      content: AnimeTierListEditForm(
-        key: _formKey,
-        anime: widget.anime,
+      content: SizedBox(
+        width: Sizes.dialogMinWidth,
+        child: AnimeTierListEditForm(
+          key: _formKey,
+          anime: widget.anime,
+        ),
       ),
       actions: [
         OutlinedButton(

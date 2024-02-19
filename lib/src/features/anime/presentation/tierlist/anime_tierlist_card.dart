@@ -1,17 +1,21 @@
-import 'package:anitierlist/src/features/anime/domain/anime.dart';
 import 'package:anitierlist/src/features/anime/presentation/cover_image.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AnimeTierListCard extends StatelessWidget {
-  const AnimeTierListCard(
-    this.anime, {
+  const AnimeTierListCard({
     super.key,
+    required this.title,
+    required this.cover,
     this.onTap,
   });
 
-  final Anime anime;
+  static const double width = 80;
+  static const double height = 120;
+
+  final String title;
+  final String? cover;
   final VoidCallback? onTap;
 
   @override
@@ -19,12 +23,12 @@ class AnimeTierListCard extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: SizedBox(
-        width: 80,
-        height: 120,
+        width: width,
+        height: height,
         child: Stack(
           children: [
             Positioned.fill(
-              child: CoverImage(image: anime.coverImageMedium),
+              child: CoverImage(image: cover),
             ),
             Positioned(
               left: 0,
@@ -34,7 +38,7 @@ class AnimeTierListCard extends StatelessWidget {
                 color: const Color(0xE6292929),
                 padding: const EdgeInsets.fromLTRB(4, 3, 4, 2),
                 child: AutoSizeText(
-                  anime.title,
+                  title,
                   style: GoogleFonts.overpass(
                     color: Colors.white,
                     height: 0,

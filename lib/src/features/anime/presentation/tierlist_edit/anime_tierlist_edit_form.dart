@@ -48,69 +48,66 @@ class AnimeTierListEditFormState extends State<AnimeTierListEditForm> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 500,
-      child: Form(
-        child: InfoLabel(
-          labelText: context.loc.anime_tierlist_edit_titleLabel,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (widget.anime.englishTitle.isNotEmpty)
-                AnimeTiersListTitleRadioListTile(
-                  value: MediaTitle.english,
-                  groupValue: _userSelectedTitle,
-                  onChanged: _onUserSelectedTitleChanged,
-                  titleText: context.loc.anime_title_english,
-                  subtitle: Text(
-                    widget.anime.englishTitle,
-                    maxLines: null,
-                  ),
-                  onCopyPressed: () => _onCopyPressed(widget.anime.englishTitle),
-                ),
-              if (widget.anime.nativeTitle.isNotEmpty)
-                AnimeTiersListTitleRadioListTile(
-                  value: MediaTitle.native,
-                  groupValue: _userSelectedTitle,
-                  onChanged: _onUserSelectedTitleChanged,
-                  titleText: context.loc.anime_title_native,
-                  subtitle: Text(
-                    widget.anime.nativeTitle,
-                    maxLines: null,
-                  ),
-                  onCopyPressed: () => _onCopyPressed(widget.anime.nativeTitle),
-                ),
-              if (widget.anime.userPreferredTitle.isNotEmpty)
-                AnimeTiersListTitleRadioListTile(
-                  value: MediaTitle.userPreferred,
-                  groupValue: _userSelectedTitle,
-                  onChanged: _onUserSelectedTitleChanged,
-                  titleText: context.loc.anime_title_userPreferred,
-                  subtitle: Text(
-                    widget.anime.userPreferredTitle,
-                    maxLines: null,
-                  ),
-                  onCopyPressed: () => _onCopyPressed(widget.anime.userPreferredTitle),
-                ),
+    return Form(
+      child: InfoLabel(
+        labelText: context.loc.anime_tierlist_edit_titleLabel,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (widget.anime.englishTitle.isNotEmpty)
               AnimeTiersListTitleRadioListTile(
-                value: MediaTitle.custom,
+                value: MediaTitle.english,
                 groupValue: _userSelectedTitle,
                 onChanged: _onUserSelectedTitleChanged,
-                titleText: context.loc.anime_title_custom,
-                subtitle: Padding(
-                  padding: const EdgeInsets.only(top: Insets.p2),
-                  child: TextFormField(
-                    focusNode: _customTitleFocusNode,
-                    controller: _customTitleController,
-                    decoration: const InputDecoration(
-                      isDense: true,
-                      border: OutlineInputBorder(),
-                    ),
+                titleText: context.loc.anime_title_english,
+                subtitle: Text(
+                  widget.anime.englishTitle,
+                  maxLines: null,
+                ),
+                onCopyPressed: () => _onCopyPressed(widget.anime.englishTitle),
+              ),
+            if (widget.anime.nativeTitle.isNotEmpty)
+              AnimeTiersListTitleRadioListTile(
+                value: MediaTitle.native,
+                groupValue: _userSelectedTitle,
+                onChanged: _onUserSelectedTitleChanged,
+                titleText: context.loc.anime_title_native,
+                subtitle: Text(
+                  widget.anime.nativeTitle,
+                  maxLines: null,
+                ),
+                onCopyPressed: () => _onCopyPressed(widget.anime.nativeTitle),
+              ),
+            if (widget.anime.userPreferredTitle.isNotEmpty)
+              AnimeTiersListTitleRadioListTile(
+                value: MediaTitle.userPreferred,
+                groupValue: _userSelectedTitle,
+                onChanged: _onUserSelectedTitleChanged,
+                titleText: context.loc.anime_title_userPreferred,
+                subtitle: Text(
+                  widget.anime.userPreferredTitle,
+                  maxLines: null,
+                ),
+                onCopyPressed: () => _onCopyPressed(widget.anime.userPreferredTitle),
+              ),
+            AnimeTiersListTitleRadioListTile(
+              value: MediaTitle.custom,
+              groupValue: _userSelectedTitle,
+              onChanged: _onUserSelectedTitleChanged,
+              titleText: context.loc.anime_title_custom,
+              subtitle: Padding(
+                padding: const EdgeInsets.only(top: Insets.p2),
+                child: TextFormField(
+                  focusNode: _customTitleFocusNode,
+                  controller: _customTitleController,
+                  decoration: const InputDecoration(
+                    isDense: true,
+                    border: OutlineInputBorder(),
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

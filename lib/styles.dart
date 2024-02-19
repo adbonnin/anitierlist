@@ -29,3 +29,8 @@ class Gaps {
   static const p24 = Gap(Insets.p24);
   static const p32 = Gap(Insets.p32);
 }
+
+class Sizes {
+  static const dialogMinWidth = 640.0;
+  static const dialogMinHeight = 480.0;
+}

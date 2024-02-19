@@ -74,11 +74,15 @@ class AnimeTierListGroupListState extends State<AnimeTierListGroupList> {
   }
 
   Widget _buildItem((Anime, ScreenshotController) animeScreenshot) {
+    final anime = animeScreenshot.$1;
+    final screenshot = animeScreenshot.$2;
+
     return Screenshot(
-      controller: animeScreenshot.$2,
+      controller: screenshot,
       child: AnimeTierListCard(
-        animeScreenshot.$1,
-        onTap: () => widget.onAnimeTap(animeScreenshot.$1),
+        title: anime.title,
+        cover: anime.coverImageMedium,
+        onTap: () => widget.onAnimeTap(anime),
       ),
     );
   }
