@@ -39,7 +39,7 @@ class _CharacterListScreenState extends State<CharacterListScreen> {
             key: _groupListKey,
             tierLists: _tierLists,
             exporting: _exporting,
-            onTierListTap: (_) {},
+            onTierListTap: _onDeleteTierListTap,
             onExportPressed: _onExportPressed,
           ),
         ),
@@ -50,11 +50,11 @@ class _CharacterListScreenState extends State<CharacterListScreen> {
   void _onAddCharacterPressed() {
     showCharacterAddDialog(
       context: context,
-      onCharacterTap: _onAddCharacter,
+      onCharacterTap: _onAddCharacterTap,
     );
   }
 
-  void _onAddCharacter(Character character) {
+  void _onAddCharacterTap(Character character) {
     final tierList = TierList(
       id: character.id,
       title: character.name,
@@ -63,6 +63,12 @@ class _CharacterListScreenState extends State<CharacterListScreen> {
 
     setState(() {
       _tierLists = {..._tierLists, tierList};
+    });
+  }
+
+  void _onDeleteTierListTap(TierList tierList) {
+    setState(() {
+      _tierLists = {..._tierLists}..remove(tierList);
     });
   }
 
