@@ -26,7 +26,7 @@ class _CharacterListScreenState extends State<CharacterListScreen> {
       children: [
         Row(
           children: [
-            OutlinedButton.icon(
+            FilledButton.tonalIcon(
               onPressed: _onAddCharacterPressed,
               icon: const Icon(Icons.person_add),
               label: Text(context.loc.characters_add_title),
