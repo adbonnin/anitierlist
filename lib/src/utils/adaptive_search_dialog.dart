@@ -8,13 +8,11 @@ class AdaptiveSearchDialog extends StatefulWidget {
     super.key,
     this.title,
     required this.onChanged,
-    required this.focusNode,
     required this.content,
   });
 
   final Widget? title;
   final ValueChanged<String> onChanged;
-  final FocusNode focusNode;
   final Widget content;
 
   @override
@@ -22,22 +20,21 @@ class AdaptiveSearchDialog extends StatefulWidget {
 }
 
 class _AdaptiveSearchDialogState extends State<AdaptiveSearchDialog> {
-  late final FocusNode focusNode;
+  final _focusNode = FocusNode();
   final _controller = TextEditingController();
 
   @override
   void initState() {
     super.initState();
 
-    focusNode = widget.focusNode;
-    focusNode.requestFocus();
-
+    _focusNode.requestFocus();
     _controller.addListener(_handleChange);
   }
 
   @override
   void dispose() {
     _controller.dispose();
+    _focusNode.dispose();
     super.dispose();
   }
 
@@ -64,7 +61,7 @@ class _AdaptiveSearchDialogState extends State<AdaptiveSearchDialog> {
       child: Scaffold(
         appBar: AppBar(
           title: TextField(
-            focusNode: widget.focusNode,
+            focusNode: _focusNode,
             controller: _controller,
             decoration: InputDecoration(
               border: InputBorder.none,
@@ -92,7 +89,7 @@ class _AdaptiveSearchDialogState extends State<AdaptiveSearchDialog> {
         child: Column(
           children: [
             TextField(
-              focusNode: widget.focusNode,
+              focusNode: _focusNode,
               controller: _controller,
               decoration: InputDecoration(
                 border: const OutlineInputBorder(),
@@ -129,6 +126,6 @@ class _AdaptiveSearchDialogState extends State<AdaptiveSearchDialog> {
 
   void _onErasePressed() {
     _controller.text = '';
-    widget.focusNode.requestFocus();
+    _focusNode.requestFocus();
   }
 }

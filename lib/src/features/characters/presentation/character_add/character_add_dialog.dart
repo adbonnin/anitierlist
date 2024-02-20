@@ -44,12 +44,10 @@ class CharacterAddDialog extends StatefulWidget {
 }
 
 class _CharacterAddDialogState extends State<CharacterAddDialog> {
-  final _searchFocusNode = FocusNode();
   var _search = '';
 
   @override
   void dispose() {
-    _searchFocusNode.dispose();
     super.dispose();
   }
 
@@ -57,7 +55,6 @@ class _CharacterAddDialogState extends State<CharacterAddDialog> {
   Widget build(BuildContext context) {
     return AdaptiveSearchDialog(
       title: Text(context.loc.characters_add_title),
-      focusNode: _searchFocusNode,
       onChanged: _onChanged,
       content: ScrollShadow(
         child: CharacterAddGridView(
@@ -76,6 +73,5 @@ class _CharacterAddDialogState extends State<CharacterAddDialog> {
 
   void _onCharacterTap(Character character) {
     widget.onCharacterTap(character);
-    _searchFocusNode.requestFocus();
   }
 }
