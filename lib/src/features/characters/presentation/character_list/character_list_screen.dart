@@ -16,14 +16,14 @@ class CharacterListScreen extends StatefulWidget {
 class _CharacterListScreenState extends State<CharacterListScreen> {
   final _groupListKey = GlobalKey<TierListGroupListState>();
 
-  var _tierLists = <TierList>{};
+  var _characters = <Character>{};
   var _loading = false;
 
   @override
   Widget build(BuildContext context) {
     return TierListGroupList(
       key: _groupListKey,
-      tierLists: _tierLists,
+      tierLists: _characters.map((c) => c.toTierList()),
       otherActions: [
         IconButton(
           onPressed: _onAddCharacterPressed,
@@ -41,25 +41,20 @@ class _CharacterListScreenState extends State<CharacterListScreen> {
   void _onAddCharacterPressed() {
     showCharacterAddDialog(
       context: context,
-      onCharacterTap: _onAddCharacterTap,
+      initialCharacters: _characters,
+      onCharactersChanged: _onCharactersChanged,
     );
   }
 
-  void _onAddCharacterTap(Character character) {
-    final tierList = TierList(
-      id: character.id,
-      title: character.name,
-      cover: character.image,
-    );
-
+  void _onCharactersChanged(Set<Character> characters) {
     setState(() {
-      _tierLists = {..._tierLists, tierList};
+      _characters = characters;
     });
   }
 
   void _onDeleteTierListTap(TierList tierList) {
     setState(() {
-      _tierLists = {..._tierLists}..remove(tierList);
+      _characters = {..._characters}..removeWhere((c) => c.id == tierList.id);
     });
   }
 

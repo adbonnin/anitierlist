@@ -1,3 +1,5 @@
+import 'package:anitierlist/src/features/tierlist/domain/tierlist.dart';
+
 class Character {
   const Character({
     required this.id,
@@ -8,4 +10,12 @@ class Character {
   final int id;
   final String name;
   final String? image;
+
+  TierList toTierList() {
+    return TierList(
+      id: id,
+      title: name,
+      cover: image,
+    );
+  }
 }

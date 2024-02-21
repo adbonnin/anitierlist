@@ -138,11 +138,13 @@ class TierListGroupListState extends State<TierListGroupList> {
         for (final tierListScreenshot in tierListScreenshots)
           Screenshot(
             controller: tierListScreenshot.$2,
-            child: TierListCard(
-              tierList: tierListScreenshot.$1,
+            child: InkWell(
               onTap: () => widget.onTierListTap(tierListScreenshot.$1),
+              child: TierListCard(
+                tierList: tierListScreenshot.$1,
+              ),
             ),
-          )
+          ),
       ],
     );
   }

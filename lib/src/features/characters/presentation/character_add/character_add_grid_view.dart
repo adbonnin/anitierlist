@@ -12,10 +12,12 @@ class CharacterAddGridView extends ConsumerStatefulWidget {
   const CharacterAddGridView({
     super.key,
     required this.search,
+    this.characters = const {},
     required this.onCharacterTap,
   });
 
   final String search;
+  final Set<Character> characters;
   final void Function(Character character) onCharacterTap;
 
   @override
@@ -24,12 +26,14 @@ class CharacterAddGridView extends ConsumerStatefulWidget {
 
 class _CharacterSearchGridViewState extends ConsumerState<CharacterAddGridView> {
   late final PagingController<int, Character> _pagingController;
+  late Set<int> _characterIds;
 
   @override
   void initState() {
     super.initState();
     _pagingController = PagingController(firstPageKey: 1);
     _pagingController.addPageRequestListener(_fetchPage);
+    _characterIds = widget.characters.map((c) => c.id).toSet();
   }
 
   @override
@@ -44,6 +48,10 @@ class _CharacterSearchGridViewState extends ConsumerState<CharacterAddGridView> 
 
     if (oldWidget.search != widget.search) {
       _pagingController.refresh();
+    }
+
+    if (oldWidget.characters != widget.characters) {
+      _characterIds = widget.characters.map((c) => c.id).toSet();
     }
   }
 
@@ -88,15 +96,27 @@ class _CharacterSearchGridViewState extends ConsumerState<CharacterAddGridView> 
   }
 
   Widget _buildItem(BuildContext context, Character item, int index) {
+    final exists = _characterIds.contains(item.id);
+
     final tierList = TierList(
       id: item.id,
       title: item.name,
       cover: item.image,
     );
 
-    return TierListCard(
-      tierList: tierList,
+    return InkWell(
       onTap: () => widget.onCharacterTap(item),
+      child: Stack(
+        children: [
+          TierListCard(
+            tierList: tierList,
+          ),
+          if (exists)
+            Container(
+              color: Colors.black54,
+            ),
+        ],
+      ),
     );
   }
 }

@@ -2,12 +2,14 @@ import 'package:anitierlist/src/features/characters/domain/character.dart';
 import 'package:anitierlist/src/features/characters/presentation/character_add/character_add_grid_view.dart';
 import 'package:anitierlist/src/l10n/app_localizations.dart';
 import 'package:anitierlist/src/utils/adaptive_search_dialog.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_scroll_shadow/flutter_scroll_shadow.dart';
 
 void showCharacterAddDialog({
   required BuildContext context,
-  required void Function(Character) onCharacterTap,
+  Set<Character> initialCharacters = const {},
+  required void Function(Set<Character>) onCharactersChanged,
   bool barrierDismissible = true,
   Color? barrierColor,
   String? barrierLabel,
@@ -23,7 +25,8 @@ void showCharacterAddDialog({
     useRootNavigator: useRootNavigator,
     builder: (BuildContext context) {
       return CharacterAddDialog(
-        onCharacterTap: onCharacterTap,
+        initialCharacters: initialCharacters,
+        onCharactersChanged: onCharactersChanged,
       );
     },
     routeSettings: routeSettings,
@@ -34,10 +37,12 @@ void showCharacterAddDialog({
 class CharacterAddDialog extends StatefulWidget {
   const CharacterAddDialog({
     super.key,
-    required this.onCharacterTap,
+    this.initialCharacters = const {},
+    required this.onCharactersChanged,
   });
 
-  final void Function(Character character) onCharacterTap;
+  final Set<Character> initialCharacters;
+  final void Function(Set<Character> character) onCharactersChanged;
 
   @override
   State<CharacterAddDialog> createState() => _CharacterAddDialogState();
@@ -45,10 +50,12 @@ class CharacterAddDialog extends StatefulWidget {
 
 class _CharacterAddDialogState extends State<CharacterAddDialog> {
   var _search = '';
+  late Set<Character> _characters;
 
   @override
-  void dispose() {
-    super.dispose();
+  void initState() {
+    super.initState();
+    _characters = widget.initialCharacters;
   }
 
   @override
@@ -59,6 +66,7 @@ class _CharacterAddDialogState extends State<CharacterAddDialog> {
       content: ScrollShadow(
         child: CharacterAddGridView(
           search: _search,
+          characters: _characters,
           onCharacterTap: _onCharacterTap,
         ),
       ),
@@ -72,6 +80,20 @@ class _CharacterAddDialogState extends State<CharacterAddDialog> {
   }
 
   void _onCharacterTap(Character character) {
-    widget.onCharacterTap(character);
+    Set<Character> updatedCharacters;
+    final foundCharacter = _characters.firstWhereOrNull((c) => c.id == character.id);
+
+    if (foundCharacter != null) {
+      updatedCharacters = {..._characters}..remove(foundCharacter);
+    } //
+    else {
+      updatedCharacters = {..._characters, character};
+    }
+
+    setState(() {
+      _characters = updatedCharacters;
+    });
+
+    widget.onCharactersChanged(_characters);
   }
 }
