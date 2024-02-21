@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:anitierlist/src/features/tierlist/domain/tierlist.dart';
 import 'package:anitierlist/src/features/tierlist/presentation/tierlist_list/tierlist_card.dart';
 import 'package:anitierlist/src/features/tierlist/presentation/tierlist_list/tierlist_group.dart';
@@ -6,6 +8,7 @@ import 'package:anitierlist/src/widgets/loading_icon.dart';
 import 'package:anitierlist/src/widgets/screenshot.dart';
 import 'package:anitierlist/styles.dart';
 import 'package:collection/collection.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class TierListGroupList extends StatefulWidget {
@@ -81,13 +84,14 @@ class TierListGroupListState extends State<TierListGroupList> {
             ? context.loc.anime_tierlist_savingThumbnails
             : context.loc.anime_tierlist_saveThumbnails,
       ),
-      IconButton(
-        onPressed: canExport ? null : widget.onSharePressed,
-        icon: LoadingIcon(Icons.share, loading: widget.isLoading),
-        tooltip: widget.isLoading //
-            ? context.loc.anime_tierlist_sharingThumbnails
-            : context.loc.anime_tierlist_shareThumbnails,
-      ),
+      if (!kIsWeb && (Platform.isIOS || Platform.isAndroid))
+        IconButton(
+          onPressed: canExport ? null : widget.onSharePressed,
+          icon: LoadingIcon(Icons.share, loading: widget.isLoading),
+          tooltip: widget.isLoading //
+              ? context.loc.anime_tierlist_sharingThumbnails
+              : context.loc.anime_tierlist_shareThumbnails,
+        ),
       ...widget.otherActions,
     ];
 
