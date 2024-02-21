@@ -2,7 +2,6 @@ import 'package:anitierlist/src/features/tierlist/domain/tierlist.dart';
 import 'package:anitierlist/src/features/tierlist/presentation/tierlist_list/tierlist_card.dart';
 import 'package:anitierlist/src/features/tierlist/presentation/tierlist_list/tierlist_group.dart';
 import 'package:anitierlist/src/l10n/app_localizations.dart';
-import 'package:anitierlist/src/utils/iterable_extensions.dart';
 import 'package:anitierlist/src/widgets/loading_icon.dart';
 import 'package:anitierlist/src/widgets/screenshot.dart';
 import 'package:anitierlist/styles.dart';
@@ -13,6 +12,7 @@ class TierListGroupList extends StatefulWidget {
   const TierListGroupList({
     super.key,
     required this.tierLists,
+    this.otherActions = const [],
     required this.exporting,
     required this.onTierListTap,
     this.toGroupLabel,
@@ -20,6 +20,7 @@ class TierListGroupList extends StatefulWidget {
   });
 
   final Iterable<TierList> tierLists;
+  final Iterable<Widget> otherActions;
   final bool exporting;
   final void Function(TierList tierList) onTierListTap;
   final String Function(String group)? toGroupLabel;
@@ -63,39 +64,51 @@ class TierListGroupListState extends State<TierListGroupList> {
   Widget build(BuildContext context) {
     final animeScreenshotsByFormat = buildTierListScreenshotsByFormat();
 
+    final tierListGroups = animeScreenshotsByFormat.entries //
+        .where((etr) => etr.value.isNotEmpty)
+        .map((etr) => _build(etr.key, etr.value))
+        .toList();
+
+    final actions = [
+      IconButton(
+        onPressed: (widget.exporting || widget.tierLists.isEmpty) ? null : widget.onExportPressed,
+        icon: LoadingIcon(Icons.file_download, loading: widget.exporting),
+        tooltip: widget.exporting //
+            ? context.loc.anime_tierlist_exportingThumbnails
+            : context.loc.anime_tierlist_exportThumbnails,
+      ),
+      ...widget.otherActions,
+    ];
+
     return Card(
       margin: EdgeInsets.zero,
-      child: Padding(
-        padding: const EdgeInsets.all(Insets.p16),
-        child: Column(
-          children: [
-            Expanded(
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(Insets.p8, Insets.p4, Insets.p8, Insets.p4),
+            child: Row(
+              children: actions,
+            ),
+          ),
+          const Divider(height: 2),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(Insets.p16, 0, Insets.p16, 0),
               child: SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: animeScreenshotsByFormat.entries //
-                      .where((etr) => etr.value.isNotEmpty)
-                      .map((etr) => _build(etr.key, etr.value))
-                      .intersperse((_, __) => Gaps.p18)
-                      .toList(),
+                  children: [
+                    for (final tierListGroup in tierListGroups) ...[
+                      Gaps.p18,
+                      tierListGroup,
+                    ]
+                  ],
                 ),
               ),
             ),
-            Gaps.p12,
-            Row(
-              children: [
-                FilledButton.icon(
-                  onPressed: (widget.exporting || widget.tierLists.isEmpty) ? null : widget.onExportPressed,
-                  icon: LoadingIcon(Icons.file_download, loading: widget.exporting),
-                  label: Text(widget.exporting //
-                      ? context.loc.anime_tierlist_exportingThumbnails
-                      : context.loc.anime_tierlist_exportThumbnails),
-                ),
-              ],
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

@@ -22,28 +22,19 @@ class _CharacterListScreenState extends State<CharacterListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          children: [
-            FilledButton.tonalIcon(
-              onPressed: _onAddCharacterPressed,
-              icon: const Icon(Icons.person_add),
-              label: Text(context.loc.characters_add_title),
-            ),
-          ],
-        ),
-        Gaps.p8,
-        Expanded(
-          child: TierListGroupList(
-            key: _groupListKey,
-            tierLists: _tierLists,
-            exporting: _exporting,
-            onTierListTap: _onDeleteTierListTap,
-            onExportPressed: _onExportPressed,
-          ),
-        ),
+    return TierListGroupList(
+      key: _groupListKey,
+      tierLists: _tierLists,
+      otherActions: [
+        IconButton(
+          onPressed: _onAddCharacterPressed,
+          icon: const Icon(Icons.person_add),
+          tooltip: context.loc.characters_add_title,
+        )
       ],
+      exporting: _exporting,
+      onTierListTap: _onDeleteTierListTap,
+      onExportPressed: _onExportPressed,
     );
   }
 
