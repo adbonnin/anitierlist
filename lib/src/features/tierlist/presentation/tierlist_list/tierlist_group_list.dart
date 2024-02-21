@@ -13,18 +13,20 @@ class TierListGroupList extends StatefulWidget {
     super.key,
     required this.tierLists,
     this.otherActions = const [],
-    required this.exporting,
+    required this.isLoading,
     required this.onTierListTap,
     this.toGroupLabel,
-    required this.onExportPressed,
+    this.onExportPressed,
+    this.onSharePressed,
   });
 
   final Iterable<TierList> tierLists;
   final Iterable<Widget> otherActions;
-  final bool exporting;
+  final bool isLoading;
   final void Function(TierList tierList) onTierListTap;
   final String Function(String group)? toGroupLabel;
-  final VoidCallback onExportPressed;
+  final VoidCallback? onExportPressed;
+  final VoidCallback? onSharePressed;
 
   @override
   State<TierListGroupList> createState() => TierListGroupListState();
@@ -62,6 +64,8 @@ class TierListGroupListState extends State<TierListGroupList> {
 
   @override
   Widget build(BuildContext context) {
+    final canExport = widget.isLoading || widget.tierLists.isEmpty;
+
     final animeScreenshotsByFormat = buildTierListScreenshotsByFormat();
 
     final tierListGroups = animeScreenshotsByFormat.entries //
@@ -71,11 +75,18 @@ class TierListGroupListState extends State<TierListGroupList> {
 
     final actions = [
       IconButton(
-        onPressed: (widget.exporting || widget.tierLists.isEmpty) ? null : widget.onExportPressed,
-        icon: LoadingIcon(Icons.file_download, loading: widget.exporting),
-        tooltip: widget.exporting //
-            ? context.loc.anime_tierlist_exportingThumbnails
-            : context.loc.anime_tierlist_exportThumbnails,
+        onPressed: canExport ? null : widget.onExportPressed,
+        icon: LoadingIcon(Icons.file_download, loading: widget.isLoading),
+        tooltip: widget.isLoading //
+            ? context.loc.anime_tierlist_savingThumbnails
+            : context.loc.anime_tierlist_saveThumbnails,
+      ),
+      IconButton(
+        onPressed: canExport ? null : widget.onSharePressed,
+        icon: LoadingIcon(Icons.share, loading: widget.isLoading),
+        tooltip: widget.isLoading //
+            ? context.loc.anime_tierlist_sharingThumbnails
+            : context.loc.anime_tierlist_shareThumbnails,
       ),
       ...widget.otherActions,
     ];

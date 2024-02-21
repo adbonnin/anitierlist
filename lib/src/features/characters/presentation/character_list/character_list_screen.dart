@@ -4,7 +4,6 @@ import 'package:anitierlist/src/features/tierlist/application/tierlist_service.d
 import 'package:anitierlist/src/features/tierlist/domain/tierlist.dart';
 import 'package:anitierlist/src/features/tierlist/presentation/tierlist_list/tierlist_group_list.dart';
 import 'package:anitierlist/src/l10n/app_localizations.dart';
-import 'package:anitierlist/styles.dart';
 import 'package:flutter/material.dart';
 
 class CharacterListScreen extends StatefulWidget {
@@ -18,7 +17,7 @@ class _CharacterListScreenState extends State<CharacterListScreen> {
   final _groupListKey = GlobalKey<TierListGroupListState>();
 
   var _tierLists = <TierList>{};
-  var _exporting = false;
+  var _loading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -32,9 +31,10 @@ class _CharacterListScreenState extends State<CharacterListScreen> {
           tooltip: context.loc.characters_add_title,
         )
       ],
-      exporting: _exporting,
+      isLoading: _loading,
       onTierListTap: _onDeleteTierListTap,
       onExportPressed: _onExportPressed,
+      onSharePressed: _onSharePressed,
     );
   }
 
@@ -68,7 +68,7 @@ class _CharacterListScreenState extends State<CharacterListScreen> {
     final name = context.loc.characters_title;
 
     setState(() {
-      _exporting = true;
+      _loading = true;
     });
 
     try {
@@ -77,7 +77,26 @@ class _CharacterListScreenState extends State<CharacterListScreen> {
     } //
     finally {
       setState(() {
-        _exporting = false;
+        _loading = false;
+      });
+    }
+  }
+
+  Future<void> _onSharePressed() async {
+    final tierListScreenshotsByFormat = _groupListKey.currentState?.buildTierListScreenshotsByFormat() ?? {};
+    final name = context.loc.characters_title;
+
+    setState(() {
+      _loading = true;
+    });
+
+    try {
+      final bytes = await TierListService.buildZip(tierListScreenshotsByFormat);
+      await TierListService.share(name, bytes);
+    } //
+    finally {
+      setState(() {
+        _loading = false;
       });
     }
   }

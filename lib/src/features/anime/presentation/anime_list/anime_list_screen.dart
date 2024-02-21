@@ -32,7 +32,7 @@ class _AnimeTierListScreenState extends ConsumerState<AnimeListScreen> {
   var _season = DateTime.now().season;
 
   var _preferencesById = <int, AnimePreference>{};
-  var _exporting = false;
+  var _loading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -92,9 +92,10 @@ class _AnimeTierListScreenState extends ConsumerState<AnimeListScreen> {
                   .map(_toTierList)
                   .toList(),
               onTierListTap: (tl) => _onAnimeTap(anime.where((a) => a.id == tl.id).firstOrNull),
-              exporting: _exporting,
+              isLoading: _loading,
               toGroupLabel: context.loc.animeGroup,
               onExportPressed: _onExportPressed,
+              onSharePressed: _onSharePressed,
             ),
           ),
         ),
@@ -185,7 +186,7 @@ class _AnimeTierListScreenState extends ConsumerState<AnimeListScreen> {
     final name = 'TierList $_year $seasonLabel';
 
     setState(() {
-      _exporting = true;
+      _loading = true;
     });
 
     try {
@@ -194,7 +195,26 @@ class _AnimeTierListScreenState extends ConsumerState<AnimeListScreen> {
     } //
     finally {
       setState(() {
-        _exporting = false;
+        _loading = false;
+      });
+    }
+  }
+
+  Future<void> _onSharePressed() async {
+    final tierListScreenshotsByFormat = _groupListKey.currentState?.buildTierListScreenshotsByFormat() ?? {};
+    final name = context.loc.characters_title;
+
+    setState(() {
+      _loading = true;
+    });
+
+    try {
+      final bytes = await TierListService.buildZip(tierListScreenshotsByFormat);
+      await TierListService.share(name, bytes);
+    } //
+    finally {
+      setState(() {
+        _loading = false;
       });
     }
   }

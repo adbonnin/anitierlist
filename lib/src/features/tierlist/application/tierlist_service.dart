@@ -9,6 +9,7 @@ import 'package:archive/archive.dart';
 import 'package:collection/collection.dart';
 import 'package:file_saver/file_saver.dart';
 import 'package:flutter/foundation.dart';
+import 'package:share_plus/share_plus.dart';
 
 class TierListService {
   const TierListService();
@@ -40,6 +41,15 @@ class TierListService {
         await File(filePath).writeAsBytes(bytes);
       }
     }
+  }
+
+  static Future<void> share(String name, Uint8List bytes) async {
+    final file = XFile(
+      name,
+      bytes: bytes,
+    );
+
+    await Share.shareXFiles([file]);
   }
 
   static Future<Uint8List> buildZip(
