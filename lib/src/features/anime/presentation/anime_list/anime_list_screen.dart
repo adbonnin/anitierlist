@@ -38,9 +38,9 @@ class _AnimeTierListScreenState extends ConsumerState<AnimeListScreen> {
   Widget build(BuildContext context) {
     const firstYear = 1939;
     final lastYear = DateTime.now().year + 1;
-    final years = List<int>.generate(max(0, lastYear - firstYear), (index) => lastYear - index);
+    final years = List.generate(max(0, lastYear - firstYear), (index) => lastYear - index);
 
-    final asyncAnime = ref.watch(browseAnimeProvider(_year, _season));
+    final asyncAnime = ref.watch(browseAnimeSeasonProvider(_year, _season));
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,

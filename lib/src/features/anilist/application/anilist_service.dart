@@ -83,6 +83,36 @@ class AnilistService {
   }
 }
 
+@riverpod
+Future<Iterable<Query$BrowseAnime$Page$media>> browseLeftovers(
+  BrowseLeftoversRef ref, {
+  required int year,
+  required Season season,
+}) {
+  final service = ref.watch(anilistServiceProvider);
+
+  return service.browseLeftovers(
+    year: year,
+    season: season,
+  );
+}
+
+@riverpod
+Future<Iterable<Query$BrowseAnime$Page$media>> browseAnime(
+  BrowseAnimeRef ref, {
+  int? year,
+  Season? season,
+  int? episodeGreater,
+}) {
+  final service = ref.watch(anilistServiceProvider);
+
+  return service.browseAnime(
+    year: year,
+    season: season,
+    episodeGreater: episodeGreater,
+  );
+}
+
 extension _SeasonExtension on Season {
   Enum$MediaSeason toEnum$MediaSeason() {
     return switch (this) {

@@ -3,43 +3,31 @@ import 'package:anitierlist/src/features/anilist/data/browse_anime.graphql.dart'
 import 'package:anitierlist/src/features/anilist/data/schema.graphql.dart';
 import 'package:anitierlist/src/features/anime/domain/anime.dart';
 import 'package:anitierlist/src/utils/iterable_extensions.dart';
+import 'package:anitierlist/src/utils/riverpod.dart';
 import 'package:anitierlist/src/utils/season.dart';
 import 'package:collection/collection.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'anime_service.g.dart';
 
-@Riverpod(keepAlive: true)
-AnimeService animeService(AnimeServiceRef ref) {
-  final anilistService = ref.watch(anilistServiceProvider);
-  return AnimeService(anilistService);
-}
-
-class AnimeService {
-  const AnimeService(this.anilistService);
-
-  final AnilistService anilistService;
-
-  Future<List<Anime>> browseAnime(int year, Season season) async {
-    final anime = (await anilistService.browseAnime(year: year, season: season)) //
-        .map((m) => m.toAnime())
-        .whereNotNull();
-
-    final leftovers = (await anilistService.browseLeftovers(year: year, season: season)) //
-        .map((m) => m.toAnime(leftover: true))
-        .whereNotNull();
-
-    return [anime, leftovers] //
-        .flatten()
-        .sorted((a, b) => a.format.toIndex() - b.format.toIndex())
-        .toList();
-  }
-}
-
 @riverpod
-Future<List<Anime>> browseAnime(BrowseAnimeRef ref, int year, Season season) {
-  final service = ref.read(animeServiceProvider);
-  return service.browseAnime(year, season);
+AsyncValue<Iterable<Anime>> browseAnimeSeason(BrowseAnimeSeasonRef ref, int year, Season season) {
+  final asyncAnime = ref
+      .watch(browseAnimeProvider(
+        year: year,
+        season: season,
+      ))
+      .whenData((value) => value.map((m) => m.toAnime()));
+
+  final asyncLeftovers = ref
+      .watch(browseLeftoversProvider(
+        year: year,
+        season: season,
+      ))
+      .whenData((value) => value.map((m) => m.toAnime(leftover: true)));
+
+  return AsyncValues.group2(asyncAnime, asyncLeftovers) //
+      .whenData((value) => [value.$1, value.$2].flatten().whereNotNull());
 }
 
 extension _MediaExtension on Query$BrowseAnime$Page$media {
