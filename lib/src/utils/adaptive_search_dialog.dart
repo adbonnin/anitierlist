@@ -77,7 +77,7 @@ class _AdaptiveSearchDialogState extends State<AdaptiveSearchDialog> {
           ),
         ),
         body: Padding(
-          padding: const EdgeInsets.all(Insets.p8),
+          padding: const EdgeInsets.fromLTRB(Insets.p8, 0, Insets.p8, Insets.p8),
           child: widget.content,
         ),
       ),

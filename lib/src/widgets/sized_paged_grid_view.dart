@@ -22,22 +22,19 @@ class SizedPagedGridView<PageKeyType, ItemType> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
-      final width = constraints.maxWidth + crossAxisSpacing;
-      final crossAxisCount = width ~/ itemWidth;
+      final crossAxisCount = (constraints.maxWidth + crossAxisSpacing) ~/ (itemWidth + crossAxisSpacing);
+      final width = (crossAxisCount * (itemWidth + crossAxisSpacing)) - crossAxisSpacing;
 
-      return Align(
-        alignment: Alignment.centerLeft,
-        child: SizedBox(
-          width: (width * crossAxisCount).floor().toDouble(),
-          child: PagedGridView(
-            pagingController: pagingController,
-            builderDelegate: PagedChildBuilderDelegate(itemBuilder: _buildItem),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              mainAxisSpacing: mainAxisSpacing,
-              crossAxisSpacing: crossAxisSpacing,
-              crossAxisCount: crossAxisCount,
-              mainAxisExtent: itemHeight,
-            ),
+      return SizedBox(
+        width: width,
+        child: PagedGridView(
+          pagingController: pagingController,
+          builderDelegate: PagedChildBuilderDelegate(itemBuilder: _buildItem),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            mainAxisSpacing: mainAxisSpacing,
+            crossAxisSpacing: crossAxisSpacing,
+            crossAxisCount: crossAxisCount,
+            mainAxisExtent: itemHeight,
           ),
         ),
       );

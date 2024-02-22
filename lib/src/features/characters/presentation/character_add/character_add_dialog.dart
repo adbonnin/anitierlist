@@ -4,7 +4,6 @@ import 'package:anitierlist/src/l10n/app_localizations.dart';
 import 'package:anitierlist/src/utils/adaptive_search_dialog.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_scroll_shadow/flutter_scroll_shadow.dart';
 
 void showCharacterAddDialog({
   required BuildContext context,
@@ -63,12 +62,10 @@ class _CharacterAddDialogState extends State<CharacterAddDialog> {
     return AdaptiveSearchDialog(
       title: Text(context.loc.characters_add_title),
       onChanged: _onChanged,
-      content: ScrollShadow(
-        child: CharacterAddGridView(
-          search: _search,
-          characters: _characters,
-          onCharacterTap: _onCharacterTap,
-        ),
+      content: CharacterAddGridView(
+        search: _search,
+        characters: _characters,
+        onCharacterTap: _onCharacterTap,
       ),
     );
   }

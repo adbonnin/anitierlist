@@ -6,6 +6,7 @@ import 'package:anitierlist/src/widgets/sized_paged_grid_view.dart';
 import 'package:anitierlist/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_scroll_shadow/flutter_scroll_shadow.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 class CharacterAddGridView extends ConsumerStatefulWidget {
@@ -57,13 +58,18 @@ class _CharacterSearchGridViewState extends ConsumerState<CharacterAddGridView> 
 
   @override
   Widget build(BuildContext context) {
-    return SizedPagedGridView(
-      itemBuilder: _buildItem,
-      itemWidth: TierListCard.width,
-      itemHeight: TierListCard.height,
-      mainAxisSpacing: Insets.p6,
-      crossAxisSpacing: Insets.p6,
-      pagingController: _pagingController,
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: ScrollShadow(
+        child: SizedPagedGridView(
+          itemBuilder: _buildItem,
+          itemWidth: TierListCard.width,
+          itemHeight: TierListCard.height,
+          mainAxisSpacing: Insets.p6,
+          crossAxisSpacing: Insets.p6,
+          pagingController: _pagingController,
+        ),
+      ),
     );
   }
 
