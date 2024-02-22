@@ -57,6 +57,8 @@ class _AdaptiveSearchDialogState extends State<AdaptiveSearchDialog> {
   }
 
   Widget _buildFullscreenDialog(BuildContext context) {
+    final searchIsEmpty = _controller.text.isEmpty;
+
     return Dialog.fullscreen(
       child: Scaffold(
         appBar: AppBar(
@@ -65,10 +67,12 @@ class _AdaptiveSearchDialogState extends State<AdaptiveSearchDialog> {
             controller: _controller,
             decoration: InputDecoration(
               border: InputBorder.none,
-              suffixIcon: IconButton(
-                onPressed: _onErasePressed,
-                icon: const Icon(Icons.close),
-              ),
+              suffixIcon: searchIsEmpty
+                  ? null
+                  : IconButton(
+                      onPressed: _onErasePressed,
+                      icon: const Icon(Icons.close),
+                    ),
             ),
           ),
         ),
@@ -81,6 +85,8 @@ class _AdaptiveSearchDialogState extends State<AdaptiveSearchDialog> {
   }
 
   Widget _buildAlertDialog(BuildContext context) {
+    final searchIsEmpty = _controller.text.isEmpty;
+
     return AlertDialog.adaptive(
       title: widget.title,
       content: SizedBox(
@@ -94,10 +100,12 @@ class _AdaptiveSearchDialogState extends State<AdaptiveSearchDialog> {
               decoration: InputDecoration(
                 border: const OutlineInputBorder(),
                 prefixIcon: const Icon(Icons.search),
-                suffixIcon: IconButton(
-                  onPressed: _onErasePressed,
-                  icon: const Icon(Icons.close),
-                ),
+                suffixIcon: searchIsEmpty
+                    ? null
+                    : IconButton(
+                        onPressed: _onErasePressed,
+                        icon: const Icon(Icons.close),
+                      ),
               ),
             ),
             Gaps.p8,
