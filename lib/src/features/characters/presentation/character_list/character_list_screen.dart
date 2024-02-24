@@ -5,6 +5,8 @@ import 'package:anitierlist/src/features/tierlist/domain/tierlist.dart';
 import 'package:anitierlist/src/features/tierlist/presentation/tierlist_list/tierlist_group_list.dart';
 import 'package:anitierlist/src/l10n/app_localizations.dart';
 import 'package:anitierlist/styles.dart';
+import 'package:bot_toast/bot_toast.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 class CharacterListScreen extends StatefulWidget {
@@ -59,7 +61,7 @@ class _CharacterListScreenState extends State<CharacterListScreen> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(context.loc.characters_empty_list),
+          Text(context.loc.characters_emptyList),
           Gaps.p18,
           TextButton.icon(
             onPressed: _onAddCharacterPressed,
@@ -72,9 +74,21 @@ class _CharacterListScreenState extends State<CharacterListScreen> {
   }
 
   void _onDeleteTierListTap(TierList tierList) {
+    final character = _characters.firstWhereOrNull((c) => c.id == tierList.id);
+
+    if (character == null) {
+      return;
+    }
+
     setState(() {
-      _characters = {..._characters}..removeWhere((c) => c.id == tierList.id);
+      _characters = {..._characters} //
+        ..remove(character);
     });
+
+    BotToast.showText(
+      text: context.loc.characters_characterRemoved(character.name),
+      duration: const Duration(seconds: 1),
+    );
   }
 
   Future<void> _onExportPressed() async {

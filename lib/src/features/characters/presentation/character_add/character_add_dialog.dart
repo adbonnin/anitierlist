@@ -2,6 +2,7 @@ import 'package:anitierlist/src/features/characters/domain/character.dart';
 import 'package:anitierlist/src/features/characters/presentation/character_add/character_add_grid_view.dart';
 import 'package:anitierlist/src/l10n/app_localizations.dart';
 import 'package:anitierlist/src/utils/adaptive_search_dialog.dart';
+import 'package:bot_toast/bot_toast.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
@@ -78,14 +79,23 @@ class _CharacterAddDialogState extends State<CharacterAddDialog> {
 
   void _onCharacterTap(Character character) {
     Set<Character> updatedCharacters;
+    String toastText;
+
     final foundCharacter = _characters.firstWhereOrNull((c) => c.id == character.id);
 
     if (foundCharacter != null) {
       updatedCharacters = {..._characters}..remove(foundCharacter);
+      toastText = context.loc.characters_characterRemoved(character.name);
     } //
     else {
       updatedCharacters = {..._characters, character};
+      toastText = context.loc.characters_characterAdded(character.name);
     }
+
+    BotToast.showText(
+      text: toastText,
+      duration: const Duration(seconds: 1),
+    );
 
     setState(() {
       _characters = updatedCharacters;

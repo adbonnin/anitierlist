@@ -1,6 +1,7 @@
 import 'package:anitierlist/src/features/anime/presentation/anime_list/anime_list_screen.dart';
 import 'package:anitierlist/src/features/characters/presentation/character_list/character_list_screen.dart';
 import 'package:anitierlist/src/router/main_shell_scaffold.dart';
+import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
@@ -16,6 +17,9 @@ GoRouter router(RouterRef ref) {
     routes: $appRoutes,
     initialLocation: '/anilist',
     debugLogDiagnostics: kDebugMode,
+    observers: [
+      BotToastNavigatorObserver(),
+    ],
   );
 }
 
