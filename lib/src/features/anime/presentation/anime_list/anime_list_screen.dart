@@ -10,6 +10,7 @@ import 'package:anitierlist/src/features/tierlist/presentation/tierlist_list/tie
 import 'package:anitierlist/src/l10n/app_localization_extension.dart';
 import 'package:anitierlist/src/l10n/app_localizations.dart';
 import 'package:anitierlist/src/utils/anime.dart';
+import 'package:anitierlist/src/utils/iterable_extensions.dart';
 import 'package:anitierlist/src/utils/season.dart';
 import 'package:anitierlist/src/widgets/async_value_widget.dart';
 import 'package:anitierlist/src/widgets/info_label.dart';
@@ -89,8 +90,8 @@ class _AnimeTierListScreenState extends ConsumerState<AnimeListScreen> {
               key: _groupListKey,
               tierLists: anime //
                   .map(_applyPreference)
-                  .map(_toTierList)
-                  .toList(),
+                  .stableSorted((a, b) => a.format.index - b.format.index)
+                  .map(_toTierList),
               onTierListTap: (tl) => _onAnimeTap(anime.where((a) => a.id == tl.id).firstOrNull),
               isLoading: _loading,
               toGroupLabel: context.loc.animeGroup,

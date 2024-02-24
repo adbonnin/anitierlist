@@ -75,7 +75,7 @@ class TierListGroupListState extends State<TierListGroupList> {
 
     final tierListGroups = animeScreenshotsByFormat.entries //
         .where((etr) => etr.value.isNotEmpty)
-        .map((etr) => _build(etr.key, etr.value));
+        .map((etr) => _buildGroup(etr.key, etr.value));
 
     final actions = [
       IconButton(
@@ -131,24 +131,28 @@ class TierListGroupListState extends State<TierListGroupList> {
     );
   }
 
-  Widget _build(String? group, List<(TierList, ScreenshotController)> tierListScreenshots) {
+  Widget _buildGroup(String? group, List<(TierList, ScreenshotController)> tierListScreenshots) {
     final toGroupLabel = widget.toGroupLabel;
     final groupLabel = (toGroupLabel == null || group == null) ? group : toGroupLabel(group);
 
     return TierListGroup(
       labelText: groupLabel,
       children: [
-        for (final tierListScreenshot in tierListScreenshots)
-          Screenshot(
-            controller: tierListScreenshot.$2,
-            child: InkWell(
-              onTap: () => widget.onTierListTap(tierListScreenshot.$1),
-              child: TierListCard(
-                tierList: tierListScreenshot.$1,
-              ),
-            ),
-          ),
+        for (final tierListScreenshot in tierListScreenshots) //
+          _buildItem(tierListScreenshot.$1, tierListScreenshot.$2)
       ],
+    );
+  }
+
+  Widget _buildItem(TierList tierList, ScreenshotController controller) {
+    return Screenshot(
+      controller: controller,
+      child: InkWell(
+        onTap: () => widget.onTierListTap(tierList),
+        child: TierListCard(
+          tierList: tierList,
+        ),
+      ),
     );
   }
 }

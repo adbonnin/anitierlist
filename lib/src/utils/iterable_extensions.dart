@@ -1,3 +1,5 @@
+import 'package:collection/collection.dart';
+
 extension IterableExtensions<E> on Iterable<E> {
   Iterable<E> intersperse(E Function(E previous, E next) generator) sync* {
     final iterator = this.iterator;
@@ -16,6 +18,17 @@ extension IterableExtensions<E> on Iterable<E> {
       yield current;
       previous = current;
     }
+  }
+
+  Iterable<E> stableSorted(Comparator<E> compare) {
+    int compareWithIndex((int, E) a, (int, E) b) {
+      final c = compare(a.$2, b.$2);
+      return c != 0 ? c : a.$1 - b.$1;
+    }
+
+    return mapIndexed((index, element) => (index, element)) //
+        .sorted(compareWithIndex)
+        .map((e) => e.$2);
   }
 }
 

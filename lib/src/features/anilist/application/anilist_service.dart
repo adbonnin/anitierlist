@@ -1,10 +1,8 @@
 import 'package:anitierlist/src/features/anilist/data/browse_anime.graphql.dart';
-import 'package:anitierlist/src/features/anilist/data/browse_characters.graphql.dart';
+import 'package:anitierlist/src/features/anilist/data/browse_anime_characters.graphql.dart';
 import 'package:anitierlist/src/features/anilist/data/schema.graphql.dart';
-import 'package:anitierlist/src/utils/anime.dart';
-import 'package:anitierlist/src/utils/iterable_extensions.dart';
+import 'package:anitierlist/src/features/anilist/data/search_characters.graphql.dart';
 import 'package:anitierlist/src/utils/season.dart';
-import 'package:collection/collection.dart';
 import 'package:graphql/client.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -25,55 +23,32 @@ class AnilistService {
 
   final GraphQLClient client;
 
-  Future<Iterable<Query$BrowseAnime$Page$media>> browseLeftovers({
-    required int year,
-    required Season season,
-  }) {
-    return browseAnime(
-      year: season.previousAnimeYear(year),
-      season: season.previous,
-      episodeGreater: 16,
-    );
-  }
-
-  Future<Iterable<Query$BrowseAnime$Page$media>> browseAnime({
+  Future<QueryResult<Query$BrowseAnime>> browseAnime({
+    int? page,
     int? year,
     Season? season,
     int? episodeGreater,
-  }) async {
-    final pages = <Iterable<Query$BrowseAnime$Page$media>>[];
-    bool hasNextPage = true;
-
-    while (hasNextPage) {
-      final result = await client.query$BrowseAnime(
-        Options$Query$BrowseAnime(
-          variables: Variables$Query$BrowseAnime(
-            page: pages.length + 1,
-            seasonYear: year,
-            season: season?.toEnum$MediaSeason(),
-            episodeGreater: episodeGreater,
-          ),
+  }) {
+    return client.query$BrowseAnime(
+      Options$Query$BrowseAnime(
+        variables: Variables$Query$BrowseAnime(
+          page: page,
+          seasonYear: year,
+          season: season?.toEnum$MediaSeason(),
+          episodeGreater: episodeGreater,
         ),
-      );
-
-      final page = result.parsedData?.Page;
-      final media = (page?.media ?? []).whereNotNull();
-
-      pages.add(media);
-      hasNextPage = (page?.pageInfo?.hasNextPage ?? false) && media.isNotEmpty;
-    }
-
-    return pages.flatten();
+      ),
+    );
   }
 
-  Future<QueryResult<Query$BrowseCharacters>> browseCharacters({
+  Future<QueryResult<Query$SearchCharacters>> searchCharacters({
     int? page,
     int? perPage,
     String? search,
   }) {
-    return client.query$BrowseCharacters(
-      Options$Query$BrowseCharacters(
-        variables: Variables$Query$BrowseCharacters(
+    return client.query$SearchCharacters(
+      Options$Query$SearchCharacters(
+        variables: Variables$Query$SearchCharacters(
           page: page,
           perPage: perPage,
           search: (search?.trim().isEmpty ?? true) ? null : search,
@@ -81,36 +56,20 @@ class AnilistService {
       ),
     );
   }
-}
 
-@riverpod
-Future<Iterable<Query$BrowseAnime$Page$media>> browseLeftovers(
-  BrowseLeftoversRef ref, {
-  required int year,
-  required Season season,
-}) {
-  final service = ref.watch(anilistServiceProvider);
-
-  return service.browseLeftovers(
-    year: year,
-    season: season,
-  );
-}
-
-@riverpod
-Future<Iterable<Query$BrowseAnime$Page$media>> browseAnime(
-  BrowseAnimeRef ref, {
-  int? year,
-  Season? season,
-  int? episodeGreater,
-}) {
-  final service = ref.watch(anilistServiceProvider);
-
-  return service.browseAnime(
-    year: year,
-    season: season,
-    episodeGreater: episodeGreater,
-  );
+  Future<QueryResult<Query$BrowseAnimeCharacters>> browseAnimeCharacters(
+    int? page,
+    int? id,
+  ) {
+    return client.query$BrowseAnimeCharacters(
+      Options$Query$BrowseAnimeCharacters(
+        variables: Variables$Query$BrowseAnimeCharacters(
+          page: page,
+          id: id,
+        ),
+      ),
+    );
+  }
 }
 
 extension _SeasonExtension on Season {
