@@ -22,6 +22,7 @@ query BrowseCharacters(
             image {
                 medium
             }
+            gender
         }
     }
 }

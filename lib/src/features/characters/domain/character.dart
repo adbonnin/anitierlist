@@ -1,3 +1,4 @@
+import 'package:anitierlist/src/features/characters/domain/gender.dart';
 import 'package:anitierlist/src/features/tierlist/domain/tierlist.dart';
 
 class Character {
@@ -5,11 +6,13 @@ class Character {
     required this.id,
     required this.name,
     required this.image,
+    required this.gender,
   });
 
   final int id;
   final String name;
   final String? image;
+  final Gender gender;
 
   TierList toTierList() {
     return TierList(

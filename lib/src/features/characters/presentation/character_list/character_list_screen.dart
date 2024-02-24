@@ -4,8 +4,8 @@ import 'package:anitierlist/src/features/tierlist/application/tierlist_service.d
 import 'package:anitierlist/src/features/tierlist/domain/tierlist.dart';
 import 'package:anitierlist/src/features/tierlist/presentation/tierlist_list/tierlist_group_list.dart';
 import 'package:anitierlist/src/l10n/app_localizations.dart';
+import 'package:anitierlist/src/widgets/toast.dart';
 import 'package:anitierlist/styles.dart';
-import 'package:bot_toast/bot_toast.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
@@ -85,10 +85,7 @@ class _CharacterListScreenState extends State<CharacterListScreen> {
         ..remove(character);
     });
 
-    BotToast.showText(
-      text: context.loc.characters_characterRemoved(character.name),
-      duration: const Duration(seconds: 1),
-    );
+    Toast.showCharacterRemovedToast(context, character);
   }
 
   Future<void> _onExportPressed() async {

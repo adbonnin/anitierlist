@@ -20,6 +20,9 @@
     "characters_characterAdded": "{name} has been added",
     "@characters_characterAdded": {
         "placeholders": {
+            "gender": {
+                "type": "String"
+            },
             "name": {
                 "type": "String"
             }
@@ -28,6 +31,9 @@
     "characters_characterRemoved": "{name} has been removed",
     "@characters_characterRemoved": {
         "placeholders": {
+            "gender": {
+                "type": "String"
+            },
             "name": {
                 "type": "String"
             }

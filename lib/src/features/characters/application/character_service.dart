@@ -1,6 +1,7 @@
 import 'package:anitierlist/src/features/anilist/application/anilist_service.dart';
 import 'package:anitierlist/src/features/anilist/data/browse_characters.graphql.dart';
 import 'package:anitierlist/src/features/characters/domain/character.dart';
+import 'package:anitierlist/src/features/characters/domain/gender.dart';
 import 'package:anitierlist/src/utils/graphql.dart';
 import 'package:collection/collection.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -47,6 +48,7 @@ extension _CharacterExtension on Query$BrowseCharacters$Page$characters {
       id: id,
       name: name?.userPreferred ?? '',
       image: image?.medium,
+      gender: Gender.fromGraphql(gender),
     );
   }
 }
