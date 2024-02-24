@@ -4,6 +4,7 @@ import 'package:anitierlist/src/features/tierlist/application/tierlist_service.d
 import 'package:anitierlist/src/features/tierlist/domain/tierlist.dart';
 import 'package:anitierlist/src/features/tierlist/presentation/tierlist_list/tierlist_group_list.dart';
 import 'package:anitierlist/src/l10n/app_localizations.dart';
+import 'package:anitierlist/styles.dart';
 import 'package:flutter/material.dart';
 
 class CharacterListScreen extends StatefulWidget {
@@ -31,6 +32,7 @@ class _CharacterListScreenState extends State<CharacterListScreen> {
           tooltip: context.loc.characters_add_title,
         )
       ],
+      emptyBuilder: _buildEmpty,
       isLoading: _loading,
       onTierListTap: _onDeleteTierListTap,
       onExportPressed: _onExportPressed,
@@ -50,6 +52,23 @@ class _CharacterListScreenState extends State<CharacterListScreen> {
     setState(() {
       _characters = characters;
     });
+  }
+
+  Widget _buildEmpty(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(context.loc.characters_empty_list),
+          Gaps.p18,
+          TextButton.icon(
+            onPressed: _onAddCharacterPressed,
+            icon: const Icon(Icons.person_add),
+            label: Text(context.loc.characters_add_title),
+          )
+        ],
+      ),
+    );
   }
 
   void _onDeleteTierListTap(TierList tierList) {

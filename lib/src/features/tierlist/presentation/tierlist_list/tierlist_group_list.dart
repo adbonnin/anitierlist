@@ -16,6 +16,7 @@ class TierListGroupList extends StatefulWidget {
     super.key,
     required this.tierLists,
     this.otherActions = const [],
+    this.emptyBuilder,
     required this.isLoading,
     required this.onTierListTap,
     this.toGroupLabel,
@@ -25,6 +26,7 @@ class TierListGroupList extends StatefulWidget {
 
   final Iterable<TierList> tierLists;
   final Iterable<Widget> otherActions;
+  final WidgetBuilder? emptyBuilder;
   final bool isLoading;
   final void Function(TierList tierList) onTierListTap;
   final String Function(String group)? toGroupLabel;
@@ -73,8 +75,7 @@ class TierListGroupListState extends State<TierListGroupList> {
 
     final tierListGroups = animeScreenshotsByFormat.entries //
         .where((etr) => etr.value.isNotEmpty)
-        .map((etr) => _build(etr.key, etr.value))
-        .toList();
+        .map((etr) => _build(etr.key, etr.value));
 
     final actions = [
       IconButton(
@@ -100,28 +101,30 @@ class TierListGroupListState extends State<TierListGroupList> {
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(Insets.p8, Insets.p4, Insets.p8, Insets.p4),
+            padding: const EdgeInsets.symmetric(vertical: Insets.p4, horizontal: Insets.p8),
             child: Row(
               children: actions,
             ),
           ),
-          const Divider(height: 2),
+          const Divider(height: 1),
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(Insets.p16, 0, Insets.p16, 0),
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    for (final tierListGroup in tierListGroups) ...[
-                      Gaps.p18,
-                      tierListGroup,
-                    ]
-                  ],
-                ),
-              ),
-            ),
+            child: tierListGroups.isEmpty
+                ? widget.emptyBuilder?.call(context) ?? const SizedBox()
+                : Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 0, horizontal: Insets.p16),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          for (final tierListGroup in tierListGroups) ...[
+                            Gaps.p18,
+                            tierListGroup,
+                          ]
+                        ],
+                      ),
+                    ),
+                  ),
           ),
         ],
       ),

@@ -17,6 +17,7 @@
     "anilist_title": "AniList",
     "characters_title": "Characters",
     "characters_add_title": "Add characters",
+    "characters_empty_list": "No characters added yet",
     "anime_title":"Anime",
     "anime_tierlist_year": "Year",
     "anime_tierlist_season": "Season",

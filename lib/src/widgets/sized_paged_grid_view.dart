@@ -21,7 +21,7 @@ class SizedPagedGridView<PageKeyType, ItemType> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, constraints) {
+    return LayoutBuilder(builder: (_, constraints) {
       final crossAxisCount = (constraints.maxWidth + crossAxisSpacing) ~/ (itemWidth + crossAxisSpacing);
       final width = (crossAxisCount * (itemWidth + crossAxisSpacing)) - crossAxisSpacing;
 
