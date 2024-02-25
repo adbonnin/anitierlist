@@ -1,5 +1,7 @@
 import 'package:anitierlist/src/features/characters/domain/character.dart';
-import 'package:anitierlist/src/features/characters/presentation/character_add/character_add_grid_view.dart';
+import 'package:anitierlist/src/features/characters/presentation/character_search/character_search_view.dart';
+import 'package:anitierlist/src/features/tierlist/domain/tierlist.dart';
+import 'package:anitierlist/src/features/tierlist/presentation/tierlist_list/tierlist_card.dart';
 import 'package:anitierlist/src/l10n/app_localizations.dart';
 import 'package:anitierlist/src/utils/adaptive_search_dialog.dart';
 import 'package:anitierlist/src/widgets/toast.dart';
@@ -52,6 +54,10 @@ class _CharacterAddDialogState extends State<CharacterAddDialog> {
   var _search = '';
   late Set<Character> _characters;
 
+  Character? _searchCharacter(int id) {
+    return _characters.firstWhereOrNull((c) => c.id == id);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -63,10 +69,34 @@ class _CharacterAddDialogState extends State<CharacterAddDialog> {
     return AdaptiveSearchDialog(
       title: Text(context.loc.characters_add_title),
       onChanged: _onChanged,
-      content: CharacterAddGridView(
+      content: CharacterSearchView(
         search: _search,
-        characters: _characters,
-        onCharacterTap: _onCharacterTap,
+        itemBuilder: _buildItem,
+      ),
+    );
+  }
+
+  Widget _buildItem(BuildContext context, Character character, int index) {
+    final exists = _searchCharacter(character.id) != null;
+
+    final tierList = TierList(
+      id: character.id,
+      title: character.name,
+      cover: character.image,
+    );
+
+    return InkWell(
+      onTap: () => _onCharacterTap(character),
+      child: Stack(
+        children: [
+          TierListCard(
+            tierList: tierList,
+          ),
+          if (exists)
+            Container(
+              color: Colors.black54,
+            ),
+        ],
       ),
     );
   }
@@ -80,7 +110,7 @@ class _CharacterAddDialogState extends State<CharacterAddDialog> {
   void _onCharacterTap(Character character) {
     Set<Character> updatedCharacters;
 
-    final foundCharacter = _characters.firstWhereOrNull((c) => c.id == character.id);
+    final foundCharacter = _searchCharacter(character.id);
 
     if (foundCharacter != null) {
       updatedCharacters = {..._characters}..remove(foundCharacter);

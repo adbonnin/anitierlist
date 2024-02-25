@@ -1,6 +1,5 @@
 import 'package:anitierlist/src/features/characters/application/character_service.dart';
 import 'package:anitierlist/src/features/characters/domain/character.dart';
-import 'package:anitierlist/src/features/tierlist/domain/tierlist.dart';
 import 'package:anitierlist/src/features/tierlist/presentation/tierlist_list/tierlist_card.dart';
 import 'package:anitierlist/src/widgets/sized_paged_grid_view.dart';
 import 'package:anitierlist/styles.dart';
@@ -9,32 +8,30 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_scroll_shadow/flutter_scroll_shadow.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
-class CharacterAddGridView extends ConsumerStatefulWidget {
-  const CharacterAddGridView({
+typedef CharacterWidgetBuilder = Widget Function(BuildContext context, Character character, int index);
+
+class CharacterSearchView extends ConsumerStatefulWidget {
+  const CharacterSearchView({
     super.key,
     required this.search,
-    this.characters = const {},
-    required this.onCharacterTap,
+    required this.itemBuilder,
   });
 
   final String search;
-  final Set<Character> characters;
-  final void Function(Character character) onCharacterTap;
+  final CharacterWidgetBuilder itemBuilder;
 
   @override
-  ConsumerState<CharacterAddGridView> createState() => _CharacterSearchGridViewState();
+  ConsumerState<CharacterSearchView> createState() => _CharacterSearchGridViewState();
 }
 
-class _CharacterSearchGridViewState extends ConsumerState<CharacterAddGridView> {
+class _CharacterSearchGridViewState extends ConsumerState<CharacterSearchView> {
   late final PagingController<int, Character> _pagingController;
-  late Set<int> _characterIds;
 
   @override
   void initState() {
     super.initState();
     _pagingController = PagingController(firstPageKey: 1);
     _pagingController.addPageRequestListener(_fetchPage);
-    _characterIds = widget.characters.map((c) => c.id).toSet();
   }
 
   @override
@@ -44,15 +41,11 @@ class _CharacterSearchGridViewState extends ConsumerState<CharacterAddGridView> 
   }
 
   @override
-  void didUpdateWidget(CharacterAddGridView oldWidget) {
+  void didUpdateWidget(CharacterSearchView oldWidget) {
     super.didUpdateWidget(oldWidget);
 
     if (oldWidget.search != widget.search) {
       _pagingController.refresh();
-    }
-
-    if (oldWidget.characters != widget.characters) {
-      _characterIds = widget.characters.map((c) => c.id).toSet();
     }
   }
 
@@ -62,7 +55,7 @@ class _CharacterSearchGridViewState extends ConsumerState<CharacterAddGridView> 
       alignment: Alignment.centerLeft,
       child: ScrollShadow(
         child: SizedPagedGridView(
-          itemBuilder: _buildItem,
+          itemBuilder: widget.itemBuilder,
           itemWidth: TierListCard.width,
           itemHeight: TierListCard.height,
           mainAxisSpacing: Insets.p6,
@@ -99,30 +92,5 @@ class _CharacterSearchGridViewState extends ConsumerState<CharacterAddGridView> 
     catch (error) {
       _pagingController.error = error;
     }
-  }
-
-  Widget _buildItem(BuildContext context, Character item, int index) {
-    final exists = _characterIds.contains(item.id);
-
-    final tierList = TierList(
-      id: item.id,
-      title: item.name,
-      cover: item.image,
-    );
-
-    return InkWell(
-      onTap: () => widget.onCharacterTap(item),
-      child: Stack(
-        children: [
-          TierListCard(
-            tierList: tierList,
-          ),
-          if (exists)
-            Container(
-              color: Colors.black54,
-            ),
-        ],
-      ),
-    );
   }
 }

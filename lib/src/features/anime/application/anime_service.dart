@@ -1,6 +1,6 @@
 import 'package:anitierlist/src/features/anilist/application/anilist_service.dart';
-import 'package:anitierlist/src/features/anilist/data/browse_anime.graphql.dart';
 import 'package:anitierlist/src/features/anilist/data/schema.graphql.dart';
+import 'package:anitierlist/src/features/anilist/data/search_anime.graphql.dart';
 import 'package:anitierlist/src/features/anime/domain/anime.dart';
 import 'package:anitierlist/src/utils/anime.dart';
 import 'package:anitierlist/src/utils/iterable_extensions.dart';
@@ -53,11 +53,11 @@ class AnimeService {
     Season? season,
     int? episodeGreater,
   }) async {
-    final pages = <Iterable<Query$BrowseAnime$Page$media>>[];
+    final pages = <Iterable<Query$SearchAnime$Page$media>>[];
     bool hasNextPage = true;
 
     while (hasNextPage) {
-      final result = await anilistService.browseAnime(
+      final result = await anilistService.searchAnime(
         page: pages.length + 1,
         year: year,
         season: season,
@@ -121,7 +121,7 @@ AsyncValue<Iterable<Anime>> browseAnimeSeason(BrowseAnimeSeasonRef ref, int year
       .whenData((value) => [value.$1, value.$2].flatten());
 }
 
-extension _MediaExtension on Query$BrowseAnime$Page$media {
+extension _MediaExtension on Query$SearchAnime$Page$media {
   Anime? toAnime() {
     final animeFormat = format?.toMediaFormat();
 

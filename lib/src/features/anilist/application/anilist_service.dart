@@ -1,6 +1,6 @@
-import 'package:anitierlist/src/features/anilist/data/browse_anime.graphql.dart';
 import 'package:anitierlist/src/features/anilist/data/browse_anime_characters.graphql.dart';
 import 'package:anitierlist/src/features/anilist/data/schema.graphql.dart';
+import 'package:anitierlist/src/features/anilist/data/search_anime.graphql.dart';
 import 'package:anitierlist/src/features/anilist/data/search_characters.graphql.dart';
 import 'package:anitierlist/src/utils/season.dart';
 import 'package:graphql/client.dart';
@@ -23,16 +23,18 @@ class AnilistService {
 
   final GraphQLClient client;
 
-  Future<QueryResult<Query$BrowseAnime>> browseAnime({
+  Future<QueryResult<Query$SearchAnime>> searchAnime({
     int? page,
+    String? search,
     int? year,
     Season? season,
     int? episodeGreater,
   }) {
-    return client.query$BrowseAnime(
-      Options$Query$BrowseAnime(
-        variables: Variables$Query$BrowseAnime(
+    return client.query$SearchAnime(
+      Options$Query$SearchAnime(
+        variables: Variables$Query$SearchAnime(
           page: page,
+          search: search,
           seasonYear: year,
           season: season?.toEnum$MediaSeason(),
           episodeGreater: episodeGreater,

@@ -1,0 +1,40 @@
+query SearchAnime(
+    $page: Int = 1
+    $search: String
+    $format: [MediaFormat]
+    $episodeGreater: Int
+    $season: MediaSeason
+    $seasonYear: Int
+    $year: String
+) {
+    Page(page: $page, perPage: 20) {
+        pageInfo {
+            total
+            perPage
+            currentPage
+            lastPage
+            hasNextPage
+        }
+        media(
+            episodes_greater: $episodeGreater
+            season: $season
+            format_in: $format
+            search: $search
+            seasonYear: $seasonYear
+            startDate_like: $year
+            isAdult: false
+            sort: [POPULARITY_DESC, SCORE_DESC]
+        ) {
+            id
+            title {
+                english
+                native
+                userPreferred
+            }
+            coverImage {
+                medium
+            }
+            format
+        }
+    }
+}
