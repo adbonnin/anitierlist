@@ -1,5 +1,5 @@
 import 'package:anitierlist/src/features/characters/domain/character.dart';
-import 'package:anitierlist/src/features/characters/presentation/character_search/character_search_view.dart';
+import 'package:anitierlist/src/features/characters/presentation/character_search/character_search_tabbar_view.dart';
 import 'package:anitierlist/src/features/tierlist/domain/tierlist.dart';
 import 'package:anitierlist/src/features/tierlist/presentation/tierlist_list/tierlist_card.dart';
 import 'package:anitierlist/src/l10n/app_localizations.dart';
@@ -69,7 +69,7 @@ class _CharacterAddDialogState extends State<CharacterAddDialog> {
     return AdaptiveSearchDialog(
       title: Text(context.loc.characters_add_title),
       onChanged: _onChanged,
-      content: CharacterSearchView(
+      content: CharacterSearchTabBarView(
         search: _search,
         itemBuilder: _buildItem,
       ),

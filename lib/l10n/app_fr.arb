@@ -12,6 +12,8 @@
     "characters_add_title": "Ajouter des personnages",
     "characters_characterAdded": "{gender, select, male{{name} a été ajouté} female{{name} a été ajoutée} other{{name} a été ajouté.e}}",
     "characters_characterRemoved": "{gender, select, male{{name} a été supprimé} female{{name} a été supprimée} other{{name} a été supprimé.e}}",
+    "characters_searchAnime": "Anime",
+    "characters_searchCharacters": "Characters",
     "characters_emptyList": "Aucun personnage ajouté pour l'instant",
     "anime_title":"Anime",
     "anime_tierlist_year": "Année",

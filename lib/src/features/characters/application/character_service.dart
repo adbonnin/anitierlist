@@ -19,7 +19,7 @@ class CharacterService {
 
   final AnilistService anilistService;
 
-  Future<PagedResult<List<Character>>> browseCharacters(String? search, int page) async {
+  Future<PagedResult<List<Character>>> searchCharacters(String? search, int page) async {
     final result = await anilistService.searchCharacters(
       search: search,
       page: page,
@@ -27,16 +27,11 @@ class CharacterService {
     );
 
     final p = result.parsedData?.Page;
-
-    final characters = (p?.characters ?? []) //
-        .whereNotNull()
-        .map((c) => c.toCharacter())
-        .toList();
-
+    final characters = (p?.characters ?? []).map((c) => c?.toCharacter());
     final hasNextPage = (p?.pageInfo?.hasNextPage ?? false) && characters.isNotEmpty;
 
     return PagedResult(
-      value: characters,
+      value: characters.whereNotNull().toList(),
       hasNextPage: hasNextPage,
     );
   }

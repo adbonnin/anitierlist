@@ -39,6 +39,8 @@
             }
         }
     },
+    "characters_searchAnime": "Anime",
+    "characters_searchCharacters": "Characters",
     "characters_emptyList": "No characters added yet",
     "anime_title":"Anime",
     "anime_tierlist_year": "Year",

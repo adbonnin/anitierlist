@@ -3,6 +3,7 @@ import 'package:anitierlist/src/features/anilist/data/schema.graphql.dart';
 import 'package:anitierlist/src/features/anilist/data/search_anime.graphql.dart';
 import 'package:anitierlist/src/features/anime/domain/anime.dart';
 import 'package:anitierlist/src/utils/anime.dart';
+import 'package:anitierlist/src/utils/graphql.dart';
 import 'package:anitierlist/src/utils/iterable_extensions.dart';
 import 'package:anitierlist/src/utils/riverpod.dart';
 import 'package:anitierlist/src/utils/season.dart';
@@ -72,6 +73,23 @@ class AnimeService {
     }
 
     return pages.flatten().map((e) => e.toAnime()).whereNotNull();
+  }
+
+  Future<PagedResult<List<Anime>>> searchAnime(String? search, int page) async {
+    final result = await anilistService.searchAnime(
+      search: search,
+      page: page,
+      perPage: 12,
+    );
+
+    final p = result.parsedData?.Page;
+    final anime = (p?.media ?? []).map((c) => c?.toAnime());
+    final hasNextPage = (p?.pageInfo?.hasNextPage ?? false) && anime.isNotEmpty;
+
+    return PagedResult(
+      value: anime.whereNotNull().toList(),
+      hasNextPage: hasNextPage,
+    );
   }
 }
 

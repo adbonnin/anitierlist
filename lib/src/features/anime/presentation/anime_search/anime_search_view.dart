@@ -1,31 +1,28 @@
-import 'package:anitierlist/src/features/characters/application/character_service.dart';
-import 'package:anitierlist/src/features/characters/domain/character.dart';
-import 'package:anitierlist/src/features/tierlist/presentation/tierlist_list/tierlist_card.dart';
-import 'package:anitierlist/src/widgets/sized_paged_grid_view.dart';
-import 'package:anitierlist/styles.dart';
+import 'package:anitierlist/src/features/anime/application/anime_service.dart';
+import 'package:anitierlist/src/features/anime/domain/anime.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_scroll_shadow/flutter_scroll_shadow.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
-typedef CharacterWidgetBuilder = Widget Function(BuildContext context, Character character, int index);
+typedef AnimeWidgetBuilder = Widget Function(BuildContext context, Anime anime, int index);
 
-class CharacterSearchView extends ConsumerStatefulWidget {
-  const CharacterSearchView({
+class AnimeSearchView extends ConsumerStatefulWidget {
+  const AnimeSearchView({
     super.key,
     required this.search,
     required this.itemBuilder,
   });
 
   final String search;
-  final CharacterWidgetBuilder itemBuilder;
+  final AnimeWidgetBuilder itemBuilder;
 
   @override
-  ConsumerState<CharacterSearchView> createState() => _CharacterSearchGridViewState();
+  ConsumerState<AnimeSearchView> createState() => _CharacterSearchGridViewState();
 }
 
-class _CharacterSearchGridViewState extends ConsumerState<CharacterSearchView> {
-  late final PagingController<int, Character> _pagingController;
+class _CharacterSearchGridViewState extends ConsumerState<AnimeSearchView> {
+  late final PagingController<int, Anime> _pagingController;
 
   @override
   void initState() {
@@ -41,7 +38,7 @@ class _CharacterSearchGridViewState extends ConsumerState<CharacterSearchView> {
   }
 
   @override
-  void didUpdateWidget(CharacterSearchView oldWidget) {
+  void didUpdateWidget(AnimeSearchView oldWidget) {
     super.didUpdateWidget(oldWidget);
 
     if (oldWidget.search != widget.search) {
@@ -54,20 +51,18 @@ class _CharacterSearchGridViewState extends ConsumerState<CharacterSearchView> {
     return Align(
       alignment: Alignment.centerLeft,
       child: ScrollShadow(
-        child: SizedPagedGridView(
-          itemBuilder: widget.itemBuilder,
-          itemWidth: TierListCard.width,
-          itemHeight: TierListCard.height,
-          mainAxisSpacing: Insets.p6,
-          crossAxisSpacing: Insets.p6,
+        child: PagedListView(
           pagingController: _pagingController,
+          builderDelegate: PagedChildBuilderDelegate(
+            itemBuilder: widget.itemBuilder,
+          ),
         ),
       ),
     );
   }
 
   Future<void> _fetchPage(int pageKey) async {
-    final service = ref.read(characterServiceProvider);
+    final service = ref.read(animeServiceProvider);
     final pagingState = _pagingController.value;
     final search = widget.search;
 
@@ -76,7 +71,7 @@ class _CharacterSearchGridViewState extends ConsumerState<CharacterSearchView> {
     }
 
     try {
-      final result = await service.searchCharacters(search, pageKey);
+      final result = await service.searchAnime(search, pageKey);
 
       if (!identical(pagingState, _pagingController.value)) {
         return;

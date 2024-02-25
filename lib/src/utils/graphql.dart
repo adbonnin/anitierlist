@@ -1,3 +1,5 @@
+typedef ItemSearch<T> = Future<PagedResult<List<T>>> Function(String search, int page);
+
 class PagedResult<T> {
   const PagedResult({
     required this.value,

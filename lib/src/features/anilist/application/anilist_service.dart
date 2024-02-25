@@ -25,6 +25,7 @@ class AnilistService {
 
   Future<QueryResult<Query$SearchAnime>> searchAnime({
     int? page,
+    int? perPage,
     String? search,
     int? year,
     Season? season,
@@ -34,6 +35,7 @@ class AnilistService {
       Options$Query$SearchAnime(
         variables: Variables$Query$SearchAnime(
           page: page,
+          perPage: perPage,
           search: search,
           seasonYear: year,
           season: season?.toEnum$MediaSeason(),

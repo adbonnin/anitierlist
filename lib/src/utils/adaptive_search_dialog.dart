@@ -90,8 +90,7 @@ class _AdaptiveSearchDialogState extends State<AdaptiveSearchDialog> {
     return AlertDialog.adaptive(
       title: widget.title,
       content: SizedBox(
-        width: Sizes.dialogMinWidth,
-        height: Sizes.dialogMinHeight,
+        width: double.maxFinite,
         child: Column(
           children: [
             TextField(
