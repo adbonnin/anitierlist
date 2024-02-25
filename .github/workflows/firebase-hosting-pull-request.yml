@@ -16,13 +16,12 @@ jobs:
 
       - name: Build
         run: |
-          version="${GITHUB_REF_NAME:1}"
           build_number=${{github.run_number}}
           
           flutter config --enable-web
           flutter pub get
           dart run build_runner build --delete-conflicting-outputs
-          flutter build web --web-renderer canvaskit --release --build-name $version --build-number $build_number
+          flutter build web --web-renderer canvaskit --release --build-number $build_number
 
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
