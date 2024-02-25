@@ -1,0 +1,58 @@
+query BrowseAnimeCharacters(
+    $id: Int,
+    $page: Int
+) {
+    Media(id: $id) {
+        id
+        characters(page: $page, sort: [ROLE, RELEVANCE, ID]) {
+            pageInfo {
+                total
+                perPage
+                currentPage
+                lastPage
+                hasNextPage
+            }
+            edges {
+                id
+                role
+                name
+                node {
+                    ...SimpleCharacter
+                }
+            }
+        }
+    }
+}
+
+query SearchCharacters(
+    $page: Int = 1
+    $perPage: Int = 30,
+    $search: String,
+) {
+    Page(page:$page, perPage:$perPage) {
+        pageInfo {
+            total
+            perPage
+            currentPage
+            lastPage
+            hasNextPage
+        }
+        characters(
+            search: $search,
+            sort: FAVOURITES_DESC
+        ) {
+            ...SimpleCharacter
+        }
+    }
+}
+
+fragment SimpleCharacter on Character {
+    id
+    name {
+        userPreferred
+    }
+    image {
+        medium
+    }
+    gender
+}

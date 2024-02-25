@@ -1,7 +1,6 @@
-import 'package:anitierlist/src/features/anilist/data/browse_anime_characters.graphql.dart';
+import 'package:anitierlist/src/features/anilist/data/anime.graphql.dart';
+import 'package:anitierlist/src/features/anilist/data/character.graphql.dart';
 import 'package:anitierlist/src/features/anilist/data/schema.graphql.dart';
-import 'package:anitierlist/src/features/anilist/data/search_anime.graphql.dart';
-import 'package:anitierlist/src/features/anilist/data/search_characters.graphql.dart';
 import 'package:anitierlist/src/utils/season.dart';
 import 'package:graphql/client.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

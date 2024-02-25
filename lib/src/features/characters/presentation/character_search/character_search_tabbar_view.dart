@@ -1,5 +1,6 @@
+import 'package:anitierlist/src/features/characters/presentation/character_paged_grid_view.dart';
 import 'package:anitierlist/src/features/characters/presentation/character_search/character_search_anime_tab.dart';
-import 'package:anitierlist/src/features/characters/presentation/character_search/character_search_view.dart';
+import 'package:anitierlist/src/features/characters/presentation/character_search/character_search_character_tab.dart';
 import 'package:anitierlist/src/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
@@ -26,7 +27,7 @@ class CharacterSearchTabBarView extends StatelessWidget {
           Expanded(
             child: TabBarView(
               children: [
-                CharacterSearchView(
+                CharacterSearchCharacterTab(
                   search: search,
                   itemBuilder: itemBuilder,
                 ),

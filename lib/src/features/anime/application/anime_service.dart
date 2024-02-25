@@ -1,6 +1,6 @@
 import 'package:anitierlist/src/features/anilist/application/anilist_service.dart';
+import 'package:anitierlist/src/features/anilist/data/anime.graphql.dart';
 import 'package:anitierlist/src/features/anilist/data/schema.graphql.dart';
-import 'package:anitierlist/src/features/anilist/data/search_anime.graphql.dart';
 import 'package:anitierlist/src/features/anime/domain/anime.dart';
 import 'package:anitierlist/src/utils/anime.dart';
 import 'package:anitierlist/src/utils/graphql.dart';

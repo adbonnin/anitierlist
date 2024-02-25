@@ -15,7 +15,7 @@ class CharacterSearchAnimeCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: InkWell(
-        onTap: () {},
+        onTap: onTap,
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: Insets.p6, horizontal: Insets.p12),
           child: Text(

@@ -1,30 +1,28 @@
-import 'package:anitierlist/src/features/characters/application/character_service.dart';
 import 'package:anitierlist/src/features/characters/domain/character.dart';
 import 'package:anitierlist/src/features/tierlist/presentation/tierlist_list/tierlist_card.dart';
+import 'package:anitierlist/src/utils/graphql.dart';
 import 'package:anitierlist/src/widgets/sized_paged_grid_view.dart';
 import 'package:anitierlist/styles.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_scroll_shadow/flutter_scroll_shadow.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 typedef CharacterWidgetBuilder = Widget Function(BuildContext context, Character character, int index);
 
-class CharacterSearchView extends ConsumerStatefulWidget {
-  const CharacterSearchView({
+class CharacterPagedGridView extends StatefulWidget {
+  const CharacterPagedGridView({
     super.key,
-    required this.search,
+    required this.itemFinder,
     required this.itemBuilder,
   });
 
-  final String search;
+  final PagedItemFinder<Character> itemFinder;
   final CharacterWidgetBuilder itemBuilder;
 
   @override
-  ConsumerState<CharacterSearchView> createState() => _CharacterSearchGridViewState();
+  State<CharacterPagedGridView> createState() => _CharacterPagedGridViewState();
 }
 
-class _CharacterSearchGridViewState extends ConsumerState<CharacterSearchView> {
+class _CharacterPagedGridViewState extends State<CharacterPagedGridView> {
   late final PagingController<int, Character> _pagingController;
 
   @override
@@ -41,42 +39,35 @@ class _CharacterSearchGridViewState extends ConsumerState<CharacterSearchView> {
   }
 
   @override
-  void didUpdateWidget(CharacterSearchView oldWidget) {
+  void didUpdateWidget(CharacterPagedGridView oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    if (oldWidget.search != widget.search) {
+    if (oldWidget.itemFinder != widget.itemFinder) {
       _pagingController.refresh();
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: ScrollShadow(
-        child: SizedPagedGridView(
-          itemBuilder: widget.itemBuilder,
-          itemWidth: TierListCard.width,
-          itemHeight: TierListCard.height,
-          mainAxisSpacing: Insets.p6,
-          crossAxisSpacing: Insets.p6,
-          pagingController: _pagingController,
-        ),
-      ),
+    return SizedPagedGridView(
+      itemBuilder: widget.itemBuilder,
+      itemWidth: TierListCard.width,
+      itemHeight: TierListCard.height,
+      mainAxisSpacing: Insets.p6,
+      crossAxisSpacing: Insets.p6,
+      pagingController: _pagingController,
     );
   }
 
   Future<void> _fetchPage(int pageKey) async {
-    final service = ref.read(characterServiceProvider);
     final pagingState = _pagingController.value;
-    final search = widget.search;
 
     if (pageKey != pagingState.nextPageKey) {
       return;
     }
 
     try {
-      final result = await service.searchCharacters(search, pageKey);
+      final result = await widget.itemFinder(pageKey);
 
       if (!identical(pagingState, _pagingController.value)) {
         return;

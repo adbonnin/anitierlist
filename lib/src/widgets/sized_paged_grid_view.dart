@@ -25,16 +25,19 @@ class SizedPagedGridView<PageKeyType, ItemType> extends StatelessWidget {
       final crossAxisCount = (constraints.maxWidth + crossAxisSpacing) ~/ (itemWidth + crossAxisSpacing);
       final width = (crossAxisCount * (itemWidth + crossAxisSpacing)) - crossAxisSpacing;
 
-      return SizedBox(
-        width: width,
-        child: PagedGridView(
-          pagingController: pagingController,
-          builderDelegate: PagedChildBuilderDelegate(itemBuilder: _buildItem),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            mainAxisSpacing: mainAxisSpacing,
-            crossAxisSpacing: crossAxisSpacing,
-            crossAxisCount: crossAxisCount,
-            mainAxisExtent: itemHeight,
+      return Align(
+        alignment: Alignment.centerLeft,
+        child: SizedBox(
+          width: width,
+          child: PagedGridView(
+            pagingController: pagingController,
+            builderDelegate: PagedChildBuilderDelegate(itemBuilder: _buildItem),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              mainAxisSpacing: mainAxisSpacing,
+              crossAxisSpacing: crossAxisSpacing,
+              crossAxisCount: crossAxisCount,
+              mainAxisExtent: itemHeight,
+            ),
           ),
         ),
       );

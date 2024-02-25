@@ -1,5 +1,5 @@
 import 'package:anitierlist/src/features/anilist/application/anilist_service.dart';
-import 'package:anitierlist/src/features/anilist/data/search_characters.graphql.dart';
+import 'package:anitierlist/src/features/anilist/data/character.graphql.dart';
 import 'package:anitierlist/src/features/characters/domain/character.dart';
 import 'package:anitierlist/src/features/characters/domain/gender.dart';
 import 'package:anitierlist/src/utils/graphql.dart';
@@ -35,9 +35,25 @@ class CharacterService {
       hasNextPage: hasNextPage,
     );
   }
+
+  Future<PagedResult<List<Character>>> browseAnimeCharacters(int animeId, int page) async {
+    final result = await anilistService.browseAnimeCharacters(
+      page,
+      animeId,
+    );
+
+    final p = result.parsedData?.Media?.characters;
+    final characters = (p?.edges ?? []).map((c) => c?.node?.toCharacter());
+    final hasNextPage = (p?.pageInfo?.hasNextPage ?? false) && characters.isNotEmpty;
+
+    return PagedResult(
+      value: characters.whereNotNull().toList(),
+      hasNextPage: hasNextPage,
+    );
+  }
 }
 
-extension _CharacterExtension on Query$SearchCharacters$Page$characters {
+extension _SimpleCharacterExtension on Fragment$SimpleCharacter {
   Character toCharacter() {
     return Character(
       id: id,
