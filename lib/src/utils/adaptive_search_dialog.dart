@@ -76,10 +76,7 @@ class _AdaptiveSearchDialogState extends State<AdaptiveSearchDialog> {
             ),
           ),
         ),
-        body: Padding(
-          padding: const EdgeInsets.fromLTRB(Insets.p8, 0, Insets.p8, Insets.p8),
-          child: widget.content,
-        ),
+        body: widget.content,
       ),
     );
   }
@@ -109,7 +106,10 @@ class _AdaptiveSearchDialogState extends State<AdaptiveSearchDialog> {
             ),
             Gaps.p8,
             Expanded(
-              child: widget.content,
+              child: Card(
+                margin: EdgeInsets.zero,
+                child: widget.content,
+              ),
             ),
           ],
         ),

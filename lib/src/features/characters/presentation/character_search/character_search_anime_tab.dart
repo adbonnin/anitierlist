@@ -4,7 +4,7 @@ import 'package:anitierlist/src/features/anime/presentation/anime_paged_list_vie
 import 'package:anitierlist/src/features/characters/application/character_service.dart';
 import 'package:anitierlist/src/features/characters/domain/character.dart';
 import 'package:anitierlist/src/features/characters/presentation/character_paged_grid_view.dart';
-import 'package:anitierlist/src/features/characters/presentation/character_search/character_search_anime_card.dart';
+import 'package:anitierlist/src/features/characters/presentation/character_search/character_search_anime_list_tile.dart';
 import 'package:anitierlist/src/utils/graphql.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -78,7 +78,7 @@ class _CharacterSearchAnimeTabState extends ConsumerState<CharacterSearchAnimeTa
   }
 
   Widget _buildAnimeItem(BuildContext context, Anime anime, int index) {
-    return CharacterSearchAnimeCard(
+    return CharacterSearchAnimeListTile(
       title: anime.title,
       onTap: () => _onAnimeTap(anime),
     );

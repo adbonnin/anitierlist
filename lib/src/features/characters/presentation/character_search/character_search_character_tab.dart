@@ -2,6 +2,7 @@ import 'package:anitierlist/src/features/characters/application/character_servic
 import 'package:anitierlist/src/features/characters/domain/character.dart';
 import 'package:anitierlist/src/features/characters/presentation/character_paged_grid_view.dart';
 import 'package:anitierlist/src/utils/graphql.dart';
+import 'package:anitierlist/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -39,9 +40,12 @@ class _CharacterSearchCharacterTabState extends ConsumerState<CharacterSearchCha
 
   @override
   Widget build(BuildContext context) {
-    return CharacterPagedGridView(
-      itemFinder: _characterFinder,
-      itemBuilder: widget.itemBuilder,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: Insets.p8),
+      child: CharacterPagedGridView(
+        itemFinder: _characterFinder,
+        itemBuilder: widget.itemBuilder,
+      ),
     );
   }
 
