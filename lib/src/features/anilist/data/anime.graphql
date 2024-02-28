@@ -10,11 +10,7 @@ query SearchAnime(
 ) {
     Page(page: $page, perPage: $perPage) {
         pageInfo {
-            total
-            perPage
-            currentPage
-            lastPage
-            hasNextPage
+            ...SimplePageInfo
         }
         media(
             episodes_greater: $episodeGreater
@@ -26,16 +22,7 @@ query SearchAnime(
             isAdult: false
             sort: [POPULARITY_DESC, SCORE_DESC]
         ) {
-            id
-            title {
-                english
-                native
-                userPreferred
-            }
-            coverImage {
-                medium
-            }
-            format
+            ...SimpleMedia
         }
     }
 }

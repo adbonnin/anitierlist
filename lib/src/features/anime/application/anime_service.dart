@@ -1,5 +1,5 @@
 import 'package:anitierlist/src/features/anilist/application/anilist_service.dart';
-import 'package:anitierlist/src/features/anilist/data/anime.graphql.dart';
+import 'package:anitierlist/src/features/anilist/data/fragments.graphql.dart';
 import 'package:anitierlist/src/features/anilist/data/schema.graphql.dart';
 import 'package:anitierlist/src/features/anime/domain/anime.dart';
 import 'package:anitierlist/src/utils/anime.dart';
@@ -50,36 +50,45 @@ class AnimeService {
   }
 
   Future<Iterable<Anime>> browseAnime({
+    required int year,
+    required Season season,
+    int? episodeGreater,
+  }) {
+    return PagedResult.queryIterables(
+      (page) => _searchPagedAnime(
+        page: page,
+        year: year,
+        season: season,
+        episodeGreater: episodeGreater,
+      ),
+    );
+  }
+
+  Future<PagedResult<List<Anime>>> searchPagedAnime({
+    required String? search,
+    required int page,
+  }) {
+    return _searchPagedAnime(
+      search: search,
+      page: page,
+    );
+  }
+
+  Future<PagedResult<List<Anime>>> _searchPagedAnime({
+    required int page,
+    int? perPage,
+    String? search,
     int? year,
     Season? season,
     int? episodeGreater,
   }) async {
-    final pages = <Iterable<Query$SearchAnime$Page$media>>[];
-    bool hasNextPage = true;
-
-    while (hasNextPage) {
-      final result = await anilistService.searchAnime(
-        page: pages.length + 1,
-        year: year,
-        season: season,
-        episodeGreater: episodeGreater,
-      );
-
-      final page = result.parsedData?.Page;
-      final media = (page?.media ?? []).whereNotNull();
-
-      pages.add(media);
-      hasNextPage = (page?.pageInfo?.hasNextPage ?? false) && media.isNotEmpty;
-    }
-
-    return pages.flatten().map((e) => e.toAnime()).whereNotNull();
-  }
-
-  Future<PagedResult<List<Anime>>> searchAnime(String? search, int page) async {
     final result = await anilistService.searchAnime(
-      search: search,
       page: page,
-      perPage: 12,
+      perPage: perPage,
+      search: search,
+      year: year,
+      season: season,
+      episodeGreater: episodeGreater,
     );
 
     final p = result.parsedData?.Page;
@@ -110,16 +119,14 @@ Future<Iterable<Anime>> browseLeftovers(
 @riverpod
 Future<Iterable<Anime>> browseAnime(
   BrowseAnimeRef ref, {
-  int? year,
-  Season? season,
-  int? episodeGreater,
+  required int year,
+  required Season season,
 }) {
   final service = ref.watch(animeServiceProvider);
 
   return service.browseAnime(
     year: year,
     season: season,
-    episodeGreater: episodeGreater,
   );
 }
 
@@ -139,7 +146,7 @@ AsyncValue<Iterable<Anime>> browseAnimeSeason(BrowseAnimeSeasonRef ref, int year
       .whenData((value) => [value.$1, value.$2].flatten());
 }
 
-extension _MediaExtension on Query$SearchAnime$Page$media {
+extension _MediaExtension on Fragment$SimpleMedia {
   Anime? toAnime() {
     final animeFormat = format?.toMediaFormat();
 

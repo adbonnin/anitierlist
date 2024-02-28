@@ -1,3 +1,4 @@
+import 'package:anitierlist/src/features/anime/domain/anime.dart';
 import 'package:anitierlist/src/features/characters/domain/character.dart';
 import 'package:anitierlist/src/features/characters/presentation/character_search/character_search_tabbar_view.dart';
 import 'package:anitierlist/src/features/tierlist/domain/tierlist.dart';
@@ -71,6 +72,7 @@ class _CharacterAddDialogState extends State<CharacterAddDialog> {
       onChanged: _onChanged,
       content: CharacterSearchTabBarView(
         search: _search,
+        onAddAnimeCharactersTap: _onAddAnimeCharactersTap,
         itemBuilder: _buildItem,
       ),
     );
@@ -111,20 +113,35 @@ class _CharacterAddDialogState extends State<CharacterAddDialog> {
     Set<Character> updatedCharacters;
 
     final foundCharacter = _searchCharacter(character.id);
+    final addCharacter = foundCharacter == null;
 
-    if (foundCharacter != null) {
-      updatedCharacters = {..._characters}..remove(foundCharacter);
-      Toast.showCharacterRemovedToast(context, character);
+    if (addCharacter) {
+      updatedCharacters = {..._characters, character};
     } //
     else {
-      updatedCharacters = {..._characters, character};
-      Toast.showCharacterAddedToast(context, character);
+      updatedCharacters = {..._characters}..remove(foundCharacter);
     }
 
     setState(() {
       _characters = updatedCharacters;
     });
 
+    widget.onCharactersChanged(updatedCharacters);
+
+    if (addCharacter) {
+      Toast.showCharacterAddedToast(context, character);
+    } //
+    else {
+      Toast.showCharacterRemovedToast(context, character);
+    }
+  }
+
+  void _onAddAnimeCharactersTap(Anime anime, List<Character> characters) {
+    setState(() {
+      _characters = {..._characters, ...characters};
+    });
+
     widget.onCharactersChanged(_characters);
+    Toast.showAnimeCharactersAddedToast(context, anime);
   }
 }

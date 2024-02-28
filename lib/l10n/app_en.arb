@@ -6,6 +6,7 @@
     "common_cancel": "Cancel",
     "common_confirm": "Confirm",
     "common_close": "Close",
+    "common_back": "Back",
     "app_title": "AniTierList {version}",
     "@app_title": {
         "placeholders": {
@@ -39,6 +40,16 @@
             }
         }
     },
+    "characters_addAllAnimeCharacters": "Add all characters",
+    "characters_animeCharactersAdded": "Characters of {title} has been added",
+    "@characters_animeCharactersAdded": {
+        "placeholders": {
+            "title": {
+                "type": "String"
+            }
+        }
+    },
+
     "characters_searchAnime": "Anime",
     "characters_searchCharacters": "Characters",
     "characters_emptyList": "No characters added yet",

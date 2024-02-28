@@ -60,10 +60,10 @@ class AnilistService {
     );
   }
 
-  Future<QueryResult<Query$BrowseAnimeCharacters>> browseAnimeCharacters(
+  Future<QueryResult<Query$BrowseAnimeCharacters>> browseAnimeCharacters({
     int? page,
     int? id,
-  ) {
+  }) {
     return client.query$BrowseAnimeCharacters(
       Options$Query$BrowseAnimeCharacters(
         variables: Variables$Query$BrowseAnimeCharacters(

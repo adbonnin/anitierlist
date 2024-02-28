@@ -1,0 +1,31 @@
+fragment SimplePageInfo on PageInfo {
+    total
+    perPage
+    currentPage
+    lastPage
+    hasNextPage
+}
+
+fragment SimpleMedia on Media {
+    id
+    title {
+        english
+        native
+        userPreferred
+    }
+    coverImage {
+        medium
+    }
+    format
+}
+
+fragment SimpleCharacter on Character {
+    id
+    name {
+        userPreferred
+    }
+    image {
+        medium
+    }
+    gender
+}

@@ -1,3 +1,5 @@
+import 'package:anitierlist/src/features/anime/domain/anime.dart';
+import 'package:anitierlist/src/features/characters/domain/character.dart';
 import 'package:anitierlist/src/features/characters/presentation/character_paged_grid_view.dart';
 import 'package:anitierlist/src/features/characters/presentation/character_search/character_search_anime_tab.dart';
 import 'package:anitierlist/src/features/characters/presentation/character_search/character_search_character_tab.dart';
@@ -8,10 +10,12 @@ class CharacterSearchTabBarView extends StatelessWidget {
   const CharacterSearchTabBarView({
     super.key,
     required this.search,
+    required this.onAddAnimeCharactersTap,
     required this.itemBuilder,
   });
 
   final String search;
+  final void Function(Anime, List<Character>) onAddAnimeCharactersTap;
   final CharacterWidgetBuilder itemBuilder;
 
   @override
@@ -33,6 +37,7 @@ class CharacterSearchTabBarView extends StatelessWidget {
                 ),
                 CharacterSearchAnimeTab(
                   search: search,
+                  onAddAnimeCharactersTap: onAddAnimeCharactersTap,
                   itemBuilder: itemBuilder,
                 )
               ],

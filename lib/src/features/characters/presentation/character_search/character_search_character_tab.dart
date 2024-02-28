@@ -50,6 +50,6 @@ class _CharacterSearchCharacterTabState extends ConsumerState<CharacterSearchCha
   }
 
   PagedItemFinder<Character> _buildFinder(String? search) {
-    return (int page) => ref.read(characterServiceProvider).searchCharacters(search, page);
+    return (int page) => ref.read(characterServiceProvider).searchPagedCharacters(search: search, page: page);
   }
 }

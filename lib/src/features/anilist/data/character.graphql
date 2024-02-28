@@ -6,11 +6,7 @@ query BrowseAnimeCharacters(
         id
         characters(page: $page, sort: [ROLE, RELEVANCE, ID]) {
             pageInfo {
-                total
-                perPage
-                currentPage
-                lastPage
-                hasNextPage
+                ...SimplePageInfo
             }
             edges {
                 id
@@ -31,11 +27,7 @@ query SearchCharacters(
 ) {
     Page(page:$page, perPage:$perPage) {
         pageInfo {
-            total
-            perPage
-            currentPage
-            lastPage
-            hasNextPage
+            ...SimplePageInfo
         }
         characters(
             search: $search,
@@ -44,15 +36,4 @@ query SearchCharacters(
             ...SimpleCharacter
         }
     }
-}
-
-fragment SimpleCharacter on Character {
-    id
-    name {
-        userPreferred
-    }
-    image {
-        medium
-    }
-    gender
 }
