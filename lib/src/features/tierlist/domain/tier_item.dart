@@ -1,5 +1,5 @@
-class TierList {
-  const TierList({
+class TierItem {
+  const TierItem({
     required this.id,
     required this.title,
     this.group,
@@ -17,7 +17,7 @@ class TierList {
       return true;
     }
 
-    if (other is! TierList) {
+    if (other is! TierItem) {
       return false;
     }
 

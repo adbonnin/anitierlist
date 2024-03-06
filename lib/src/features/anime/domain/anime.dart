@@ -1,3 +1,5 @@
+import 'package:anitierlist/src/features/tierlist/domain/tier_item.dart';
+
 class Anime {
   const Anime({
     required this.id,
@@ -67,6 +69,15 @@ class Anime {
       userSelectedTitle: userSelectedTitle ?? this.userSelectedTitle,
       coverImageMedium: coverImageMedium ?? this.coverImageMedium,
       format: format ?? this.format,
+    );
+  }
+
+  TierItem toTierItem() {
+    return TierItem(
+      id: id,
+      title: title,
+      group: format.name,
+      cover: coverImageMedium,
     );
   }
 }

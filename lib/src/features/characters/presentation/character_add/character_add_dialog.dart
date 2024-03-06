@@ -1,8 +1,7 @@
 import 'package:anitierlist/src/features/anime/domain/anime.dart';
 import 'package:anitierlist/src/features/characters/domain/character.dart';
 import 'package:anitierlist/src/features/characters/presentation/character_search/character_search_tabbar_view.dart';
-import 'package:anitierlist/src/features/tierlist/domain/tierlist.dart';
-import 'package:anitierlist/src/features/tierlist/presentation/tierlist_list/tierlist_card.dart';
+import 'package:anitierlist/src/features/tierlist/presentation/tier_item_card.dart';
 import 'package:anitierlist/src/l10n/app_localizations.dart';
 import 'package:anitierlist/src/utils/adaptive_search_dialog.dart';
 import 'package:anitierlist/src/widgets/toast.dart';
@@ -76,18 +75,12 @@ class _CharacterAddDialogState extends State<CharacterAddDialog> {
   Widget _buildItem(BuildContext context, Character character, int index) {
     final exists = _charactersByIds[character.id] != null;
 
-    final tierList = TierList(
-      id: character.id,
-      title: character.name,
-      cover: character.image,
-    );
-
     return InkWell(
       onTap: () => _onCharacterTap(character),
       child: Stack(
         children: [
-          TierListCard(
-            tierList: tierList,
+          TierItemCard(
+            item: character.toTierItem(),
           ),
           if (exists)
             Container(

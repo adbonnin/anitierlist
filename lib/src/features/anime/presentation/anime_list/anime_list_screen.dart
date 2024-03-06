@@ -5,7 +5,6 @@ import 'package:anitierlist/src/features/anime/domain/anime.dart';
 import 'package:anitierlist/src/features/anime/domain/anime_preference.dart';
 import 'package:anitierlist/src/features/anime/presentation/anime_edit/anime_edit_dialog.dart';
 import 'package:anitierlist/src/features/tierlist/application/tierlist_service.dart';
-import 'package:anitierlist/src/features/tierlist/domain/tierlist.dart';
 import 'package:anitierlist/src/features/tierlist/presentation/tierlist_list/tierlist_group_list.dart';
 import 'package:anitierlist/src/l10n/app_localization_extension.dart';
 import 'package:anitierlist/src/l10n/app_localizations.dart';
@@ -91,7 +90,7 @@ class _AnimeTierListScreenState extends ConsumerState<AnimeListScreen> {
               tierLists: anime //
                   .map(_applyPreference)
                   .stableSorted((a, b) => a.format.index - b.format.index)
-                  .map(_toTierList),
+                  .map((a) => a.toTierItem()),
               onTierListTap: (tl) => _onAnimeTap(anime.where((a) => a.id == tl.id).firstOrNull),
               isLoading: _loading,
               toGroupLabel: context.loc.animeGroup,
@@ -169,15 +168,6 @@ class _AnimeTierListScreenState extends ConsumerState<AnimeListScreen> {
     }
 
     return anime;
-  }
-
-  TierList _toTierList(Anime anime) {
-    return TierList(
-      id: anime.id,
-      title: anime.title,
-      group: anime.format.name,
-      cover: anime.coverImageMedium,
-    );
   }
 
   Future<void> _onExportPressed() async {
