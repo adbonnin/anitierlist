@@ -32,6 +32,21 @@ extension IterableExtensions<E> on Iterable<E> {
   }
 }
 
+extension MapEntryIterableExtension<K, V> on Iterable<MapEntry<K, V>> {
+  Map<K, V> toMap() {
+    return Map.fromEntries(this);
+  }
+}
+
+extension TupleIterableExtension<K, V> on Iterable<(K, V)> {
+  Map<K, V> toMap() {
+    return {
+      for (var element in this) //
+        element.$1: element.$2
+    };
+  }
+}
+
 extension IterableIterableExtension<E> on Iterable<Iterable<E>> {
   Iterable<E> flatten() {
     return expand((element) => element);

@@ -73,15 +73,19 @@ class _CharacterPagedGridViewState extends State<CharacterPagedGridView> {
         return;
       }
 
-      if (result.hasNextPage) {
-        _pagingController.appendPage(result.value, pageKey + 1);
-      } //
-      else {
-        _pagingController.appendLastPage(result.value);
+      if (mounted) {
+        if (result.hasNextPage) {
+          _pagingController.appendPage(result.value, pageKey + 1);
+        } //
+        else {
+          _pagingController.appendLastPage(result.value);
+        }
       }
     } //
     catch (error) {
-      _pagingController.error = error;
+      if (mounted) {
+        _pagingController.error = error;
+      }
     }
   }
 }

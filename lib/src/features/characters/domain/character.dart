@@ -1,5 +1,6 @@
 import 'package:anitierlist/src/features/characters/domain/gender.dart';
 import 'package:anitierlist/src/features/tierlist/domain/tierlist.dart';
+import 'package:anitierlist/src/utils/iterable_extensions.dart';
 
 class Character {
   const Character({
@@ -20,5 +21,11 @@ class Character {
       title: name,
       cover: image,
     );
+  }
+}
+
+extension CharacterIterableExtension on Iterable<Character> {
+  Map<int, Character> toMapById() {
+    return map((e) => (e.id, e)).toMap();
   }
 }
