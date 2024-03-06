@@ -49,9 +49,17 @@
             }
         }
     },
-
     "characters_searchAnime": "Anime",
     "characters_searchCharacters": "Characters",
+    "characters_exportName": "Characters {date}",
+    "@characters_exportName": {
+        "placeholders": {
+            "date": {
+                "type": "DateTime",
+                "format": "yMd"
+            }
+        }
+    },
     "characters_emptyList": "No characters added yet",
     "anime_title":"Anime",
     "anime_tierlist_year": "Year",
@@ -67,6 +75,17 @@
     "anime_tierlist_sharingThumbnails": "Sharing thumbnails",
     "anime_tierlist_edit_title": "Thumbnail preferences",
     "anime_tierlist_edit_titleLabel": "Title",
+    "anime_tierlist_exportName": "TierList {year} {seasonLabel}",
+    "@anime_tierlist_exportName": {
+        "placeholders": {
+            "year": {
+                "type": "int"
+            },
+            "seasonLabel": {
+                "type": "String"
+            }
+        }
+    },
     "anime_title_english": "English",
     "anime_title_native": "Native",
     "anime_title_userPreferred": "User preferred",

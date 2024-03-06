@@ -174,7 +174,7 @@ class _AnimeTierListScreenState extends ConsumerState<AnimeListScreen> {
     final tierListScreenshotsByFormat = _groupListKey.currentState?.buildTierListScreenshotsByFormat() ?? {};
 
     final seasonLabel = context.loc.season(_season);
-    final name = 'TierList $_year $seasonLabel';
+    final name = context.loc.anime_tierlist_exportName(_year, seasonLabel);
 
     setState(() {
       _loading = true;
