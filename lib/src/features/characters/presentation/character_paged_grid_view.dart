@@ -1,5 +1,5 @@
 import 'package:anitierlist/src/features/characters/domain/character.dart';
-import 'package:anitierlist/src/features/tierlist/presentation/tier_item_card.dart';
+import 'package:anitierlist/src/features/tierlist/presentation/tierlist_item_card.dart';
 import 'package:anitierlist/src/utils/graphql.dart';
 import 'package:anitierlist/src/widgets/sized_paged_grid_view.dart';
 import 'package:anitierlist/styles.dart';
@@ -51,8 +51,8 @@ class _CharacterPagedGridViewState extends State<CharacterPagedGridView> {
   Widget build(BuildContext context) {
     return SizedPagedGridView(
       itemBuilder: widget.itemBuilder,
-      itemWidth: TierItemCard.width,
-      itemHeight: TierItemCard.height,
+      itemWidth: TierListItemCard.width,
+      itemHeight: TierListItemCard.height,
       mainAxisSpacing: Insets.p6,
       crossAxisSpacing: Insets.p6,
       pagingController: _pagingController,

@@ -1,7 +1,7 @@
 import 'package:anitierlist/src/features/anime/domain/anime.dart';
 import 'package:anitierlist/src/features/characters/domain/character.dart';
 import 'package:anitierlist/src/features/characters/presentation/character_search/character_search_tabbar_view.dart';
-import 'package:anitierlist/src/features/tierlist/presentation/tier_item_card.dart';
+import 'package:anitierlist/src/features/tierlist/presentation/tierlist_item_card.dart';
 import 'package:anitierlist/src/l10n/app_localizations.dart';
 import 'package:anitierlist/src/utils/adaptive_search_dialog.dart';
 import 'package:anitierlist/src/widgets/toast.dart';
@@ -79,7 +79,7 @@ class _CharacterAddDialogState extends State<CharacterAddDialog> {
       onTap: () => _onCharacterTap(character),
       child: Stack(
         children: [
-          TierItemCard(
+          TierListItemCard(
             item: character.toItem(),
           ),
           if (exists)

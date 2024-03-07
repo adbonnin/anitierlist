@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:anitierlist/src/features/tierlist/domain/tierlist.dart';
-import 'package:anitierlist/src/features/tierlist/presentation/tier_item_card.dart';
+import 'package:anitierlist/src/features/tierlist/presentation/tierlist_item_card.dart';
 import 'package:anitierlist/src/features/tierlist/presentation/tierlist_list/tierlist_group.dart';
 import 'package:anitierlist/src/features/tierlist/presentation/tierlist_list/tierlist_group_title.dart';
 import 'package:anitierlist/src/l10n/app_localizations.dart';
@@ -156,7 +156,7 @@ class TierListGroupListState extends State<TierListGroupList> {
       controller: controller,
       child: InkWell(
         onTap: () => widget.onItemTap(tierList),
-        child: TierItemCard(
+        child: TierListItemCard(
           item: tierList,
         ),
       ),
