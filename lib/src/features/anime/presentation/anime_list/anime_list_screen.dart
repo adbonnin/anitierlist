@@ -6,6 +6,7 @@ import 'package:anitierlist/src/features/anime/domain/anime_preference.dart';
 import 'package:anitierlist/src/features/anime/presentation/anime_edit/anime_edit_dialog.dart';
 import 'package:anitierlist/src/features/tierlist/application/tierlist_service.dart';
 import 'package:anitierlist/src/features/tierlist/presentation/tierlist_list/tierlist_group_list.dart';
+import 'package:anitierlist/src/features/tierlist/presentation/tierlist_list/tierlist_group_title.dart';
 import 'package:anitierlist/src/l10n/app_localization_extension.dart';
 import 'package:anitierlist/src/l10n/app_localizations.dart';
 import 'package:anitierlist/src/utils/anime.dart';
@@ -93,7 +94,7 @@ class _AnimeTierListScreenState extends ConsumerState<AnimeListScreen> {
                   .map((a) => a.toTierItem()),
               onItemTap: (tl) => _onAnimeTap(anime.where((a) => a.id == tl.id).firstOrNull),
               isLoading: _loading,
-              toGroupLabel: context.loc.animeGroup,
+              groupTitleBuilder: _buildGroupTitle,
               onExportPressed: _onExportPressed,
               onSharePressed: _onSharePressed,
             ),
@@ -130,6 +131,12 @@ class _AnimeTierListScreenState extends ConsumerState<AnimeListScreen> {
     return DropdownMenuItem<Season>(
       value: season,
       child: Text(context.loc.season(season)),
+    );
+  }
+
+  Widget _buildGroupTitle(BuildContext context, String group) {
+    return TierListGroupTitle(
+      titleText: context.loc.animeGroup(group),
     );
   }
 

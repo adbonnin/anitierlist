@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:anitierlist/src/features/tierlist/domain/tierlist.dart';
 import 'package:anitierlist/src/features/tierlist/presentation/tier_item_card.dart';
 import 'package:anitierlist/src/features/tierlist/presentation/tierlist_list/tierlist_group.dart';
+import 'package:anitierlist/src/features/tierlist/presentation/tierlist_list/tierlist_group_title.dart';
 import 'package:anitierlist/src/l10n/app_localizations.dart';
 import 'package:anitierlist/src/widgets/loading_icon.dart';
 import 'package:anitierlist/src/widgets/screenshot.dart';
@@ -19,7 +20,7 @@ class TierListGroupList extends StatefulWidget {
     this.emptyBuilder,
     required this.isLoading,
     required this.onItemTap,
-    this.toGroupLabel,
+    this.groupTitleBuilder,
     this.onExportPressed,
     this.onSharePressed,
   });
@@ -29,7 +30,7 @@ class TierListGroupList extends StatefulWidget {
   final WidgetBuilder? emptyBuilder;
   final bool isLoading;
   final void Function(TierListItem item) onItemTap;
-  final String Function(String group)? toGroupLabel;
+  final Widget Function(BuildContext context, String group)? groupTitleBuilder;
   final VoidCallback? onExportPressed;
   final VoidCallback? onSharePressed;
 
@@ -132,15 +133,21 @@ class TierListGroupListState extends State<TierListGroupList> {
   }
 
   Widget _buildGroup(String? group, List<(TierListItem, ScreenshotController)> tierListScreenshots) {
-    final toGroupLabel = widget.toGroupLabel;
-    final groupLabel = (toGroupLabel == null || group == null) ? group : toGroupLabel(group);
+    final groupTitleBuilder = widget.groupTitleBuilder;
+    final groupTitle = group == null ? null : (groupTitleBuilder ?? _buildDefaultGroupTitle)(context, group);
 
     return TierListGroup(
-      labelText: groupLabel,
+      title: groupTitle,
       children: [
         for (final tierListScreenshot in tierListScreenshots) //
           _buildItem(tierListScreenshot.$1, tierListScreenshot.$2)
       ],
+    );
+  }
+
+  Widget _buildDefaultGroupTitle(BuildContext context, String group) {
+    return TierListGroupTitle(
+      titleText: group,
     );
   }
 
