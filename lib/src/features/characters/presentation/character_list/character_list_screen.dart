@@ -4,6 +4,7 @@ import 'package:anitierlist/src/features/tierlist/application/tierlist_service.d
 import 'package:anitierlist/src/features/tierlist/domain/tierlist.dart';
 import 'package:anitierlist/src/features/tierlist/presentation/tierlist_list/tierlist_group_list.dart';
 import 'package:anitierlist/src/l10n/app_localizations.dart';
+import 'package:anitierlist/src/utils/file.dart';
 import 'package:anitierlist/src/utils/string_extension.dart';
 import 'package:anitierlist/src/widgets/toast.dart';
 import 'package:anitierlist/styles.dart';
@@ -99,7 +100,7 @@ class _CharacterListScreenState extends State<CharacterListScreen> {
 
     try {
       final bytes = await TierListService.buildZip(tierListScreenshotsByFormat);
-      await TierListService.saveZipFile(name, bytes);
+      await saveZipFile(name, bytes);
     } //
     finally {
       setState(() {

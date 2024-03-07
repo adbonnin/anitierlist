@@ -10,6 +10,7 @@ import 'package:anitierlist/src/features/tierlist/presentation/tierlist_list/tie
 import 'package:anitierlist/src/l10n/app_localization_extension.dart';
 import 'package:anitierlist/src/l10n/app_localizations.dart';
 import 'package:anitierlist/src/utils/anime.dart';
+import 'package:anitierlist/src/utils/file.dart';
 import 'package:anitierlist/src/utils/iterable_extensions.dart';
 import 'package:anitierlist/src/utils/season.dart';
 import 'package:anitierlist/src/widgets/async_value_widget.dart';
@@ -189,7 +190,7 @@ class _AnimeTierListScreenState extends ConsumerState<AnimeListScreen> {
 
     try {
       final bytes = await TierListService.buildZip(tierListScreenshotsByFormat, context.loc.animeGroup);
-      await TierListService.saveZipFile(name, bytes);
+      await saveZipFile(name, bytes);
     } //
     finally {
       setState(() {

@@ -112,7 +112,7 @@ class TierListGroupListState extends State<TierListGroupList> {
             child: tierListGroups.isEmpty
                 ? widget.emptyBuilder?.call(context) ?? const SizedBox()
                 : Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 0, horizontal: Insets.p16),
+                    padding: const EdgeInsets.symmetric(horizontal: Insets.p16),
                     child: SingleChildScrollView(
                       child: Column(
                         mainAxisSize: MainAxisSize.min,

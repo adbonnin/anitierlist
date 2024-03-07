@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:anitierlist/src/features/tierlist/domain/tierlist.dart';
 import 'package:anitierlist/src/utils/image_extensions.dart';
 import 'package:anitierlist/src/utils/number.dart';
@@ -7,41 +5,11 @@ import 'package:anitierlist/src/utils/string_extension.dart';
 import 'package:anitierlist/src/widgets/screenshot.dart';
 import 'package:archive/archive.dart';
 import 'package:collection/collection.dart';
-import 'package:file_saver/file_saver.dart';
 import 'package:flutter/foundation.dart';
 import 'package:share_plus/share_plus.dart';
 
 class TierListService {
   const TierListService();
-
-  static Future<void> saveZipFile(String name, Uint8List bytes) async {
-    const ext = '.zip';
-    const mimeType = MimeType.zip;
-
-    if (bytes.isEmpty) {
-      return;
-    } //
-    else if (kIsWeb) {
-      await FileSaver.instance.saveFile(
-        name: name,
-        bytes: bytes,
-        ext: ext,
-        mimeType: mimeType,
-      );
-    } //
-    else {
-      final filePath = await FileSaver.instance.saveAs(
-        name: name,
-        bytes: bytes,
-        ext: ext,
-        mimeType: mimeType,
-      );
-
-      if (filePath != null) {
-        await File(filePath).writeAsBytes(bytes);
-      }
-    }
-  }
 
   static Future<void> share(String name, Uint8List bytes) async {
     final file = XFile(
