@@ -1,4 +1,4 @@
-import 'package:anitierlist/src/features/tierlist/domain/tier_item.dart';
+import 'package:anitierlist/src/features/tierlist/domain/tierlist.dart';
 
 class Anime {
   const Anime({
@@ -72,10 +72,12 @@ class Anime {
     );
   }
 
-  TierItem toTierItem() {
-    return TierItem(
+  TierListItem toTierItem() {
+    return TierListItem(
       id: id,
-      title: title,
+      titles: {
+        'userPreferred': title,
+      },
       group: format.name,
       cover: coverImageMedium,
     );

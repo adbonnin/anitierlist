@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:anitierlist/src/features/tierlist/domain/tier_item.dart';
+import 'package:anitierlist/src/features/tierlist/domain/tierlist.dart';
 import 'package:anitierlist/src/features/tierlist/presentation/tier_item_card.dart';
 import 'package:anitierlist/src/features/tierlist/presentation/tierlist_list/tierlist_group.dart';
 import 'package:anitierlist/src/l10n/app_localizations.dart';
@@ -14,21 +14,21 @@ import 'package:flutter/material.dart';
 class TierListGroupList extends StatefulWidget {
   const TierListGroupList({
     super.key,
-    required this.tierLists,
+    required this.items,
     this.otherActions = const [],
     this.emptyBuilder,
     required this.isLoading,
-    required this.onTierListTap,
+    required this.onItemTap,
     this.toGroupLabel,
     this.onExportPressed,
     this.onSharePressed,
   });
 
-  final Iterable<TierItem> tierLists;
+  final Iterable<TierListItem> items;
   final Iterable<Widget> otherActions;
   final WidgetBuilder? emptyBuilder;
   final bool isLoading;
-  final void Function(TierItem tierList) onTierListTap;
+  final void Function(TierListItem item) onItemTap;
   final String Function(String group)? toGroupLabel;
   final VoidCallback? onExportPressed;
   final VoidCallback? onSharePressed;
@@ -43,15 +43,15 @@ class TierListGroupListState extends State<TierListGroupList> {
   @override
   void initState() {
     super.initState();
-    _screenshotControllers = List.generate(widget.tierLists.length, (_) => ScreenshotController());
+    _screenshotControllers = List.generate(widget.items.length, (_) => ScreenshotController());
   }
 
   @override
   void didUpdateWidget(TierListGroupList oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    if (widget.tierLists.length != oldWidget.tierLists.length) {
-      _screenshotControllers = List.generate(widget.tierLists.length, (_) => ScreenshotController());
+    if (widget.items.length != oldWidget.items.length) {
+      _screenshotControllers = List.generate(widget.items.length, (_) => ScreenshotController());
     }
   }
 
@@ -61,15 +61,15 @@ class TierListGroupListState extends State<TierListGroupList> {
     super.dispose();
   }
 
-  Map<String?, List<(TierItem, ScreenshotController)>> buildTierListScreenshotsByFormat() {
-    return widget.tierLists //
+  Map<String?, List<(TierListItem, ScreenshotController)>> buildTierListScreenshotsByFormat() {
+    return widget.items //
         .mapIndexed((i, a) => (a, _screenshotControllers[i]))
         .groupListsBy((element) => element.$1.group);
   }
 
   @override
   Widget build(BuildContext context) {
-    final canExport = widget.isLoading || widget.tierLists.isEmpty;
+    final canExport = widget.isLoading || widget.items.isEmpty;
 
     final animeScreenshotsByFormat = buildTierListScreenshotsByFormat();
 
@@ -131,7 +131,7 @@ class TierListGroupListState extends State<TierListGroupList> {
     );
   }
 
-  Widget _buildGroup(String? group, List<(TierItem, ScreenshotController)> tierListScreenshots) {
+  Widget _buildGroup(String? group, List<(TierListItem, ScreenshotController)> tierListScreenshots) {
     final toGroupLabel = widget.toGroupLabel;
     final groupLabel = (toGroupLabel == null || group == null) ? group : toGroupLabel(group);
 
@@ -144,11 +144,11 @@ class TierListGroupListState extends State<TierListGroupList> {
     );
   }
 
-  Widget _buildItem(TierItem tierList, ScreenshotController controller) {
+  Widget _buildItem(TierListItem tierList, ScreenshotController controller) {
     return Screenshot(
       controller: controller,
       child: InkWell(
-        onTap: () => widget.onTierListTap(tierList),
+        onTap: () => widget.onItemTap(tierList),
         child: TierItemCard(
           item: tierList,
         ),

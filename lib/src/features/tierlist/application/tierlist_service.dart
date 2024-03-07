@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:anitierlist/src/features/tierlist/domain/tier_item.dart';
+import 'package:anitierlist/src/features/tierlist/domain/tierlist.dart';
 import 'package:anitierlist/src/utils/image_extensions.dart';
 import 'package:anitierlist/src/utils/number.dart';
 import 'package:anitierlist/src/utils/string_extension.dart';
@@ -53,7 +53,7 @@ class TierListService {
   }
 
   static Future<Uint8List> buildZip(
-    Map<String?, List<(TierItem, ScreenshotController)>> tierListScreenshotsByFormat, [
+    Map<String?, List<(TierListItem, ScreenshotController)>> tierListScreenshotsByFormat, [
     String Function(String group)? toGroupLabel,
   ]) async {
     final archive = Archive();

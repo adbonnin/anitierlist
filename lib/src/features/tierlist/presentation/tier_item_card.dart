@@ -1,4 +1,4 @@
-import 'package:anitierlist/src/features/tierlist/domain/tier_item.dart';
+import 'package:anitierlist/src/features/tierlist/domain/tierlist.dart';
 import 'package:anitierlist/src/widgets/cover_image.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +13,7 @@ class TierItemCard extends StatelessWidget {
   static const double width = 80;
   static const double height = 120;
 
-  final TierItem item;
+  final TierListItem item;
 
   @override
   Widget build(BuildContext context) {

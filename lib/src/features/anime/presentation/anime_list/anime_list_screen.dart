@@ -87,11 +87,11 @@ class _AnimeTierListScreenState extends ConsumerState<AnimeListScreen> {
             asyncAnime,
             data: (anime) => TierListGroupList(
               key: _groupListKey,
-              tierLists: anime //
+              items: anime //
                   .map(_applyPreference)
                   .stableSorted((a, b) => a.format.index - b.format.index)
                   .map((a) => a.toTierItem()),
-              onTierListTap: (tl) => _onAnimeTap(anime.where((a) => a.id == tl.id).firstOrNull),
+              onItemTap: (tl) => _onAnimeTap(anime.where((a) => a.id == tl.id).firstOrNull),
               isLoading: _loading,
               toGroupLabel: context.loc.animeGroup,
               onExportPressed: _onExportPressed,

@@ -1,7 +1,7 @@
 import 'package:anitierlist/src/features/characters/domain/character.dart';
 import 'package:anitierlist/src/features/characters/presentation/character_add/character_add_dialog.dart';
 import 'package:anitierlist/src/features/tierlist/application/tierlist_service.dart';
-import 'package:anitierlist/src/features/tierlist/domain/tier_item.dart';
+import 'package:anitierlist/src/features/tierlist/domain/tierlist.dart';
 import 'package:anitierlist/src/features/tierlist/presentation/tierlist_list/tierlist_group_list.dart';
 import 'package:anitierlist/src/l10n/app_localizations.dart';
 import 'package:anitierlist/src/utils/string_extension.dart';
@@ -27,7 +27,7 @@ class _CharacterListScreenState extends State<CharacterListScreen> {
   Widget build(BuildContext context) {
     return TierListGroupList(
       key: _groupListKey,
-      tierLists: _characters.map((c) => c.toTierItem()),
+      items: _characters.map((c) => c.toItem()),
       otherActions: [
         IconButton(
           onPressed: _onAddCharacterPressed,
@@ -37,7 +37,7 @@ class _CharacterListScreenState extends State<CharacterListScreen> {
       ],
       emptyBuilder: _buildEmpty,
       isLoading: _loading,
-      onTierListTap: _onDeleteTierListTap,
+      onItemTap: _onDeleteTierListTap,
       onExportPressed: _onExportPressed,
       onSharePressed: _onSharePressed,
     );
@@ -74,7 +74,7 @@ class _CharacterListScreenState extends State<CharacterListScreen> {
     );
   }
 
-  void _onDeleteTierListTap(TierItem item) {
+  void _onDeleteTierListTap(TierListItem item) {
     final character = _characters.firstWhereOrNull((c) => c.id == item.id);
 
     if (character == null) {

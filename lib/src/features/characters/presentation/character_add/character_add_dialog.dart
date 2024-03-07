@@ -80,7 +80,7 @@ class _CharacterAddDialogState extends State<CharacterAddDialog> {
       child: Stack(
         children: [
           TierItemCard(
-            item: character.toTierItem(),
+            item: character.toItem(),
           ),
           if (exists)
             Container(

@@ -1,5 +1,5 @@
 import 'package:anitierlist/src/features/characters/domain/gender.dart';
-import 'package:anitierlist/src/features/tierlist/domain/tier_item.dart';
+import 'package:anitierlist/src/features/tierlist/domain/tierlist.dart';
 import 'package:anitierlist/src/utils/iterable_extensions.dart';
 
 class Character {
@@ -15,10 +15,12 @@ class Character {
   final String? image;
   final Gender gender;
 
-  TierItem toTierItem() {
-    return TierItem(
+  TierListItem toItem() {
+    return TierListItem(
       id: id,
-      title: name,
+      titles: {
+        'userPreferred': name,
+      },
       cover: image,
     );
   }
