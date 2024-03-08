@@ -209,7 +209,7 @@ class _AnimeTierListScreenState extends ConsumerState<AnimeListScreen> {
 
     try {
       final bytes = await TierListService.buildZip(tierListScreenshotsByFormat);
-      await TierListService.share(name, bytes);
+      await shareZipFile(name, bytes);
     } //
     finally {
       setState(() {

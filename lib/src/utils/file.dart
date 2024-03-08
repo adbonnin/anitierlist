@@ -2,6 +2,16 @@ import 'dart:io';
 
 import 'package:file_saver/file_saver.dart';
 import 'package:flutter/foundation.dart';
+import 'package:share_plus/share_plus.dart';
+
+Future<void> shareZipFile(String name, Uint8List bytes) async {
+  final file = XFile(
+    '$name.zip',
+    bytes: bytes,
+  );
+
+  await Share.shareXFiles([file]);
+}
 
 Future<void> saveZipFile(String name, Uint8List bytes) async {
   const ext = '.zip';
