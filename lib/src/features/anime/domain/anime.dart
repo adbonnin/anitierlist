@@ -17,36 +17,37 @@ class Anime {
   final String nativeTitle;
   final String userPreferredTitle;
   final String customTitle;
-  final MediaTitle? userSelectedTitle;
+  final TierListTitle? userSelectedTitle;
   final String? coverImageMedium;
   final AnimeFormat format;
 
-  MediaTitle get selectedTitle {
+  TierListTitle get selectedTitle {
     if (userSelectedTitle != null) {
       return userSelectedTitle!;
     }
 
     if (englishTitle.isNotEmpty) {
-      return MediaTitle.english;
+      return TierListTitle.english;
     }
 
     if (userPreferredTitle.isNotEmpty) {
-      return MediaTitle.userPreferred;
+      return TierListTitle.userPreferred;
     }
 
     if (nativeTitle.isNotEmpty) {
-      return MediaTitle.native;
+      return TierListTitle.native;
     }
 
-    return MediaTitle.english;
+    return TierListTitle.english;
   }
 
   String get title {
     return switch (selectedTitle) {
-      MediaTitle.english => englishTitle,
-      MediaTitle.native => nativeTitle,
-      MediaTitle.userPreferred => userPreferredTitle,
-      MediaTitle.custom => customTitle,
+      TierListTitle.english => englishTitle,
+      TierListTitle.native => nativeTitle,
+      TierListTitle.userPreferred => userPreferredTitle,
+      TierListTitle.custom => customTitle,
+      TierListTitle.$unknown => userPreferredTitle,
     };
   }
 
@@ -56,7 +57,7 @@ class Anime {
     String? nativeTitle,
     String? userPreferredTitle,
     String? customTitle,
-    MediaTitle? userSelectedTitle,
+    TierListTitle? userSelectedTitle,
     String? coverImageMedium,
     AnimeFormat? format,
   }) {
@@ -74,9 +75,9 @@ class Anime {
 
   TierListItem toTierItem() {
     return TierListItem(
-      id: id,
+      id: 'anime-$id',
       titles: {
-        'userPreferred': title,
+        TierListTitle.userPreferred: title,
       },
       group: format.name,
       cover: coverImageMedium,
@@ -90,13 +91,6 @@ enum AnimeFormat {
   leftover,
   movie,
   ovaOnaSpecial,
-}
-
-enum MediaTitle {
-  english,
-  native,
-  userPreferred,
-  custom,
 }
 
 extension AnimeIterableExtension on Iterable<Anime> {

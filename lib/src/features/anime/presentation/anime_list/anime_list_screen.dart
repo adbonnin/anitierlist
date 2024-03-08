@@ -93,7 +93,7 @@ class _AnimeTierListScreenState extends ConsumerState<AnimeListScreen> {
                   .map(_applyPreference)
                   .stableSorted((a, b) => a.format.index - b.format.index)
                   .map((a) => a.toTierItem()),
-              onItemTap: (tl) => _onAnimeTap(anime.where((a) => a.id == tl.id).firstOrNull),
+              onItemTap: (tl) => _onAnimeTap(anime.where((a) => '${a.id}' == tl.id).firstOrNull),
               isLoading: _loading,
               groupTitleBuilder: _buildGroupTitle,
               onExportPressed: _onExportPressed,

@@ -17,9 +17,9 @@ class Character {
 
   TierListItem toItem() {
     return TierListItem(
-      id: id,
+      id: 'character-$id',
       titles: {
-        'userPreferred': name,
+        TierListTitle.userPreferred: name,
       },
       cover: image,
     );

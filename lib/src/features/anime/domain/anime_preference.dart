@@ -1,4 +1,4 @@
-import 'package:anitierlist/src/features/anime/domain/anime.dart';
+import 'package:anitierlist/src/features/tierlist/domain/tierlist.dart';
 
 class AnimePreference {
   const AnimePreference({
@@ -7,5 +7,5 @@ class AnimePreference {
   });
 
   final String customTitle;
-  final MediaTitle userSelectedTitle;
+  final TierListTitle userSelectedTitle;
 }

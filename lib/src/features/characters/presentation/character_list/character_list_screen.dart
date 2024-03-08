@@ -76,7 +76,7 @@ class _CharacterListScreenState extends State<CharacterListScreen> {
   }
 
   void _onDeleteTierListTap(TierListItem item) {
-    final character = _characters.firstWhereOrNull((c) => c.id == item.id);
+    final character = _characters.firstWhereOrNull((c) => '${c.id}' == item.id);
 
     if (character == null) {
       return;
