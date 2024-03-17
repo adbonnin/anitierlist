@@ -121,10 +121,10 @@ class _CharacterAddDialogState extends State<CharacterAddDialog> {
     widget.onCharactersChanged(updatedCharactersById.values.toSet());
 
     if (addCharacter) {
-      Toast.showCharacterAddedToast(context, character);
+      Toast.showCharacterAddedToast(context, character.userPreferredName, character.gender);
     } //
     else {
-      Toast.showCharacterRemovedToast(context, character);
+      Toast.showCharacterRemovedToast(context, character.userPreferredName, character.gender);
     }
   }
 
@@ -140,6 +140,6 @@ class _CharacterAddDialogState extends State<CharacterAddDialog> {
     });
 
     widget.onCharactersChanged(updatedCharactersById.values.toSet());
-    Toast.showAnimeCharactersAddedToast(context, anime);
+    Toast.showAnimeCharactersAddedToast(context, anime.title);
   }
 }

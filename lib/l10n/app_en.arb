@@ -21,10 +21,10 @@
     "characters_characterAdded": "{name} has been added",
     "@characters_characterAdded": {
         "placeholders": {
-            "gender": {
+            "name": {
                 "type": "String"
             },
-            "name": {
+            "gender": {
                 "type": "String"
             }
         }

@@ -22,6 +22,10 @@ fragment SimpleMedia on Media {
 fragment SimpleCharacter on Character {
     id
     name {
+        alternative
+        alternativeSpoiler
+        full
+        native
         userPreferred
     }
     image {

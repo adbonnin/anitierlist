@@ -87,7 +87,7 @@ class _CharacterListScreenState extends State<CharacterListScreen> {
         ..remove(character);
     });
 
-    Toast.showCharacterRemovedToast(context, character);
+    Toast.showCharacterRemovedToast(context, character.userPreferredName, character.gender);
   }
 
   Future<void> _onExportPressed() async {

@@ -88,7 +88,11 @@ extension _SimpleCharacterExtension on Fragment$SimpleCharacter {
   Character toCharacter() {
     return Character(
       id: id,
-      name: name?.userPreferred ?? '',
+      alternativeName: name?.userPreferred ?? '',
+      alternativeSpoilerName: name?.userPreferred ?? '',
+      fullName: name?.userPreferred ?? '',
+      nativeName: name?.userPreferred ?? '',
+      userPreferredName: name?.userPreferred ?? '',
       image: image?.medium,
       gender: Gender.fromGraphql(gender),
     );

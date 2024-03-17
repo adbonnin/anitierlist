@@ -159,7 +159,7 @@ extension _MediaExtension on Fragment$SimpleMedia {
       englishTitle: title?.english ?? '',
       nativeTitle: title?.native ?? '',
       userPreferredTitle: title?.userPreferred ?? '',
-      coverImageMedium: coverImage?.medium,
+      coverImage: coverImage?.medium,
       format: animeFormat,
     );
   }

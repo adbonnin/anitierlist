@@ -8,7 +8,7 @@ class Anime {
     this.userPreferredTitle = '',
     this.customTitle = '',
     this.userSelectedTitle,
-    this.coverImageMedium,
+    this.coverImage,
     required this.format,
   });
 
@@ -18,7 +18,7 @@ class Anime {
   final String userPreferredTitle;
   final String customTitle;
   final TierListTitle? userSelectedTitle;
-  final String? coverImageMedium;
+  final String? coverImage;
   final AnimeFormat format;
 
   TierListTitle get selectedTitle {
@@ -58,7 +58,7 @@ class Anime {
     String? userPreferredTitle,
     String? customTitle,
     TierListTitle? userSelectedTitle,
-    String? coverImageMedium,
+    String? coverImage,
     AnimeFormat? format,
   }) {
     return Anime(
@@ -68,7 +68,7 @@ class Anime {
       userPreferredTitle: userPreferredTitle ?? this.userPreferredTitle,
       customTitle: customTitle ?? this.customTitle,
       userSelectedTitle: userSelectedTitle ?? this.userSelectedTitle,
-      coverImageMedium: coverImageMedium ?? this.coverImageMedium,
+      coverImage: coverImage ?? this.coverImage,
       format: format ?? this.format,
     );
   }
@@ -80,7 +80,7 @@ class Anime {
         TierListTitle.userPreferred: title,
       },
       group: format.name,
-      cover: coverImageMedium,
+      cover: coverImage,
     );
   }
 }
