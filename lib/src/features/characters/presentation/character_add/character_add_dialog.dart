@@ -1,6 +1,7 @@
 import 'package:anitierlist/src/features/anime/domain/anime.dart';
 import 'package:anitierlist/src/features/characters/domain/character.dart';
 import 'package:anitierlist/src/features/characters/presentation/character_search/character_search_tabbar_view.dart';
+import 'package:anitierlist/src/features/tierlist/domain/tierlist.dart';
 import 'package:anitierlist/src/features/tierlist/presentation/tierlist_item_card.dart';
 import 'package:anitierlist/src/l10n/app_localizations.dart';
 import 'package:anitierlist/src/utils/adaptive_search_dialog.dart';
@@ -9,8 +10,8 @@ import 'package:flutter/material.dart';
 
 void showCharacterAddDialog({
   required BuildContext context,
-  Set<Character> initialCharacters = const {},
-  required void Function(Set<Character>) onCharactersChanged,
+  Set<TierListItem> initialCharacters = const {},
+  required void Function(Set<TierListItem>) onCharactersChanged,
   bool barrierDismissible = true,
   Color? barrierColor,
   String? barrierLabel,
@@ -42,8 +43,8 @@ class CharacterAddDialog extends StatefulWidget {
     required this.onCharactersChanged,
   });
 
-  final Set<Character> initialCharacters;
-  final void Function(Set<Character> character) onCharactersChanged;
+  final Set<TierListItem> initialCharacters;
+  final void Function(Set<TierListItem> character) onCharactersChanged;
 
   @override
   State<CharacterAddDialog> createState() => _CharacterAddDialogState();
@@ -51,7 +52,7 @@ class CharacterAddDialog extends StatefulWidget {
 
 class _CharacterAddDialogState extends State<CharacterAddDialog> {
   var _search = '';
-  late Map<int, Character> _charactersByIds;
+  late Map<String, TierListItem> _charactersByIds;
 
   @override
   void initState() {
@@ -73,16 +74,19 @@ class _CharacterAddDialogState extends State<CharacterAddDialog> {
   }
 
   Widget _buildItem(BuildContext context, Character character, int index) {
-    final exists = _charactersByIds[character.id] != null;
+    final itemId = character.itemId;
+
+    final foundItem = _charactersByIds[itemId];
+    final item = foundItem ?? TierListItem(id: itemId, value: character);
 
     return InkWell(
       onTap: () => _onCharacterTap(character),
       child: Stack(
         children: [
           TierListItemCard(
-            item: character.toItem(),
+            item: item,
           ),
-          if (exists)
+          if (foundItem != null)
             Container(
               color: Colors.black54,
             ),
@@ -98,20 +102,23 @@ class _CharacterAddDialogState extends State<CharacterAddDialog> {
   }
 
   void _onCharacterTap(Character character) {
-    Map<int, Character> updatedCharactersById;
+    Map<String, TierListItem> updatedCharactersById;
 
-    final foundCharacter = _charactersByIds[character.id];
-    final addCharacter = foundCharacter == null;
+    final itemId = character.itemId;
 
-    if (addCharacter) {
+    final foundItem = _charactersByIds[itemId];
+    final item = foundItem ?? TierListItem(id: itemId, value: character);
+    final addItem = foundItem == null;
+
+    if (addItem) {
       updatedCharactersById = {
         ..._charactersByIds,
-        character.id: character,
+        itemId: item,
       };
     } //
     else {
       updatedCharactersById = {..._charactersByIds} //
-        ..remove(character.id);
+        ..remove(itemId);
     }
 
     setState(() {
@@ -120,11 +127,11 @@ class _CharacterAddDialogState extends State<CharacterAddDialog> {
 
     widget.onCharactersChanged(updatedCharactersById.values.toSet());
 
-    if (addCharacter) {
-      Toast.showCharacterAddedToast(context, character.userPreferredName, character.gender);
+    if (addItem) {
+      Toast.showItemAddedToast(context, item);
     } //
     else {
-      Toast.showCharacterRemovedToast(context, character.userPreferredName, character.gender);
+      Toast.showItemRemovedToast(context, item);
     }
   }
 
@@ -132,7 +139,12 @@ class _CharacterAddDialogState extends State<CharacterAddDialog> {
     final updatedCharactersById = {..._charactersByIds};
 
     for (final character in characters) {
-      updatedCharactersById.putIfAbsent(character.id, () => character);
+      final itemId = character.itemId;
+
+      updatedCharactersById.putIfAbsent(
+        itemId,
+        () => TierListItem(id: itemId, value: character),
+      );
     }
 
     setState(() {
@@ -140,6 +152,6 @@ class _CharacterAddDialogState extends State<CharacterAddDialog> {
     });
 
     widget.onCharactersChanged(updatedCharactersById.values.toSet());
-    Toast.showAnimeCharactersAddedToast(context, anime.title);
+    Toast.showAnimeCharactersAddedToast(context, anime);
   }
 }

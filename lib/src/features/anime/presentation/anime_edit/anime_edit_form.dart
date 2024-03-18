@@ -1,5 +1,6 @@
-import 'package:anitierlist/src/features/anime/domain/anime.dart';
 import 'package:anitierlist/src/features/tierlist/domain/tierlist.dart';
+import 'package:anitierlist/src/features/tierlist/domain/tierlist_value.dart';
+import 'package:anitierlist/src/l10n/app_localization_extension.dart';
 import 'package:anitierlist/src/l10n/app_localizations.dart';
 import 'package:anitierlist/src/widgets/expanded_radio_list_tile.dart';
 import 'package:anitierlist/src/widgets/info_label.dart';
@@ -8,11 +9,11 @@ import 'package:flutter/material.dart';
 
 class AnimeEditFormData {
   const AnimeEditFormData({
-    required this.userSelectedTitle,
+    required this.selectedTitle,
     required this.customTitle,
   });
 
-  final TierListTitle userSelectedTitle;
+  final String selectedTitle;
   final String customTitle;
 }
 
@@ -22,23 +23,26 @@ class AnimeEditForm extends StatefulWidget {
     required this.anime,
   });
 
-  final Anime anime;
+  final TierListItem anime;
 
   @override
   State<AnimeEditForm> createState() => AnimeEditFormState();
 }
 
 class AnimeEditFormState extends State<AnimeEditForm> {
-  final _customTitleController = TextEditingController();
+  late final TextEditingController _customTitleController;
   final _customTitleFocusNode = FocusNode();
 
-  late TierListTitle _userSelectedTitle;
+  late String _selectedTitle;
 
   @override
   void initState() {
     super.initState();
-    _userSelectedTitle = widget.anime.selectedTitle;
+
+    _customTitleController = TextEditingController(text: widget.anime.customTitle);
     _customTitleFocusNode.addListener(_handleCustomTitleFocus);
+
+    _selectedTitle = widget.anime.selectedTitle;
   }
 
   @override
@@ -56,45 +60,27 @@ class AnimeEditFormState extends State<AnimeEditForm> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            if (widget.anime.englishTitle.isNotEmpty)
+            ExpandedRadioListTile(
+              value: TierListTitle.undefined,
+              groupValue: _selectedTitle,
+              onChanged: _onUserSelectedTitleChanged,
+              title: Text(context.loc.tierlist_undefinedTitle),
+            ),
+            for (final etr in widget.anime.value.titles.entries)
               ExpandedRadioListTile(
-                value: TierListTitle.english,
-                groupValue: _userSelectedTitle,
+                value: etr.key,
+                groupValue: _selectedTitle,
                 onChanged: _onUserSelectedTitleChanged,
-                title: Text(context.loc.anime_title_english),
+                title: Text(context.loc.animeTitle(etr.key)),
                 subtitle: Text(
-                  widget.anime.englishTitle,
+                  etr.value,
                   maxLines: null,
                 ),
-                onCopyPressed: () => _onCopyPressed(widget.anime.englishTitle),
-              ),
-            if (widget.anime.nativeTitle.isNotEmpty)
-              ExpandedRadioListTile(
-                value: TierListTitle.native,
-                groupValue: _userSelectedTitle,
-                onChanged: _onUserSelectedTitleChanged,
-                title: Text(context.loc.anime_title_native),
-                subtitle: Text(
-                  widget.anime.nativeTitle,
-                  maxLines: null,
-                ),
-                onCopyPressed: () => _onCopyPressed(widget.anime.nativeTitle),
-              ),
-            if (widget.anime.userPreferredTitle.isNotEmpty)
-              ExpandedRadioListTile(
-                value: TierListTitle.userPreferred,
-                groupValue: _userSelectedTitle,
-                onChanged: _onUserSelectedTitleChanged,
-                title: Text(context.loc.anime_title_userPreferred),
-                subtitle: Text(
-                  widget.anime.userPreferredTitle,
-                  maxLines: null,
-                ),
-                onCopyPressed: () => _onCopyPressed(widget.anime.userPreferredTitle),
+                onCopyPressed: () => _onCopyPressed(etr.value),
               ),
             ExpandedRadioListTile(
               value: TierListTitle.custom,
-              groupValue: _userSelectedTitle,
+              groupValue: _selectedTitle,
               onChanged: _onUserSelectedTitleChanged,
               title: Text(context.loc.anime_title_custom),
               subtitle: Padding(
@@ -118,7 +104,7 @@ class AnimeEditFormState extends State<AnimeEditForm> {
   void _handleCustomTitleFocus() {
     if (_customTitleFocusNode.hasFocus) {
       setState(() {
-        _userSelectedTitle = TierListTitle.custom;
+        _selectedTitle = TierListTitle.custom;
       });
     }
   }
@@ -128,24 +114,24 @@ class AnimeEditFormState extends State<AnimeEditForm> {
       _customTitleController.text = text;
 
       setState(() {
-        _userSelectedTitle = TierListTitle.custom;
+        _selectedTitle = TierListTitle.custom;
       });
     }
   }
 
-  void _onUserSelectedTitleChanged(TierListTitle? value) {
+  void _onUserSelectedTitleChanged(String? value) {
     if (value == null) {
       return;
     }
 
     setState(() {
-      _userSelectedTitle = value;
+      _selectedTitle = value;
     });
   }
 
   AnimeEditFormData value() {
     return AnimeEditFormData(
-      userSelectedTitle: _userSelectedTitle,
+      selectedTitle: _selectedTitle,
       customTitle: _customTitleController.text,
     );
   }

@@ -23,7 +23,7 @@ class TierListItemCard extends StatelessWidget {
       child: Stack(
         children: [
           Positioned.fill(
-            child: CoverImage(image: item.cover),
+            child: CoverImage(image: item.value.cover),
           ),
           Positioned(
             left: 0,
@@ -33,7 +33,7 @@ class TierListItemCard extends StatelessWidget {
               color: const Color(0xE6292929),
               padding: const EdgeInsets.fromLTRB(4, 3, 4, 2),
               child: AutoSizeText(
-                item.title,
+                item.title(),
                 style: GoogleFonts.overpass(
                   color: Colors.white,
                   height: 0,

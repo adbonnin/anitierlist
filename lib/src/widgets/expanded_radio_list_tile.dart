@@ -9,7 +9,7 @@ class ExpandedRadioListTile<T> extends StatelessWidget {
     this.onChanged,
     this.onCopyPressed,
     required this.title,
-    required this.subtitle,
+    this.subtitle,
   });
 
   final T value;
@@ -17,7 +17,7 @@ class ExpandedRadioListTile<T> extends StatelessWidget {
   final ValueChanged<T?>? onChanged;
   final VoidCallback? onCopyPressed;
   final Widget title;
-  final Widget subtitle;
+  final Widget? subtitle;
 
   @override
   Widget build(BuildContext context) {

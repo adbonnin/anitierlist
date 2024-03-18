@@ -20,6 +20,8 @@
     "characters_exportName": "Personnages {date}",
     "characters_emptyList": "Aucun personnage ajouté pour l'instant",
     "anime_title":"Anime",
+    "anime_animeAdded": "{title} a été ajouté",
+    "anime_animeRemoved": "{title} a été supprimé",
     "anime_tierlist_year": "Année",
     "anime_tierlist_season": "Saison",
     "anime_tierlist_tv": "TV",
@@ -37,5 +39,6 @@
     "anime_title_english": "Anglais",
     "anime_title_native": "Natif",
     "anime_title_userPreferred": "Préféré des utilisateurs",
-    "anime_title_custom": "Personnalisé"
+    "anime_title_custom": "Personnalisé",
+    "tierlist_undefinedTitle": "Par default"
 }

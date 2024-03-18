@@ -32,10 +32,10 @@
     "characters_characterRemoved": "{name} has been removed",
     "@characters_characterRemoved": {
         "placeholders": {
-            "gender": {
+            "name": {
                 "type": "String"
             },
-            "name": {
+            "gender": {
                 "type": "String"
             }
         }
@@ -62,6 +62,15 @@
     },
     "characters_emptyList": "No characters added yet",
     "anime_title":"Anime",
+    "anime_animeAdded": "{title} has been added",
+    "anime_animeRemoved": "{title} has been removed",
+    "@anime_animeRemoved": {
+        "placeholders": {
+            "title": {
+                "type": "String"
+            }
+        }
+    },
     "anime_tierlist_year": "Year",
     "anime_tierlist_season": "Season",
     "anime_tierlist_tv": "TV",
@@ -89,5 +98,6 @@
     "anime_title_english": "English",
     "anime_title_native": "Native",
     "anime_title_userPreferred": "User preferred",
-    "anime_title_custom": "Custom"
+    "anime_title_custom": "Custom",
+    "tierlist_undefinedTitle": "Default"
 }

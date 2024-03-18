@@ -1,7 +1,8 @@
+import 'package:anitierlist/src/features/tierlist/domain/tierlist_value.dart';
 import 'package:anitierlist/src/utils/firestore.dart';
+import 'package:anitierlist/src/utils/iterable_extensions.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_firestore_odm/cloud_firestore_odm.dart';
-import 'package:json_annotation/json_annotation.dart';
 
 part 'tierlist.g.dart';
 
@@ -28,31 +29,30 @@ class TierList {
 class TierListItem {
   const TierListItem({
     required this.id,
-    this.type = TierListType.$unknown,
     this.group = '',
-    this.titles = const {},
     this.customTitle = '',
-    this.userSelectedTitle = TierListTitle.$unknown,
-    this.cover,
+    this.selectedTitle = TierListTitle.undefined,
+    required this.value,
   });
 
   @Id()
   final String id;
-
-  @JsonKey(unknownEnumValue: TierListType.$unknown)
-  final TierListType type;
-
   final String group;
-  final Map<TierListTitle, String> titles;
   final String customTitle;
+  final String selectedTitle;
 
-  @JsonKey(unknownEnumValue: TierListTitle.$unknown)
-  final TierListTitle userSelectedTitle;
+  @TierListValueConverter()
+  final TierListValue value;
 
-  final String? cover;
+  String title() {
+    final titles = value.titles;
 
-  String get title {
-    return titles.values.firstOrNull ?? '';
+    if (selectedTitle == TierListTitle.custom && customTitle.isNotEmpty) {
+      return customTitle;
+    }
+
+    final selected = selectedTitle.isEmpty ? null : titles[selectedTitle];
+    return selected ?? titles.values.firstOrNull ?? '';
   }
 
   factory TierListItem.fromJson(Map<String, Object?> json) => //
@@ -61,23 +61,19 @@ class TierListItem {
   Map<String, Object?> toJson() => //
       _$TierListItemToJson(this);
 
-  TierListItem copyWith(
+  TierListItem copyWith({
     String? id,
-    TierListType? type,
     String? group,
-    Map<TierListTitle, String>? titles,
     String? customTitle,
-    TierListTitle? userSelectedTitle,
-    String? cover,
-  ) {
+    String? selectedTitle,
+    TierListValue? value,
+  }) {
     return TierListItem(
       id: id ?? this.id,
-      type: type ?? this.type,
       group: group ?? this.group,
-      titles: titles ?? this.titles,
       customTitle: customTitle ?? this.customTitle,
-      userSelectedTitle: userSelectedTitle ?? this.userSelectedTitle,
-      cover: cover ?? this.cover,
+      selectedTitle: selectedTitle ?? this.selectedTitle,
+      value: value ?? this.value,
     );
   }
 
@@ -91,38 +87,26 @@ class TierListItem {
       return false;
     }
 
-    return runtimeType == other.runtimeType &&
+    return runtimeType == other.runtimeType && //
         id == other.id &&
         group == other.group &&
-        titles == other.titles &&
-        customTitle == other.customTitle &&
-        userSelectedTitle == other.userSelectedTitle &&
-        cover == other.cover;
+        selectedTitle == other.selectedTitle &&
+        value == other.value;
   }
 
   @override
   int get hashCode {
     return id.hashCode ^ //
         group.hashCode ^
-        titles.hashCode ^
-        customTitle.hashCode ^
-        userSelectedTitle.hashCode ^
-        cover.hashCode;
+        selectedTitle.hashCode ^
+        value.hashCode;
   }
 }
 
-enum TierListTitle {
-  english,
-  native,
-  userPreferred,
-  custom,
-  $unknown,
-}
-
-enum TierListType {
-  anime,
-  character,
-  $unknown,
+extension CharacterIterableExtension on Iterable<TierListItem> {
+  Map<String, TierListItem> toMapById() {
+    return map((e) => (e.id, e)).toMap();
+  }
 }
 
 @Collection<TierList>('tierlists')

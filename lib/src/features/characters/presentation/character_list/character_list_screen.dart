@@ -1,4 +1,3 @@
-import 'package:anitierlist/src/features/characters/domain/character.dart';
 import 'package:anitierlist/src/features/characters/presentation/character_add/character_add_dialog.dart';
 import 'package:anitierlist/src/features/tierlist/application/tierlist_service.dart';
 import 'package:anitierlist/src/features/tierlist/domain/tierlist.dart';
@@ -21,14 +20,14 @@ class CharacterListScreen extends StatefulWidget {
 class _CharacterListScreenState extends State<CharacterListScreen> {
   final _groupListKey = GlobalKey<TierListGroupListState>();
 
-  var _characters = <Character>{};
+  var _characters = <TierListItem>{};
   var _loading = false;
 
   @override
   Widget build(BuildContext context) {
     return TierListGroupList(
       key: _groupListKey,
-      items: _characters.map((c) => c.toItem()),
+      items: _characters,
       otherActions: [
         IconButton(
           onPressed: _onAddCharacterPressed,
@@ -52,7 +51,7 @@ class _CharacterListScreenState extends State<CharacterListScreen> {
     );
   }
 
-  void _onCharactersChanged(Set<Character> characters) {
+  void _onCharactersChanged(Set<TierListItem> characters) {
     setState(() {
       _characters = characters;
     });
@@ -76,7 +75,7 @@ class _CharacterListScreenState extends State<CharacterListScreen> {
   }
 
   void _onDeleteTierListTap(TierListItem item) {
-    final character = _characters.firstWhereOrNull((c) => '${c.id}' == item.id);
+    final character = _characters.firstWhereOrNull((c) => c.id == item.id);
 
     if (character == null) {
       return;
@@ -87,7 +86,7 @@ class _CharacterListScreenState extends State<CharacterListScreen> {
         ..remove(character);
     });
 
-    Toast.showCharacterRemovedToast(context, character.userPreferredName, character.gender);
+    Toast.showItemRemovedToast(context, character);
   }
 
   Future<void> _onExportPressed() async {

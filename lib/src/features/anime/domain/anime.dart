@@ -1,13 +1,15 @@
-import 'package:anitierlist/src/features/tierlist/domain/tierlist.dart';
+import 'package:anitierlist/src/features/tierlist/domain/tierlist_value.dart';
+import 'package:json_annotation/json_annotation.dart';
 
-class Anime {
+part 'anime.g.dart';
+
+@JsonSerializable()
+class Anime implements TierListValue {
   const Anime({
     required this.id,
     this.englishTitle = '',
     this.nativeTitle = '',
     this.userPreferredTitle = '',
-    this.customTitle = '',
-    this.userSelectedTitle,
     this.coverImage,
     required this.format,
   });
@@ -16,40 +18,33 @@ class Anime {
   final String englishTitle;
   final String nativeTitle;
   final String userPreferredTitle;
-  final String customTitle;
-  final TierListTitle? userSelectedTitle;
   final String? coverImage;
   final AnimeFormat format;
 
-  TierListTitle get selectedTitle {
-    if (userSelectedTitle != null) {
-      return userSelectedTitle!;
-    }
-
-    if (englishTitle.isNotEmpty) {
-      return TierListTitle.english;
-    }
-
-    if (userPreferredTitle.isNotEmpty) {
-      return TierListTitle.userPreferred;
-    }
-
-    if (nativeTitle.isNotEmpty) {
-      return TierListTitle.native;
-    }
-
-    return TierListTitle.english;
+  @override
+  String get itemId {
+    return 'anime-$id';
   }
 
-  String get title {
-    return switch (selectedTitle) {
-      TierListTitle.english => englishTitle,
-      TierListTitle.native => nativeTitle,
-      TierListTitle.userPreferred => userPreferredTitle,
-      TierListTitle.custom => customTitle,
-      TierListTitle.$unknown => userPreferredTitle,
+  @override
+  String? get cover {
+    return coverImage;
+  }
+
+  @override
+  Map<String, String> get titles {
+    return {
+      AnimeTitle.english: englishTitle,
+      AnimeTitle.native: nativeTitle,
+      AnimeTitle.userPreferred: userPreferredTitle,
     };
   }
+
+  factory Anime.fromJson(Map<String, Object?> json) => //
+      _$AnimeFromJson(json);
+
+  Map<String, Object?> toJson() => //
+      _$AnimeToJson(this);
 
   Anime copyWith({
     int? id,
@@ -57,7 +52,6 @@ class Anime {
     String? nativeTitle,
     String? userPreferredTitle,
     String? customTitle,
-    TierListTitle? userSelectedTitle,
     String? coverImage,
     AnimeFormat? format,
   }) {
@@ -66,23 +60,18 @@ class Anime {
       englishTitle: englishTitle ?? this.englishTitle,
       nativeTitle: nativeTitle ?? this.nativeTitle,
       userPreferredTitle: userPreferredTitle ?? this.userPreferredTitle,
-      customTitle: customTitle ?? this.customTitle,
-      userSelectedTitle: userSelectedTitle ?? this.userSelectedTitle,
       coverImage: coverImage ?? this.coverImage,
       format: format ?? this.format,
     );
   }
+}
 
-  TierListItem toTierItem() {
-    return TierListItem(
-      id: 'anime-$id',
-      titles: {
-        TierListTitle.userPreferred: title,
-      },
-      group: format.name,
-      cover: coverImage,
-    );
-  }
+class AnimeTitle {
+  AnimeTitle._();
+
+  static const english = 'english';
+  static const native = 'native';
+  static const userPreferred = 'userPreferred';
 }
 
 enum AnimeFormat {

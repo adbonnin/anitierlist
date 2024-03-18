@@ -22,7 +22,7 @@ class AnimeListTile extends StatelessWidget {
       selected: selected,
       dense: dense,
       title: Text(
-        anime.title,
+        anime.userPreferredTitle,
         overflow: TextOverflow.ellipsis,
         maxLines: 1,
       ),

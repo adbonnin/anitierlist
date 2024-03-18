@@ -1,8 +1,11 @@
 import 'package:anitierlist/src/features/characters/domain/gender.dart';
-import 'package:anitierlist/src/features/tierlist/domain/tierlist.dart';
-import 'package:anitierlist/src/utils/iterable_extensions.dart';
+import 'package:anitierlist/src/features/tierlist/domain/tierlist_value.dart';
+import 'package:json_annotation/json_annotation.dart';
 
-class Character {
+part 'character.g.dart';
+
+@JsonSerializable()
+class Character implements TierListValue {
   const Character({
     required this.id,
     required this.alternativeName,
@@ -23,19 +26,38 @@ class Character {
   final String? image;
   final Gender gender;
 
-  TierListItem toItem() {
-    return TierListItem(
-      id: 'character-$id',
-      titles: {
-        TierListTitle.userPreferred: userPreferredName,
-      },
-      cover: image,
-    );
+  @override
+  String get itemId {
+    return 'character-$id';
   }
+
+  @override
+  String? get cover {
+    return image;
+  }
+
+  @override
+  Map<String, String> get titles {
+    return {
+      CharacterName.alternative: alternativeName,
+      CharacterName.alternativeSpoiler: alternativeSpoilerName,
+      CharacterName.full: fullName,
+      CharacterName.native: nativeName,
+      CharacterName.userPreferred: userPreferredName,
+    };
+  }
+
+  factory Character.fromJson(Map<String, Object?> json) => //
+      _$CharacterFromJson(json);
+
+  Map<String, Object?> toJson() => //
+      _$CharacterToJson(this);
 }
 
-extension CharacterIterableExtension on Iterable<Character> {
-  Map<int, Character> toMapById() {
-    return map((e) => (e.id, e)).toMap();
-  }
+class CharacterName {
+  static const alternative = 'alternative';
+  static const alternativeSpoiler = 'alternativeSpoiler';
+  static const full = 'full';
+  static const native = 'native';
+  static const userPreferred = 'userPreferred';
 }

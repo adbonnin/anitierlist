@@ -1,4 +1,6 @@
-import 'package:anitierlist/src/features/characters/domain/gender.dart';
+import 'package:anitierlist/src/features/anime/domain/anime.dart';
+import 'package:anitierlist/src/features/tierlist/domain/tierlist.dart';
+import 'package:anitierlist/src/l10n/app_localization_extension.dart';
 import 'package:anitierlist/src/l10n/app_localizations.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
@@ -16,15 +18,28 @@ Function() showToast(BuildContext context, String text) {
 class Toast {
   Toast._();
 
-  static CancelFunc showCharacterAddedToast(BuildContext context, String name, Gender gender) {
-    return showToast(context, context.loc.characters_characterAdded(name, gender.name));
+  static Function() showItemAddedToast(BuildContext context, TierListItem item) {
+    final text = context.loc.tierListItemAdded(item);
+
+    if (text.isEmpty) {
+      return () {};
+    }
+
+    return showToast(context, text);
   }
 
-  static CancelFunc showCharacterRemovedToast(BuildContext context, String name, Gender gender) {
-    return showToast(context, context.loc.characters_characterRemoved(name, gender.name));
+  static Function() showItemRemovedToast(BuildContext context, TierListItem item) {
+    final text = context.loc.tierListItemRemoved(item);
+
+    if (text.isEmpty) {
+      return () {};
+    }
+
+    return showToast(context, text);
   }
 
-  static CancelFunc showAnimeCharactersAddedToast(BuildContext context, String title) {
-    return showToast(context, context.loc.characters_animeCharactersAdded(title));
+  static Function() showAnimeCharactersAddedToast(BuildContext context, Anime anime) {
+    final text = context.loc.characters_animeCharactersAdded(anime.userPreferredTitle);
+    return showToast(context, text);
   }
 }

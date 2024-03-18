@@ -1,17 +1,14 @@
 import 'dart:math';
 
-import 'package:anitierlist/src/features/anime/application/anime_service.dart';
-import 'package:anitierlist/src/features/anime/domain/anime.dart';
-import 'package:anitierlist/src/features/anime/domain/anime_preference.dart';
 import 'package:anitierlist/src/features/anime/presentation/anime_edit/anime_edit_dialog.dart';
 import 'package:anitierlist/src/features/tierlist/application/tierlist_service.dart';
+import 'package:anitierlist/src/features/tierlist/domain/tierlist.dart';
 import 'package:anitierlist/src/features/tierlist/presentation/tierlist_list/tierlist_group_list.dart';
 import 'package:anitierlist/src/features/tierlist/presentation/tierlist_list/tierlist_group_title.dart';
 import 'package:anitierlist/src/l10n/app_localization_extension.dart';
 import 'package:anitierlist/src/l10n/app_localizations.dart';
 import 'package:anitierlist/src/utils/anime.dart';
 import 'package:anitierlist/src/utils/file.dart';
-import 'package:anitierlist/src/utils/iterable_extensions.dart';
 import 'package:anitierlist/src/utils/season.dart';
 import 'package:anitierlist/src/widgets/async_value_widget.dart';
 import 'package:anitierlist/src/widgets/info_label.dart';
@@ -33,7 +30,7 @@ class _AnimeTierListScreenState extends ConsumerState<AnimeListScreen> {
   var _year = DateTime.now().year;
   var _season = DateTime.now().season;
 
-  var _preferencesById = <int, AnimePreference>{};
+  var _preferencesById = <String, TierListItem>{};
   var _loading = false;
 
   @override
@@ -42,7 +39,7 @@ class _AnimeTierListScreenState extends ConsumerState<AnimeListScreen> {
     final lastYear = DateTime.now().year + 1;
     final years = List.generate(max(0, lastYear - firstYear), (index) => lastYear - index);
 
-    final asyncAnime = ref.watch(browseAnimeSeasonProvider(_year, _season));
+    final asyncAnime = ref.watch(browseTierListAnimeSeasonProvider(_year, _season));
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -89,11 +86,8 @@ class _AnimeTierListScreenState extends ConsumerState<AnimeListScreen> {
             asyncAnime,
             data: (anime) => TierListGroupList(
               key: _groupListKey,
-              items: anime //
-                  .map(_applyPreference)
-                  .stableSorted((a, b) => a.format.index - b.format.index)
-                  .map((a) => a.toTierItem()),
-              onItemTap: (tl) => _onAnimeTap(anime.where((a) => '${a.id}' == tl.id).firstOrNull),
+              items: anime.map(_applyPreference),
+              onItemTap: _onAnimeTap,
               isLoading: _loading,
               groupTitleBuilder: _buildGroupTitle,
               onExportPressed: _onExportPressed,
@@ -141,7 +135,7 @@ class _AnimeTierListScreenState extends ConsumerState<AnimeListScreen> {
     );
   }
 
-  Future<void> _onAnimeTap(Anime? anime) async {
+  Future<void> _onAnimeTap(TierListItem? anime) async {
     if (anime == null) {
       return;
     }
@@ -165,17 +159,8 @@ class _AnimeTierListScreenState extends ConsumerState<AnimeListScreen> {
     });
   }
 
-  Anime _applyPreference(Anime anime) {
-    final preference = _preferencesById[anime.id];
-
-    if (preference != null) {
-      anime = anime.copyWith(
-        customTitle: preference.customTitle,
-        userSelectedTitle: preference.userSelectedTitle,
-      );
-    }
-
-    return anime;
+  TierListItem _applyPreference(TierListItem anime) {
+    return _preferencesById[anime.id] ?? anime;
   }
 
   Future<void> _onExportPressed() async {
