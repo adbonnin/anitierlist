@@ -17,6 +17,13 @@ class TierListTitle {
 
   static const undefined = '';
   static const custom = 'custom';
+
+  static const alternative = 'alternative';
+  static const alternativeSpoiler = 'alternativeSpoiler';
+  static const fullName = 'fullName';
+  static const native = 'native';
+  static const userPreferred = 'userPreferred';
+  static const english = 'english';
 }
 
 class TierListValueConverter implements JsonConverter<TierListValue, Map<String, dynamic>> {

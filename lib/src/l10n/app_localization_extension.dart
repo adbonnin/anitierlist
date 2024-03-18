@@ -1,6 +1,7 @@
 import 'package:anitierlist/src/features/anime/domain/anime.dart';
 import 'package:anitierlist/src/features/characters/domain/character.dart';
 import 'package:anitierlist/src/features/tierlist/domain/tierlist.dart';
+import 'package:anitierlist/src/features/tierlist/domain/tierlist_value.dart';
 import 'package:anitierlist/src/utils/season.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -39,19 +40,17 @@ extension AppLocalizationsExtension on AppLocalizations {
   }
 
   String animeTitle(String title) {
-    if (title == AnimeTitle.english) {
-      return anime_title_english;
-    }
-
-    if (title == AnimeTitle.native) {
-      return anime_title_native;
-    }
-
-    if (title == AnimeTitle.userPreferred) {
-      return anime_title_userPreferred;
-    }
-
-    return title;
+    return switch (title) {
+      TierListTitle.undefined => tierlist_undefinedTitle,
+      TierListTitle.custom => tierlist_customTitle,
+      TierListTitle.alternative => tierlist_alternativeTitle,
+      TierListTitle.alternativeSpoiler => tierlist_alternativeSpoilerTitle,
+      TierListTitle.fullName => tierlist_fullNameTitle,
+      TierListTitle.native => tierlist_nativeTitle,
+      TierListTitle.userPreferred => tierlist_userPreferredTitle,
+      TierListTitle.english => tierlist_englishTitle,
+      _ => title,
+    };
   }
 
   String tierListItemRemoved(TierListItem item) {

@@ -36,9 +36,12 @@
     "anime_tierlist_edit_title": "Préférences de la miniature",
     "anime_tierlist_edit_titleLabel": "Titre",
     "anime_tierlist_exportName": "TierList {year} {seasonLabel}",
-    "anime_title_english": "Anglais",
-    "anime_title_native": "Natif",
-    "anime_title_userPreferred": "Préféré des utilisateurs",
-    "anime_title_custom": "Personnalisé",
-    "tierlist_undefinedTitle": "Par default"
+    "tierlist_undefinedTitle": "Par default",
+    "tierlist_customTitle": "Personnalisé",
+    "tierlist_alternativeTitle": "Alternatif",
+    "tierlist_alternativeSpoilerTitle": "Spoiler alternatif",
+    "tierlist_fullNameTitle": "Nom complet",
+    "tierlist_nativeTitle": "Natif",
+    "tierlist_userPreferredTitle": "Préféré des utilisateurs",
+    "tierlist_englishTitle": "Anglais"
 }

@@ -34,9 +34,9 @@ class Anime implements TierListValue {
   @override
   Map<String, String> get titles {
     return {
-      AnimeTitle.english: englishTitle,
-      AnimeTitle.native: nativeTitle,
-      AnimeTitle.userPreferred: userPreferredTitle,
+      TierListTitle.english: englishTitle,
+      TierListTitle.native: nativeTitle,
+      TierListTitle.userPreferred: userPreferredTitle,
     };
   }
 
@@ -64,14 +64,6 @@ class Anime implements TierListValue {
       format: format ?? this.format,
     );
   }
-}
-
-class AnimeTitle {
-  AnimeTitle._();
-
-  static const english = 'english';
-  static const native = 'native';
-  static const userPreferred = 'userPreferred';
 }
 
 enum AnimeFormat {

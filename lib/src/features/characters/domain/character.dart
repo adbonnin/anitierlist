@@ -39,11 +39,11 @@ class Character implements TierListValue {
   @override
   Map<String, String> get titles {
     return {
-      CharacterName.alternative: alternativeName,
-      CharacterName.alternativeSpoiler: alternativeSpoilerName,
-      CharacterName.full: fullName,
-      CharacterName.native: nativeName,
-      CharacterName.userPreferred: userPreferredName,
+      TierListTitle.alternative: alternativeName,
+      TierListTitle.alternativeSpoiler: alternativeSpoilerName,
+      TierListTitle.fullName: fullName,
+      TierListTitle.native: nativeName,
+      TierListTitle.userPreferred: userPreferredName,
     };
   }
 
@@ -52,12 +52,4 @@ class Character implements TierListValue {
 
   Map<String, Object?> toJson() => //
       _$CharacterToJson(this);
-}
-
-class CharacterName {
-  static const alternative = 'alternative';
-  static const alternativeSpoiler = 'alternativeSpoiler';
-  static const full = 'full';
-  static const native = 'native';
-  static const userPreferred = 'userPreferred';
 }

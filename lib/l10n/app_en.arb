@@ -95,9 +95,12 @@
             }
         }
     },
-    "anime_title_english": "English",
-    "anime_title_native": "Native",
-    "anime_title_userPreferred": "User preferred",
-    "anime_title_custom": "Custom",
-    "tierlist_undefinedTitle": "Default"
+    "tierlist_undefinedTitle": "Default",
+    "tierlist_customTitle": "Custom",
+    "tierlist_alternativeTitle": "Alternative",
+    "tierlist_alternativeSpoilerTitle": "Alternative spoiler",
+    "tierlist_fullNameTitle": "Full name",
+    "tierlist_nativeTitle": "Native",
+    "tierlist_userPreferredTitle": "User preferred",
+    "tierlist_englishTitle": "English"
 }

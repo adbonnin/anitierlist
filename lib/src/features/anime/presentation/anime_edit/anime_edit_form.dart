@@ -82,7 +82,7 @@ class AnimeEditFormState extends State<AnimeEditForm> {
               value: TierListTitle.custom,
               groupValue: _selectedTitle,
               onChanged: _onUserSelectedTitleChanged,
-              title: Text(context.loc.anime_title_custom),
+              title: Text(context.loc.tierlist_customTitle),
               subtitle: Padding(
                 padding: const EdgeInsets.only(top: Insets.p2),
                 child: TextFormField(
