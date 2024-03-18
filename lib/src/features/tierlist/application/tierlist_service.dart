@@ -18,7 +18,7 @@ class TierListService {
   const TierListService();
 
   static Future<Uint8List> buildZip(
-    Map<String?, List<(TierListItem, ScreenshotController)>> tierListScreenshotsByFormat, [
+    Map<String, List<(TierListItem, ScreenshotController)>> tierListScreenshotsByFormat, [
     String Function(String group)? toGroupLabel,
   ]) async {
     final archive = Archive();
@@ -30,8 +30,8 @@ class TierListService {
       final group = etr.key;
       final imageControllers = etr.value.map((e) => e.$2).toList();
 
-      final groupLabel = (toGroupLabel == null || group == null ? group : toGroupLabel.call(group)) //
-          ?.removeSpecialCharacters()
+      final groupLabel = (toGroupLabel == null ? group : toGroupLabel(group)) //
+          .removeSpecialCharacters()
           .removeMultipleSpace();
 
       await _addCapturesToArchive(archive, total, offset, groupLabel, imageControllers);
@@ -53,7 +53,7 @@ class TierListService {
     Archive archive,
     int total,
     int offset,
-    String? groupText,
+    String groupText,
     List<ScreenshotController> screenshotControllers,
   ) async {
     if (screenshotControllers.isEmpty) {
@@ -73,7 +73,7 @@ class TierListService {
       final index = numberFormat.format(offset + i);
       final nameItems = [index];
 
-      if (groupText != null && groupText.isNotEmpty) {
+      if (groupText.isNotEmpty) {
         nameItems.add(groupText);
       }
 

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:anitierlist/src/features/tierlist/domain/tierlist.dart';
+import 'package:anitierlist/src/features/tierlist/domain/tierlist_value.dart';
 import 'package:anitierlist/src/features/tierlist/presentation/tierlist_item_card.dart';
 import 'package:anitierlist/src/features/tierlist/presentation/tierlist_list/tierlist_group.dart';
 import 'package:anitierlist/src/features/tierlist/presentation/tierlist_list/tierlist_group_title.dart';
@@ -62,7 +63,7 @@ class TierListGroupListState extends State<TierListGroupList> {
     super.dispose();
   }
 
-  Map<String?, List<(TierListItem, ScreenshotController)>> buildTierListScreenshotsByFormat() {
+  Map<String, List<(TierListItem, ScreenshotController)>> buildTierListScreenshotsByFormat() {
     return widget.items //
         .mapIndexed((i, a) => (a, _screenshotControllers[i]))
         .groupListsBy((element) => element.$1.group);
@@ -132,9 +133,9 @@ class TierListGroupListState extends State<TierListGroupList> {
     );
   }
 
-  Widget _buildGroup(String? group, List<(TierListItem, ScreenshotController)> tierListScreenshots) {
-    final groupTitleBuilder = widget.groupTitleBuilder;
-    final groupTitle = group == null ? null : (groupTitleBuilder ?? _buildDefaultGroupTitle)(context, group);
+  Widget _buildGroup(String group, List<(TierListItem, ScreenshotController)> tierListScreenshots) {
+    final groupTitleBuilder = widget.groupTitleBuilder ?? _buildDefaultGroupTitle;
+    final groupTitle = group == TierListTitle.undefined ? null : groupTitleBuilder(context, group);
 
     return TierListGroup(
       title: groupTitle,
