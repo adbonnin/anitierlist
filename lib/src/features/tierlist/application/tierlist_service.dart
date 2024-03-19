@@ -1,21 +1,61 @@
-import 'package:anitierlist/src/features/anime/application/anime_service.dart';
-import 'package:anitierlist/src/features/anime/domain/anime.dart';
 import 'package:anitierlist/src/features/tierlist/domain/tierlist.dart';
 import 'package:anitierlist/src/utils/image_extensions.dart';
-import 'package:anitierlist/src/utils/iterable_extensions.dart';
 import 'package:anitierlist/src/utils/number.dart';
-import 'package:anitierlist/src/utils/season.dart';
 import 'package:anitierlist/src/utils/string_extension.dart';
 import 'package:anitierlist/src/widgets/screenshot.dart';
 import 'package:archive/archive.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'tierlist_service.g.dart';
 
+@Riverpod(keepAlive: true)
+TierListService tierListService(TierListServiceRef ref) {
+  return TierListService.fromFirestore(FirebaseFirestore.instance);
+}
+
 class TierListService {
-  const TierListService();
+  const TierListService(this.firestore, this.tierListCollection);
+
+  final FirebaseFirestore firestore;
+  final TierListCollectionReference tierListCollection;
+
+  factory TierListService.fromFirestore(FirebaseFirestore firestore) {
+    final tierListCollection = TierListCollectionReference(firestore);
+    return TierListService(firestore, tierListCollection);
+  }
+
+  Stream<Iterable<TierListItem>> tierListItems(String tierListId) {
+    final tierListDoc = tierListCollection.doc(tierListId).reference;
+
+    final snapshot = TierListItemCollectionReference(tierListDoc).whereValue().snapshots();
+    return snapshot.map((event) => event.snapshot.docs.map((e) => e.data()));
+  }
+
+  Future<void> addItem(String tierListId, TierListItem item) {
+    final tierListDoc = tierListCollection.doc(tierListId).reference;
+
+    return TierListItemCollectionReference(tierListDoc).doc(item.id).set(item);
+  }
+
+  Future<void> addAllItems(String tierListId, Iterable<TierListItem> items) {
+    return firestore.runTransaction((transaction) async {
+      final tierListDoc = await transaction.get(tierListCollection.doc(tierListId).reference);
+      final tierListItemCollection = TierListItemCollectionReference(tierListDoc.reference);
+
+      for (TierListItem item in items) {
+        transaction.set(tierListItemCollection.doc(item.id).reference, item);
+      }
+    });
+  }
+
+  Future<void> removeItem(String tierListId, String itemId) {
+    final tierListDoc = tierListCollection.doc(tierListId).reference;
+
+    return TierListItemCollectionReference(tierListDoc).doc(itemId).delete();
+  }
 
   static Future<Uint8List> buildZip(
     Map<String, List<(TierListItem, ScreenshotController)>> tierListScreenshotsByFormat, [
@@ -85,25 +125,4 @@ class TierListService {
       archive.addFile(file);
     }
   }
-}
-
-@Riverpod()
-AsyncValue<Iterable<TierListItem>> browseTierListAnimeSeason(
-  BrowseTierListAnimeSeasonRef ref,
-  int year,
-  Season season,
-) {
-  final asyncBrowseAnimeSeason = ref.watch(browseAnimeSeasonProvider(year, season));
-
-  TierListItem toItem(Anime anime) {
-    return TierListItem(
-      id: anime.itemId,
-      group: anime.format.name,
-      value: anime,
-    );
-  }
-
-  return asyncBrowseAnimeSeason.whenData((anime) => anime //
-      .stableSorted((a, b) => a.format.index - b.format.index)
-      .map(toItem));
 }

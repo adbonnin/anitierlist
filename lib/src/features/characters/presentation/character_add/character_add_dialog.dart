@@ -1,17 +1,16 @@
 import 'package:anitierlist/src/features/anime/domain/anime.dart';
-import 'package:anitierlist/src/features/characters/domain/character.dart';
-import 'package:anitierlist/src/features/characters/presentation/character_search/character_search_tabbar_view.dart';
+import 'package:anitierlist/src/features/characters/presentation/character_add/character_add_page.dart';
+import 'package:anitierlist/src/features/tierlist/application/tierlist_providers.dart';
+import 'package:anitierlist/src/features/tierlist/application/tierlist_service.dart';
 import 'package:anitierlist/src/features/tierlist/domain/tierlist.dart';
-import 'package:anitierlist/src/features/tierlist/presentation/tierlist_item_card.dart';
-import 'package:anitierlist/src/l10n/app_localizations.dart';
-import 'package:anitierlist/src/utils/adaptive_search_dialog.dart';
+import 'package:anitierlist/src/widgets/async_value_widget.dart';
 import 'package:anitierlist/src/widgets/toast.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void showCharacterAddDialog({
   required BuildContext context,
-  Set<TierListItem> initialCharacters = const {},
-  required void Function(Set<TierListItem>) onCharactersChanged,
+  required String tierListId,
   bool barrierDismissible = true,
   Color? barrierColor,
   String? barrierLabel,
@@ -27,8 +26,7 @@ void showCharacterAddDialog({
     useRootNavigator: useRootNavigator,
     builder: (BuildContext context) {
       return CharacterAddDialog(
-        initialCharacters: initialCharacters,
-        onCharactersChanged: onCharactersChanged,
+        tierListId: tierListId,
       );
     },
     routeSettings: routeSettings,
@@ -36,122 +34,58 @@ void showCharacterAddDialog({
   );
 }
 
-class CharacterAddDialog extends StatefulWidget {
+class CharacterAddDialog extends ConsumerStatefulWidget {
   const CharacterAddDialog({
     super.key,
-    this.initialCharacters = const {},
-    required this.onCharactersChanged,
+    required this.tierListId,
   });
 
-  final Set<TierListItem> initialCharacters;
-  final void Function(Set<TierListItem> character) onCharactersChanged;
+  final String tierListId;
 
   @override
-  State<CharacterAddDialog> createState() => _CharacterAddDialogState();
+  ConsumerState<CharacterAddDialog> createState() => _CharacterAddDialogState();
 }
 
-class _CharacterAddDialogState extends State<CharacterAddDialog> {
-  var _search = '';
-  late Map<String, TierListItem> _charactersByIds;
-
-  @override
-  void initState() {
-    super.initState();
-    _charactersByIds = widget.initialCharacters.toMapById();
-  }
-
+class _CharacterAddDialogState extends ConsumerState<CharacterAddDialog> {
   @override
   Widget build(BuildContext context) {
-    return AdaptiveSearchDialog(
-      title: Text(context.loc.characters_add_title),
-      onChanged: _onChanged,
-      content: CharacterSearchTabBarView(
-        search: _search,
+    final charactersSnapshot = ref.watch(tierListItemsSnapshotProvider(widget.tierListId));
+
+    return AsyncValueWidget(
+      charactersSnapshot,
+      data: (characters) => CharacterAddPage(
+        characters: characters,
+        onAddCharacterTap: _onAddCharacterTap,
+        onDeleteCharacterTap: _onDeleteCharacterTap,
         onAddAnimeCharactersTap: _onAddAnimeCharactersTap,
-        itemBuilder: _buildItem,
       ),
     );
   }
 
-  Widget _buildItem(BuildContext context, Character character, int index) {
-    final itemId = character.itemId;
+  Future<void> _onAddCharacterTap(TierListItem character) async {
+    final service = ref.read(tierListServiceProvider);
+    await service.addItem(widget.tierListId, character);
 
-    final foundItem = _charactersByIds[itemId];
-    final item = foundItem ?? TierListItem(id: itemId, value: character);
-
-    return InkWell(
-      onTap: () => _onCharacterTap(character),
-      child: Stack(
-        children: [
-          TierListItemCard(
-            item: item,
-          ),
-          if (foundItem != null)
-            Container(
-              color: Colors.black54,
-            ),
-        ],
-      ),
-    );
-  }
-
-  void _onChanged(String value) {
-    setState(() {
-      _search = value;
-    });
-  }
-
-  void _onCharacterTap(Character character) {
-    Map<String, TierListItem> updatedCharactersById;
-
-    final itemId = character.itemId;
-
-    final foundItem = _charactersByIds[itemId];
-    final item = foundItem ?? TierListItem(id: itemId, value: character);
-    final addItem = foundItem == null;
-
-    if (addItem) {
-      updatedCharactersById = {
-        ..._charactersByIds,
-        itemId: item,
-      };
-    } //
-    else {
-      updatedCharactersById = {..._charactersByIds} //
-        ..remove(itemId);
-    }
-
-    setState(() {
-      _charactersByIds = updatedCharactersById;
-    });
-
-    widget.onCharactersChanged(updatedCharactersById.values.toSet());
-
-    if (addItem) {
-      Toast.showItemAddedToast(context, item);
-    } //
-    else {
-      Toast.showItemRemovedToast(context, item);
+    if (mounted) {
+      Toast.showItemAddedToast(context, character);
     }
   }
 
-  void _onAddAnimeCharactersTap(Anime anime, List<Character> characters) {
-    final updatedCharactersById = {..._charactersByIds};
+  Future<void> _onDeleteCharacterTap(TierListItem character) async {
+    final service = ref.read(tierListServiceProvider);
+    await service.removeItem(widget.tierListId, character.id);
 
-    for (final character in characters) {
-      final itemId = character.itemId;
-
-      updatedCharactersById.putIfAbsent(
-        itemId,
-        () => TierListItem(id: itemId, value: character),
-      );
+    if (mounted) {
+      Toast.showItemRemovedToast(context, character);
     }
+  }
 
-    setState(() {
-      _charactersByIds = updatedCharactersById;
-    });
+  Future<void> _onAddAnimeCharactersTap(Anime anime, Iterable<TierListItem> characters) async {
+    final service = ref.read(tierListServiceProvider);
+    await service.addAllItems(widget.tierListId, characters);
 
-    widget.onCharactersChanged(updatedCharactersById.values.toSet());
-    Toast.showAnimeCharactersAddedToast(context, anime);
+    if (mounted) {
+      Toast.showAnimeCharactersAddedToast(context, anime);
+    }
   }
 }
