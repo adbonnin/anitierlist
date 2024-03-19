@@ -12,13 +12,13 @@ class CharacterAddPage extends StatefulWidget {
     super.key,
     required this.characters,
     required this.onAddCharacterTap,
-    required this.onDeleteCharacterTap,
+    required this.onRemoveCharacterTap,
     required this.onAddAnimeCharactersTap,
   });
 
   final Iterable<TierListItem> characters;
   final ValueChanged<TierListItem> onAddCharacterTap;
-  final ValueChanged<TierListItem> onDeleteCharacterTap;
+  final ValueChanged<TierListItem> onRemoveCharacterTap;
   final void Function(Anime, Iterable<TierListItem>) onAddAnimeCharactersTap;
 
   @override
@@ -68,7 +68,7 @@ class _CharacterAddPageState extends State<CharacterAddPage> {
 
     return InkWell(
       onTap: () => foundItem != null //
-          ? widget.onDeleteCharacterTap(item)
+          ? widget.onRemoveCharacterTap(item)
           : widget.onAddCharacterTap(item),
       child: Stack(
         children: [

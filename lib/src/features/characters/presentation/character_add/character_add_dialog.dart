@@ -56,7 +56,7 @@ class _CharacterAddDialogState extends ConsumerState<CharacterAddDialog> {
       data: (characters) => CharacterAddPage(
         characters: characters,
         onAddCharacterTap: _onAddCharacterTap,
-        onDeleteCharacterTap: _onDeleteCharacterTap,
+        onRemoveCharacterTap: _onRemoveCharacterTap,
         onAddAnimeCharactersTap: _onAddAnimeCharactersTap,
       ),
     );
@@ -71,7 +71,7 @@ class _CharacterAddDialogState extends ConsumerState<CharacterAddDialog> {
     }
   }
 
-  Future<void> _onDeleteCharacterTap(TierListItem character) async {
+  Future<void> _onRemoveCharacterTap(TierListItem character) async {
     final service = ref.read(tierListServiceProvider);
     await service.removeItem(widget.tierListId, character.id);
 
