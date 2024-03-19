@@ -1,5 +1,6 @@
 import 'package:anitierlist/src/features/anime/domain/anime.dart';
 import 'package:anitierlist/src/features/characters/domain/character.dart';
+import 'package:anitierlist/src/utils/iterable_extensions.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 abstract class TierListValue {
@@ -56,5 +57,11 @@ class TierListValueConverter implements JsonConverter<TierListValue, Map<String,
       characterType => Character.fromJson(json),
       _ => throw "Type is not supported",
     };
+  }
+}
+
+extension TitleMapExtension<K> on Map<K, String> {
+  Map<K, String> removeEmptyTitles() {
+    return entries.where((etr) => etr.value.isNotEmpty).toMap();
   }
 }

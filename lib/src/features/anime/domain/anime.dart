@@ -34,10 +34,10 @@ class Anime implements TierListValue {
   @override
   Map<String, String> get titles {
     return {
+      TierListTitle.userPreferred: userPreferredTitle,
       TierListTitle.english: englishTitle,
       TierListTitle.native: nativeTitle,
-      TierListTitle.userPreferred: userPreferredTitle,
-    };
+    }.removeEmptyTitles();
   }
 
   factory Anime.fromJson(Map<String, Object?> json) => //

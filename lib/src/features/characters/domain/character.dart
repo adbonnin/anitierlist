@@ -39,12 +39,12 @@ class Character implements TierListValue {
   @override
   Map<String, String> get titles {
     return {
-      TierListTitle.alternative: alternativeName,
-      TierListTitle.alternativeSpoiler: alternativeSpoilerName,
+      TierListTitle.userPreferred: userPreferredName,
       TierListTitle.fullName: fullName,
       TierListTitle.native: nativeName,
-      TierListTitle.userPreferred: userPreferredName,
-    };
+      TierListTitle.alternative: alternativeName,
+      TierListTitle.alternativeSpoiler: alternativeSpoilerName,
+    }.removeEmptyTitles();
   }
 
   factory Character.fromJson(Map<String, Object?> json) => //

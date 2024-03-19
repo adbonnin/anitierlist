@@ -17,6 +17,8 @@ class TierListItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final title = item.title();
+
     return SizedBox(
       width: width,
       height: height,
@@ -25,26 +27,27 @@ class TierListItemCard extends StatelessWidget {
           Positioned.fill(
             child: CoverImage(image: item.value.cover),
           ),
-          Positioned(
-            left: 0,
-            bottom: 0,
-            right: 0,
-            child: Container(
-              color: const Color(0xE6292929),
-              padding: const EdgeInsets.fromLTRB(4, 3, 4, 2),
-              child: AutoSizeText(
-                item.title(),
-                style: GoogleFonts.overpass(
-                  color: Colors.white,
-                  height: 0,
+          if (title.isNotEmpty)
+            Positioned(
+              left: 0,
+              bottom: 0,
+              right: 0,
+              child: Container(
+                color: const Color(0xE6292929),
+                padding: const EdgeInsets.fromLTRB(4, 3, 4, 2),
+                child: AutoSizeText(
+                  title,
+                  style: GoogleFonts.overpass(
+                    color: Colors.white,
+                    height: 0,
+                  ),
+                  minFontSize: 0,
+                  maxFontSize: 9,
+                  maxLines: 6,
+                  stepGranularity: 0.1,
                 ),
-                minFontSize: 0,
-                maxFontSize: 9,
-                maxLines: 6,
-                stepGranularity: 0.1,
               ),
-            ),
-          )
+            )
         ],
       ),
     );
