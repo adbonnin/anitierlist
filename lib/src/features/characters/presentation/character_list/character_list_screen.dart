@@ -1,3 +1,4 @@
+import 'package:anitierlist/src/features/anime/presentation/anime_edit/anime_edit_dialog.dart';
 import 'package:anitierlist/src/features/characters/presentation/character_add/character_add_dialog.dart';
 import 'package:anitierlist/src/features/tierlist/application/tierlist_providers.dart';
 import 'package:anitierlist/src/features/tierlist/application/tierlist_service.dart';
@@ -47,7 +48,7 @@ class _CharacterListScreenState extends ConsumerState<CharacterListScreen> {
         ],
         emptyBuilder: _buildEmpty,
         isLoading: _loading,
-        onItemTap: _onDeleteItemTap,
+        onItemTap: _onItemTap,
         onExportPressed: _onExportPressed,
         onSharePressed: _onSharePressed,
       ),
@@ -78,7 +79,27 @@ class _CharacterListScreenState extends ConsumerState<CharacterListScreen> {
     );
   }
 
-  Future<void> _onDeleteItemTap(TierListItem item) {
+  Future<void> _onItemTap(TierListItem item) async {
+    final service = ref.read(tierListServiceProvider);
+
+    final updatedPreference = await showAnimeEditDialog(
+      context: context,
+      anime: item,
+    );
+
+    if (updatedPreference == null) {
+      return;
+    }
+
+    return service.updateItem(
+      widget.tierListId,
+      item.id,
+      customTitle: updatedPreference.customTitle,
+      selectedTitle: updatedPreference.selectedTitle,
+    );
+  }
+
+  Future<void> _onRemoveItemTap(TierListItem item) {
     final service = ref.read(tierListServiceProvider);
     return service.removeItem(widget.tierListId, item.id);
   }

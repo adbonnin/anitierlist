@@ -5,6 +5,7 @@
     "common_winter": "Hiver",
     "common_cancel": "Annuler",
     "common_confirm": "Confirmer",
+    "common_delete": "Supprimer",
     "common_close": "Fermer",
     "common_back": "Retour",
     "app_title": "AniTierList {version}",

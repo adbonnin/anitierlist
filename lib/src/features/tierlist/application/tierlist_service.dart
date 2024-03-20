@@ -61,6 +61,21 @@ class TierListService {
     return batch.commit();
   }
 
+  Future<void> updateItem(
+    String tierListId,
+    String itemId, {
+    required String selectedTitle,
+    required String customTitle,
+  }) {
+    final tierListDoc = tierListCollection.doc(tierListId).reference;
+    final tierListItemDoc = TierListItemCollectionReference(tierListDoc).doc(itemId);
+
+    return tierListItemDoc.update(
+      selectedTitle: selectedTitle,
+      customTitle: customTitle,
+    );
+  }
+
   Future<void> removeItem(String tierListId, String itemId) {
     final tierListDoc = tierListCollection.doc(tierListId).reference;
 

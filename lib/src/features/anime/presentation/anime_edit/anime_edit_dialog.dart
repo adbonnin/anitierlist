@@ -4,7 +4,7 @@ import 'package:anitierlist/src/l10n/app_localizations.dart';
 import 'package:anitierlist/styles.dart';
 import 'package:flutter/material.dart';
 
-Future<TierListItem?> showAnimeEditDialog({
+Future<AnimeEditDialogData?> showAnimeEditDialog({
   required BuildContext context,
   required TierListItem anime,
   bool barrierDismissible = true,
@@ -14,7 +14,7 @@ Future<TierListItem?> showAnimeEditDialog({
   RouteSettings? routeSettings,
   Offset? anchorPoint,
 }) {
-  return showDialog<TierListItem>(
+  return showDialog<AnimeEditDialogData>(
     context: context,
     barrierDismissible: barrierDismissible,
     barrierColor: barrierColor,
@@ -26,6 +26,16 @@ Future<TierListItem?> showAnimeEditDialog({
     routeSettings: routeSettings,
     anchorPoint: anchorPoint,
   );
+}
+
+class AnimeEditDialogData {
+  const AnimeEditDialogData({
+    required this.selectedTitle,
+    required this.customTitle,
+  });
+
+  final String selectedTitle;
+  final String customTitle;
 }
 
 class AnimeEditDialog extends StatefulWidget {
@@ -59,6 +69,10 @@ class _AnimeEditDialogState extends State<AnimeEditDialog> {
           onPressed: _onCancelPressed,
           child: Text(context.loc.common_cancel),
         ),
+        OutlinedButton(
+          onPressed: _onCancelPressed,
+          child: Text(context.loc.common_delete),
+        ),
         FilledButton(
           onPressed: _onConfirmPressed,
           child: Text(context.loc.common_confirm),
@@ -79,12 +93,6 @@ class _AnimeEditDialogState extends State<AnimeEditDialog> {
     }
 
     final value = formState.value();
-
-    final updatedAnime = widget.anime.copyWith(
-      selectedTitle: value.selectedTitle,
-      customTitle: value.customTitle,
-    );
-
-    Navigator.of(context).pop(updatedAnime);
+    Navigator.of(context).pop(value);
   }
 }

@@ -1,3 +1,4 @@
+import 'package:anitierlist/src/features/anime/presentation/anime_edit/anime_edit_dialog.dart';
 import 'package:anitierlist/src/features/tierlist/domain/tierlist.dart';
 import 'package:anitierlist/src/features/tierlist/domain/tierlist_value.dart';
 import 'package:anitierlist/src/l10n/app_localization_extension.dart';
@@ -6,16 +7,6 @@ import 'package:anitierlist/src/widgets/expanded_radio_list_tile.dart';
 import 'package:anitierlist/src/widgets/info_label.dart';
 import 'package:anitierlist/styles.dart';
 import 'package:flutter/material.dart';
-
-class AnimeEditFormData {
-  const AnimeEditFormData({
-    required this.selectedTitle,
-    required this.customTitle,
-  });
-
-  final String selectedTitle;
-  final String customTitle;
-}
 
 class AnimeEditForm extends StatefulWidget {
   const AnimeEditForm({
@@ -129,8 +120,8 @@ class AnimeEditFormState extends State<AnimeEditForm> {
     });
   }
 
-  AnimeEditFormData value() {
-    return AnimeEditFormData(
+  AnimeEditDialogData value() {
+    return AnimeEditDialogData(
       selectedTitle: _selectedTitle,
       customTitle: _customTitleController.text,
     );
