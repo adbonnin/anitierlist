@@ -1,5 +1,7 @@
 import 'package:anitierlist/src/features/tierlist/domain/tierlist.dart';
+import 'package:anitierlist/src/l10n/app_localization_extension.dart';
 import 'package:anitierlist/src/utils/image_extensions.dart';
+import 'package:anitierlist/src/utils/iterable_extensions.dart';
 import 'package:anitierlist/src/utils/number.dart';
 import 'package:anitierlist/src/utils/string_extension.dart';
 import 'package:anitierlist/src/widgets/screenshot.dart';
@@ -7,6 +9,7 @@ import 'package:archive/archive.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'tierlist_service.g.dart';
@@ -55,6 +58,36 @@ class TierListService {
     final tierListDoc = tierListCollection.doc(tierListId).reference;
 
     return TierListItemCollectionReference(tierListDoc).doc(itemId).delete();
+  }
+
+  static Iterable<String> notifyTierListItem(
+    AppLocalizations loc,
+    AsyncValue<Iterable<TierListItem>>? previous,
+    AsyncValue<Iterable<TierListItem>> next,
+  ) {
+    final previousItems = previous?.valueOrNull;
+    final nextItems = next.valueOrNull;
+
+    if (previousItems == null || nextItems == null) {
+      return [];
+    }
+
+    final messages = <String>[];
+    final previousItemsById = previousItems.map((e) => (e.id, e)).toMap();
+
+    for (final nextItem in nextItems) {
+      final previousItem = previousItemsById.remove(nextItem.id);
+
+      if (previousItem == null) {
+        messages.add(loc.tierListItemAdded(nextItem));
+      }
+    }
+
+    for (final previousItem in previousItemsById.values) {
+      messages.add(loc.tierListItemRemoved(previousItem));
+    }
+
+    return messages;
   }
 
   static Future<Uint8List> buildZip(

@@ -3,6 +3,7 @@ import 'package:anitierlist/src/features/characters/presentation/character_add/c
 import 'package:anitierlist/src/features/tierlist/application/tierlist_providers.dart';
 import 'package:anitierlist/src/features/tierlist/application/tierlist_service.dart';
 import 'package:anitierlist/src/features/tierlist/domain/tierlist.dart';
+import 'package:anitierlist/src/l10n/app_localizations.dart';
 import 'package:anitierlist/src/widgets/async_value_widget.dart';
 import 'package:anitierlist/src/widgets/toast.dart';
 import 'package:flutter/material.dart';
@@ -49,7 +50,10 @@ class CharacterAddDialog extends ConsumerStatefulWidget {
 class _CharacterAddDialogState extends ConsumerState<CharacterAddDialog> {
   @override
   Widget build(BuildContext context) {
-    final charactersSnapshot = ref.watch(tierListItemsSnapshotProvider(widget.tierListId));
+    final characterProvider = tierListItemsSnapshotProvider(widget.tierListId);
+
+    final charactersSnapshot = ref.watch(characterProvider);
+    ref.listen(characterProvider, _handleItems);
 
     return AsyncValueWidget(
       charactersSnapshot,
@@ -65,27 +69,25 @@ class _CharacterAddDialogState extends ConsumerState<CharacterAddDialog> {
   Future<void> _onAddCharacterTap(TierListItem character) async {
     final service = ref.read(tierListServiceProvider);
     await service.addItem(widget.tierListId, character);
-
-    if (mounted) {
-      Toast.showItemAddedToast(context, character);
-    }
   }
 
-  Future<void> _onRemoveCharacterTap(TierListItem character) async {
+  Future<void> _onRemoveCharacterTap(TierListItem character) {
     final service = ref.read(tierListServiceProvider);
-    await service.removeItem(widget.tierListId, character.id);
-
-    if (mounted) {
-      Toast.showItemRemovedToast(context, character);
-    }
+    return service.removeItem(widget.tierListId, character.id);
   }
 
-  Future<void> _onAddAnimeCharactersTap(Anime anime, Iterable<TierListItem> characters) async {
+  Future<void> _onAddAnimeCharactersTap(Anime anime, Iterable<TierListItem> characters) {
     final service = ref.read(tierListServiceProvider);
-    await service.addAllItems(widget.tierListId, characters);
+    return service.addAllItems(widget.tierListId, characters);
+  }
 
-    if (mounted) {
-      Toast.showAnimeCharactersAddedToast(context, anime);
+  void _handleItems(AsyncValue<Iterable<TierListItem>>? previous, AsyncValue<Iterable<TierListItem>> next) {
+    final messages = TierListService.notifyTierListItem(context.loc, previous, next);
+
+    for (final message in messages) {
+      if (mounted) {
+        showToast(context, message);
+      }
     }
   }
 }

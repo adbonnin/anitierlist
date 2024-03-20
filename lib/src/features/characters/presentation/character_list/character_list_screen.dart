@@ -28,7 +28,10 @@ class _CharacterListScreenState extends ConsumerState<CharacterListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final asyncCharacters = ref.watch(tierListItemsSnapshotProvider(widget.tierListId));
+    final charactersProvider = tierListItemsSnapshotProvider(widget.tierListId);
+
+    final asyncCharacters = ref.watch(charactersProvider);
+    ref.listen(charactersProvider, _handleItems);
 
     return AsyncValueWidget(
       asyncCharacters,
@@ -75,14 +78,9 @@ class _CharacterListScreenState extends ConsumerState<CharacterListScreen> {
     );
   }
 
-  Future<void> _onDeleteItemTap(TierListItem item) async {
+  Future<void> _onDeleteItemTap(TierListItem item) {
     final service = ref.read(tierListServiceProvider);
-
-    await service.removeItem(widget.tierListId, item.id);
-
-    if (mounted) {
-      Toast.showItemRemovedToast(context, item);
-    }
+    return service.removeItem(widget.tierListId, item.id);
   }
 
   Future<void> _onExportPressed() async {
@@ -120,6 +118,16 @@ class _CharacterListScreenState extends ConsumerState<CharacterListScreen> {
       setState(() {
         _loading = false;
       });
+    }
+  }
+
+  void _handleItems(AsyncValue<Iterable<TierListItem>>? previous, AsyncValue<Iterable<TierListItem>> next) {
+    final messages = TierListService.notifyTierListItem(context.loc, previous, next);
+
+    for (final message in messages) {
+      if (mounted) {
+        showToast(context, message);
+      }
     }
   }
 }
