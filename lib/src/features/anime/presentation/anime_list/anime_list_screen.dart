@@ -4,8 +4,8 @@ import 'package:anitierlist/src/features/anime/presentation/anime_edit/anime_edi
 import 'package:anitierlist/src/features/tierlist/application/tierlist_providers.dart';
 import 'package:anitierlist/src/features/tierlist/application/tierlist_service.dart';
 import 'package:anitierlist/src/features/tierlist/domain/tierlist.dart';
-import 'package:anitierlist/src/features/tierlist/presentation/tierlist_list/tierlist_group_list.dart';
-import 'package:anitierlist/src/features/tierlist/presentation/tierlist_list/tierlist_group_title.dart';
+import 'package:anitierlist/src/features/tierlist/presentation/tierlist_group/tierlist_group_list.dart';
+import 'package:anitierlist/src/features/tierlist/presentation/tierlist_group/tierlist_group_title.dart';
 import 'package:anitierlist/src/l10n/app_localization_extension.dart';
 import 'package:anitierlist/src/l10n/app_localizations.dart';
 import 'package:anitierlist/src/utils/anime.dart';
@@ -136,11 +136,7 @@ class _AnimeTierListScreenState extends ConsumerState<AnimeListScreen> {
     );
   }
 
-  Future<void> _onAnimeTap(TierListItem? anime) async {
-    if (anime == null) {
-      return;
-    }
-
+  Future<void> _onAnimeTap(TierListItem anime) async {
     final updatedPreference = await showAnimeEditDialog(
       context: context,
       anime: anime,

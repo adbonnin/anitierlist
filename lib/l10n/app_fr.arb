@@ -36,6 +36,7 @@
     "anime_tierlist_edit_title": "Préférences de la miniature",
     "anime_tierlist_edit_titleLabel": "Titre",
     "anime_tierlist_exportName": "TierList {year} {seasonLabel}",
+    "tierlist_title": "TierList",
     "tierlist_undefinedTitle": "Par default",
     "tierlist_customTitle": "Personnalisé",
     "tierlist_alternativeTitle": "Alternatif",

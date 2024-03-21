@@ -30,11 +30,16 @@ class TierListService {
     return TierListService(firestore, tierListCollection);
   }
 
-  Stream<Iterable<TierListItem>> tierListItems(String tierListId) {
+  Stream<List<TierList>> tierLists() {
+    final snapshot = tierListCollection.snapshots();
+    return snapshot.map((event) => event.snapshot.docs.map((e) => e.data()).toList());
+  }
+
+  Stream<List<TierListItem>> tierListItems(String tierListId) {
     final tierListDoc = tierListCollection.doc(tierListId).reference;
 
     final snapshot = TierListItemCollectionReference(tierListDoc).whereValue().snapshots();
-    return snapshot.map((event) => event.snapshot.docs.map((e) => e.data()));
+    return snapshot.map((event) => event.snapshot.docs.map((e) => e.data()).toList());
   }
 
   Future<void> addItem(String tierListId, TierListItem item) {
@@ -48,7 +53,7 @@ class TierListService {
       final tierListDoc = await transaction.get(tierListCollection.doc(tierListId).reference);
       final tierListItemCollection = TierListItemCollectionReference(tierListDoc.reference);
 
-      for (TierListItem item in items) {
+      for (final item in items) {
         transaction.set(tierListItemCollection.doc(item.id).reference, item);
       }
     });

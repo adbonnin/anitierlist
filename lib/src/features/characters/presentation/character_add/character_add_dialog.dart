@@ -50,7 +50,7 @@ class CharacterAddDialog extends ConsumerStatefulWidget {
 class _CharacterAddDialogState extends ConsumerState<CharacterAddDialog> {
   @override
   Widget build(BuildContext context) {
-    final characterProvider = tierListItemsSnapshotProvider(widget.tierListId);
+    final characterProvider = tierListItemsSnapshotsProvider(widget.tierListId);
 
     final charactersSnapshot = ref.watch(characterProvider);
     ref.listen(characterProvider, _handleItems);

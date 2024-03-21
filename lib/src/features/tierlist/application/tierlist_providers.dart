@@ -9,8 +9,16 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'tierlist_providers.g.dart';
 
 @riverpod
-Stream<Iterable<TierListItem>> tierListItemsSnapshot(
-  TierListItemsSnapshotRef ref,
+Stream<List<TierList>> tierListsSnapshots(
+  TierListsSnapshotsRef ref,
+) {
+  final service = ref.watch(tierListServiceProvider);
+  return service.tierLists();
+}
+
+@riverpod
+Stream<List<TierListItem>> tierListItemsSnapshots(
+  TierListItemsSnapshotsRef ref,
   String tierListId,
 ) {
   final service = ref.watch(tierListServiceProvider);

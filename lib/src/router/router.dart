@@ -1,6 +1,7 @@
 import 'package:anitierlist/src/features/anime/presentation/anime_list/anime_list_screen.dart';
 import 'package:anitierlist/src/features/characters/presentation/character_list/character_list_screen.dart';
-import 'package:anitierlist/src/router/main_shell_scaffold.dart';
+import 'package:anitierlist/src/features/tierlist/presentation/tierlist_list/tierlist_list_screen.dart';
+import 'package:anitierlist/src/router/app_scaffold.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
@@ -34,8 +35,13 @@ GoRouter router(RouterRef ref) {
     ),
     TypedStatefulShellBranch<CharactersBranchData>(
       routes: [
-        TypedGoRoute<CharactersRouteData>(
-          path: '/characters',
+        TypedGoRoute<TierListsRouteData>(
+          path: '/tierlists',
+          routes: [
+            TypedGoRoute<TierListRouteData>(
+              path: ':id',
+            ),
+          ],
         ),
       ],
     ),
@@ -71,11 +77,35 @@ class AnimeRouteData extends GoRouteData {
   }
 }
 
-class CharactersRouteData extends GoRouteData {
-  const CharactersRouteData();
+class TierListsRouteData extends GoRouteData {
+  const TierListsRouteData();
 
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return const CharacterListScreen();
+  Page<Function> buildPage(BuildContext context, GoRouterState state) {
+    return NoTransitionPage(
+      child: PageScaffold(
+        body: (_) => TierListListScreen(
+          key: state.pageKey,
+        ),
+      ),
+    );
+  }
+}
+
+class TierListRouteData extends GoRouteData {
+  const TierListRouteData(this.id);
+
+  final String id;
+
+  @override
+  Page<Function> buildPage(BuildContext context, GoRouterState state) {
+    return NoTransitionPage(
+      child: PageScaffold(
+        body: (_) => TierListListScreen(
+          key: state.pageKey,
+        ),
+        secondaryBody: (_) => const CharacterListScreen(),
+      ),
+    );
   }
 }

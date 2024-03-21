@@ -2,7 +2,7 @@ import 'package:anitierlist/src/features/characters/presentation/character_add/c
 import 'package:anitierlist/src/features/tierlist/application/tierlist_providers.dart';
 import 'package:anitierlist/src/features/tierlist/application/tierlist_service.dart';
 import 'package:anitierlist/src/features/tierlist/domain/tierlist.dart';
-import 'package:anitierlist/src/features/tierlist/presentation/tierlist_list/tierlist_group_list.dart';
+import 'package:anitierlist/src/features/tierlist/presentation/tierlist_group/tierlist_group_list.dart';
 import 'package:anitierlist/src/l10n/app_localizations.dart';
 import 'package:anitierlist/src/utils/file.dart';
 import 'package:anitierlist/src/utils/string_extension.dart';
@@ -28,7 +28,7 @@ class _CharacterListScreenState extends ConsumerState<CharacterListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final charactersProvider = tierListItemsSnapshotProvider(widget.tierListId);
+    final charactersProvider = tierListItemsSnapshotsProvider(widget.tierListId);
 
     final asyncCharacters = ref.watch(charactersProvider);
     ref.listen(charactersProvider, _handleItems);
