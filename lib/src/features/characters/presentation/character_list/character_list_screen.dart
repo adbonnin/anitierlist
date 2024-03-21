@@ -13,9 +13,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class CharacterListScreen extends ConsumerStatefulWidget {
-  const CharacterListScreen({super.key});
+  const CharacterListScreen({
+    super.key,
+    required this.tierListId,
+  });
 
-  final String tierListId = 'CaCs3LKLX6lHcFF4jxG3';
+  final String tierListId;
 
   @override
   ConsumerState<CharacterListScreen> createState() => _CharacterListScreenState();

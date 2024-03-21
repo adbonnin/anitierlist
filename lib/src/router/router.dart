@@ -104,7 +104,7 @@ class TierListRouteData extends GoRouteData {
         body: (_) => TierListListScreen(
           key: state.pageKey,
         ),
-        secondaryBody: (_) => const CharacterListScreen(),
+        secondaryBody: (_) => CharacterListScreen(tierListId: id),
       ),
     );
   }
