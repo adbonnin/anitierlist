@@ -49,14 +49,16 @@ class TierListService {
   }
 
   Future<void> addAllItems(String tierListId, Iterable<TierListItem> items) {
-    return firestore.runTransaction((transaction) async {
-      final tierListDoc = await transaction.get(tierListCollection.doc(tierListId).reference);
-      final tierListItemCollection = TierListItemCollectionReference(tierListDoc.reference);
+    final tierListDoc = tierListCollection.doc(tierListId).reference;
+    final tierListItemCollection = TierListItemCollectionReference(tierListDoc);
 
-      for (final item in items) {
-        transaction.set(tierListItemCollection.doc(item.id).reference, item);
-      }
-    });
+    final batch = firestore.batch();
+
+    for (final item in items) {
+      batch.set(tierListItemCollection.doc(item.id).reference, item);
+    }
+
+    return batch.commit();
   }
 
   Future<void> removeItem(String tierListId, String itemId) {
