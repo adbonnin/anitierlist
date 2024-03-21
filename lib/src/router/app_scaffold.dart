@@ -18,33 +18,39 @@ class PageScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AdaptiveLayout(
-      bodyRatio: 0.3,
-      internalAnimations: false,
-      body: SlotLayout(
-        config: {
-          Breakpoints.small: SlotLayout.from(
-            key: const Key('smallBody'),
-            builder: secondaryBody ?? body,
+    return LayoutBuilder(
+      builder: (_, constraints) {
+        final width = constraints.maxWidth;
+
+        return AdaptiveLayout(
+          bodyRatio: 239 / width,
+          internalAnimations: false,
+          body: SlotLayout(
+            config: {
+              Breakpoints.small: SlotLayout.from(
+                key: const Key('smallBody'),
+                builder: secondaryBody ?? body,
+              ),
+              Breakpoints.mediumAndUp: SlotLayout.from(
+                key: const Key('mediumBody'),
+                builder: body,
+              ),
+            },
           ),
-          Breakpoints.mediumAndUp: SlotLayout.from(
-            key: const Key('mediumBody'),
-            builder: body,
+          secondaryBody: SlotLayout(
+            config: {
+              Breakpoints.small: SlotLayout.from(
+                key: const Key('smallBody'),
+                builder: null,
+              ),
+              Breakpoints.mediumAndUp: SlotLayout.from(
+                key: const Key('mediumBody'),
+                builder: secondaryBody ?? emptySecondaryBody,
+              ),
+            },
           ),
-        },
-      ),
-      secondaryBody: SlotLayout(
-        config: {
-          Breakpoints.small: SlotLayout.from(
-            key: const Key('smallBody'),
-            builder: null,
-          ),
-          Breakpoints.mediumAndUp: SlotLayout.from(
-            key: const Key('mediumBody'),
-            builder: secondaryBody ?? emptySecondaryBody,
-          ),
-        },
-      ),
+        );
+      },
     );
   }
 }
