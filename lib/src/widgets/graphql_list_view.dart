@@ -1,31 +1,30 @@
-import 'package:anitierlist/src/features/anime/domain/anime.dart';
 import 'package:anitierlist/src/utils/graphql.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
-typedef AnimeWidgetBuilder = Widget Function(BuildContext context, Anime anime, int index);
-
-class AnimePagedListView extends StatefulWidget {
-  const AnimePagedListView({
+class GraphqlListView<T> extends StatefulWidget {
+  const GraphqlListView({
     super.key,
     required this.itemFinder,
     required this.itemBuilder,
+    required this.firstPageKey,
   });
 
-  final PagedItemFinder<Anime> itemFinder;
-  final AnimeWidgetBuilder itemBuilder;
+  final PagedItemFinder<T> itemFinder;
+  final ItemWidgetBuilder<T> itemBuilder;
+  final int firstPageKey;
 
   @override
-  State<AnimePagedListView> createState() => _AnimePagedListViewState();
+  State<GraphqlListView> createState() => _GraphqlListViewState();
 }
 
-class _AnimePagedListViewState extends State<AnimePagedListView> {
-  late final PagingController<int, Anime> _pagingController;
+class _GraphqlListViewState<T> extends State<GraphqlListView<T>> {
+  late final PagingController<int, T> _pagingController;
 
   @override
   void initState() {
     super.initState();
-    _pagingController = PagingController(firstPageKey: 1);
+    _pagingController = PagingController(firstPageKey: widget.firstPageKey);
     _pagingController.addPageRequestListener(_fetchPage);
   }
 
@@ -36,7 +35,7 @@ class _AnimePagedListViewState extends State<AnimePagedListView> {
   }
 
   @override
-  void didUpdateWidget(AnimePagedListView oldWidget) {
+  void didUpdateWidget(GraphqlListView<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
 
     if (oldWidget.itemFinder != widget.itemFinder) {

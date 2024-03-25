@@ -1,12 +1,12 @@
 import 'package:anitierlist/src/features/anime/application/anime_service.dart';
 import 'package:anitierlist/src/features/anime/domain/anime.dart';
 import 'package:anitierlist/src/features/anime/presentation/anime_list_tile.dart';
-import 'package:anitierlist/src/features/anime/presentation/anime_paged_list_view.dart';
 import 'package:anitierlist/src/features/characters/application/character_service.dart';
 import 'package:anitierlist/src/features/characters/domain/character.dart';
 import 'package:anitierlist/src/features/characters/presentation/character_paged_grid_view.dart';
 import 'package:anitierlist/src/l10n/app_localizations.dart';
 import 'package:anitierlist/src/utils/graphql.dart';
+import 'package:anitierlist/src/widgets/graphql_list_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -57,9 +57,10 @@ class _CharacterSearchAnimeTabState extends ConsumerState<CharacterSearchAnimeTa
     return PageView(
       controller: _controller,
       children: [
-        AnimePagedListView(
+        GraphqlListView(
           itemFinder: _animeFinder,
           itemBuilder: _buildAnimeItem,
+          firstPageKey: 1,
         ),
         if (_characterFinder != null)
           Column(
