@@ -96,6 +96,11 @@
         }
     },
     "tierlist_title": "TierLists",
+    "tierlist_edit_createTitle": "Create TierList",
+    "tierlist_edit_editTitle": "Edit TierList",
+    "tierlist_edit_nameField": "Name",
+    "tierlist_edit_nameRequiredError": "Titre est required",
+    "tierlist_createButton": "Create TierList",
     "tierlist_undefinedTitle": "Default",
     "tierlist_customTitle": "Custom",
     "tierlist_alternativeTitle": "Alternative",

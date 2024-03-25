@@ -103,6 +103,7 @@ class TierListRouteData extends GoRouteData {
       child: PageScaffold(
         body: (_) => TierListListScreen(
           key: state.pageKey,
+          selectedId: id,
         ),
         secondaryBody: (_) => CharacterListScreen(tierListId: id),
       ),

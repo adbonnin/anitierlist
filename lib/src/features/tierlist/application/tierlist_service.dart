@@ -35,6 +35,10 @@ class TierListService {
     return snapshot.map((event) => event.snapshot.docs.map((e) => e.data()).toList());
   }
 
+  Future<String> createTierList(TierList item) {
+    return tierListCollection.add(item).then((value) => value.id);
+  }
+
   Stream<List<TierListItem>> tierListItems(String tierListId) {
     final tierListDoc = tierListCollection.doc(tierListId).reference;
 

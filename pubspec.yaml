@@ -60,6 +60,7 @@ dependencies:
   json_annotation: ^4.8.1
   cloud_firestore: ^4.15.7
   cloud_firestore_odm: ^1.0.0-dev.84
+  form_builder_validators: ^9.1.0
 
 dev_dependencies:
   flutter_test:

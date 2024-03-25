@@ -9,7 +9,7 @@ part 'tierlist.g.dart';
 @firestoreSerializable
 class TierList {
   const TierList({
-    required this.id,
+    this.id = '',
     this.name = '',
   });
 
@@ -23,6 +23,14 @@ class TierList {
 
   Map<String, Object?> toJson() => //
       _$TierListToJson(this);
+
+  TierList copyWith({
+    String? name,
+  }) {
+    return TierList(
+      name: name ?? this.name,
+    );
+  }
 }
 
 @firestoreSerializable
